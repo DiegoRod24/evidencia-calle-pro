@@ -1,0 +1,15 @@
+{
+  "appId": "pe.oneshot.evidence",
+  "appName": "ONE SHOT",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 800,
+      "backgroundColor": "#05070D",
+      "showSpinner": false
+    }
+  }
+}

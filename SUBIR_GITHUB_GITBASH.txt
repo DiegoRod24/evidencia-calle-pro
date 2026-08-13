@@ -1,0 +1,10 @@
+# ONE SHOT v3.3 EVIDENCE UX
+# Dentro de la carpeta del repo evidencia-calle-pro:
+
+git status
+git add .
+git commit -m "one shot v3.3 evidence ux: watermark, maps, editor y configuracion visual"
+git push origin main
+
+# La PWA publicada detectará version.json y podrá actualizar desde el botón ↻.
+# IndexedDB y oneshotSettings no se eliminan durante la actualización PWA.

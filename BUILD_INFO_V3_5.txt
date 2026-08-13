@@ -1,0 +1,10 @@
+ONE SHOT v3.5 EVIDENCE PRO
+VERSION=oneshot-v3.5-evidence-pro-01
+Fecha=2026-08-07
+
+Validaciones:
+- app.js: node --check OK
+- service-worker.js: node --check OK
+- HTML: sin IDs duplicados
+- root/www: sincronizados
+- version.json / app.js / SW: mismo build

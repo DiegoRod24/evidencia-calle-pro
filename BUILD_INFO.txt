@@ -1,0 +1,25 @@
+ONE SHOT v3.3 EVIDENCE UX
+Build: oneshot-v3.3-evidence-ux-01
+Fecha: 2026-08-07
+
+Objetivos de esta revisión:
+- retirar regla/horizonte visual
+- corregir arrastre de watermark
+- watermark configurable y más legible
+- verificador lateral ascendente con texto horizontal
+- ONPE predeterminado / logo personalizable
+- visor y editor responsivos
+- Maps en visor/editor/galería
+- selección toggle y limpieza
+- auto-hide configurable
+- tamaños y color persistentes
+- actualización rápida PWA
+- historial al corregir GPS
+
+Validaciones automáticas requeridas antes de empaquetar:
+- node --check app.js
+- node --check service-worker.js
+- JSON válido
+- IDs HTML sin duplicados
+- referencias de IDs sin faltantes
+- root/www sincronizados

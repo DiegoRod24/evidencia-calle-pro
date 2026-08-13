@@ -1,0 +1,8 @@
+{
+  "version": "v5.6.3 PERMISSION ASSISTANT",
+  "build": "oneshot-v5.6.3-permission-assistant-01",
+  "released": "2026-08-13",
+  "notes": "Asistente de permisos: diagnóstico de cámara bloqueada/ocupada/no disponible, guía Android-Samsung-iPhone, prueba de cámara y GPS, chequeo previo del dispositivo y recuperación sin cerrar recorridos activos.",
+  "apkUrl": "",
+  "apkFilename": "ONE_SHOT_v5_6_3_PERMISSION_ASSISTANT.apk"
+}

@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#030711">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="ONE SHOT">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>ONE SHOT v5.6.3 · Permission Assistant</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="icon" href="icon-192.png">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+</head>
+<body class="cameraMode">
+  <div id="splash" class="splash" aria-hidden="true">
+    <div class="splashSight">
+      <i class="splashLine"></i>
+      <div class="splashLogo markIcon"></div>
+      <span class="sightRing"></span>
+    </div>
+    <div class="splashTitle"><span class="one">ONE</span><span class="shot">SHOT</span></div>
+    <div class="splashSub">UNA TOMA. EVIDENCIA REAL.</div>
+    <div class="splashCapture">CAPTURANDO EVIDENCIA</div>
+  </div>
+
+  <div class="appShell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="markIcon"></div>
+        <div class="brandText">
+          <h1><span>ONE</span> SHOT</h1>
+          <p>Una toma. Evidencia real.</p>
+        </div>
+      </div>
+      <div class="topChips">
+        <span id="platformChip">PWA</span>
+        <button id="quickUpdateBtn" class="chipButton updateChip" title="Actualizar ONE SHOT">↻</button>
+        <button id="gpsChip" class="chipButton" title="Actualizar ubicación">GPS…</button>
+      </div>
+    </header>
+
+    <main id="viewCamera" class="view active">
+      <section class="cameraStage" id="cameraStage">
+        <video id="video" playsinline autoplay muted></video>
+        <canvas id="captureCanvas" hidden></canvas>
+
+        <div id="cameraFallback" class="cameraFallback" data-state="idle">
+          <div class="fallbackSight"><div class="fallbackMark markIcon"></div></div>
+          <h2 id="cameraStateTitle">Cámara lista</h2>
+          <p id="cameraStateText">Abre la cámara para comenzar a registrar evidencia.</p>
+          <div class="cameraFallbackActions">
+            <button id="startCameraBtn" class="startPill">Abrir cámara</button>
+            <button id="retryCameraBtn" class="startPill secondary isHidden">Reintentar</button>
+            <button id="releaseCameraBtn" class="startPill ghost isHidden">Liberar cámara</button>
+            <button id="permissionHelpBtn" class="startPill permission isHidden">🔓 Ayuda con permisos</button>
+          </div>
+          <small id="cameraErrorDetail" class="cameraErrorDetail"></small>
+        </div>
+
+        <div class="cameraBrandOverlay draggableGroup" data-layout-key="brand" aria-hidden="true">
+          <span class="miniMark markIcon"></span>
+          <b><em>ONE</em> SHOT</b>
+        </div>
+
+        <div id="captureReticle" class="captureReticle" aria-hidden="true">
+          <span></span><span></span><span></span><span></span><i></i>
+        </div>
+        <div id="focusRing" class="focusRing" aria-hidden="true"><i></i></div>
+        <div id="captureFlash" class="captureFlash"></div>
+        <div id="captureConfirm" class="captureConfirm">✓ EVIDENCIA CAPTURADA <small id="captureCode">—</small></div>
+        <img id="captureFreeze" class="captureFreeze" alt="Última evidencia">
+
+        <div class="cameraTopTools draggableGroup" id="cameraTopTools" data-layout-key="tools">
+          <button id="toolMenuBtn" class="cameraIconBtn glass3d" title="Ocultar / mostrar herramientas"><span>☰</span></button>
+          <button id="resetCaptureBtn" class="cameraIconBtn glass3d" title="Reiniciar cámara y GPS"><span>↻</span></button>
+          <button id="switchCameraBtn" class="cameraIconBtn glass3d" title="Cambiar lente"><span>⇄</span></button>
+          <button id="torchBtn" class="cameraIconBtn glass3d isHidden" title="Linterna"><span>ϟ</span></button>
+          <button id="cleanScreenBtn" class="cameraIconBtn glass3d" title="Pantalla limpia"><span>◌</span></button>
+          <button id="layoutCameraBtn" class="cameraIconBtn glass3d" title="Personalizar cámara"><span>✥</span></button>
+        </div>
+
+        <div id="cameraOptions" class="cameraOptions"><label class="cameraLensField"><b>Lente / encuadre</b><select id="cameraLensSelect" aria-label="Lente de cámara"></select><small>Elige el lente trasero que mejor abarque el panel, fachada o detalle.</small></label>
+          <div><b>Marca</b><button data-wm-pos="left">Izq.</button><button data-wm-pos="center">Centro</button><button data-wm-pos="right">Der.</button></div>
+          <div><b>Controles</b><button data-dock-pos="left">Izq.</button><button data-dock-pos="center">Centro</button><button data-dock-pos="right">Der.</button></div>
+          <div><b>HUD</b><button data-hud-mode="normal">Normal</button><button data-hud-mode="compact">Sutil</button><button data-hud-mode="minimal">Mínimo</button></div>
+          <div class="optionOrientation"><b>Giro</b><button data-orient-mode="auto">Auto</button><button data-orient-mode="portrait">Vertical</button><button data-orient-mode="landscape-right">Horizontal ▶</button><button data-orient-mode="landscape-left">Horizontal ◀</button></div>
+          <button id="toggleHudBtn" class="optionWide">◌ Ocultar / mostrar controles</button>
+          <button id="editLayoutBtn" class="optionWide">✥ Mover controles y marca</button>
+          <button id="resetLayoutBtn" class="optionWide">↺ Restablecer diseño actual</button>
+          <button id="refreshAllBtn" class="optionWide">↻ Liberar + cámara + GPS</button>
+        </div>
+
+        <div id="watermarkLive" class="watermarkLive draggableGroup" data-layout-key="watermark" data-pos="left">
+          <div class="wmLiveTop">
+            <div class="wmLiveMark"><span class="miniReticle">◎</span><div><b><em>ONE</em> SHOT</b><small>EVIDENCIA DE CAMPO</small></div></div>
+            <div class="wmInstitutionGhost"><span class="oneShotSeal">OS</span></div>
+          </div>
+          <div class="wmLiveBottom">
+            <div class="wmLiveTimeRow"><strong id="wmTime">--:--</strong><i></i><div><b id="wmDateLabel">--</b><span id="wmDayLabel">--</span></div></div>
+            <div id="wmAddr" class="wmLiveAddress">Ubicación pendiente</div>
+            <small id="wmGps">GPS pendiente</small>
+            <div class="wmLiveCode">Código de Foto: <b id="wmCode">OS-…</b></div>
+          </div>
+          <div class="wmVerifyLive" aria-label="Código verificador"><span id="wmVerifyChunks">PENDIENTE · ONE SHOT VERIFIED</span></div>
+        </div>
+
+        <div id="cameraDock" class="cameraDock draggableGroup" data-layout-key="dock" data-pos="center">
+          <div class="zoomPresets" id="zoomPresets">
+            <button data-zoom="0.5" class="wideZoom">0.5</button>
+            <button data-zoom="1" class="active">1x</button>
+            <button data-zoom="2">2x</button>
+            <button data-zoom="4">4x</button>
+            <button data-zoom="8">8x</button>
+            <button data-zoom="10">10x</button>
+          </div>
+          <div class="captureRow">
+            <button id="lastShotBtn" class="lastShotBtn" title="Última evidencia"><span>▧</span></button>
+            <button id="shootBtn" class="shootBtn" aria-label="Capturar evidencia"><span></span></button>
+            <button id="refreshGpsBtn" class="roundMiniBtn" title="Actualizar GPS">⌖</button>
+          </div>
+          <div class="zoomSliderWrap">
+            <input id="zoomSlider" type="range" min="1" max="4" step="0.1" value="1">
+            <strong id="zoomLabel">1.0x</strong>
+          </div>
+        </div>
+        <div id="trustBar" class="trustBar">
+          <span id="trustCamera">CAM ✓</span><span id="trustGps">GPS …</span><span id="trustTime">HORA …</span><span id="trustOnline">ONLINE</span><span id="orientationChip">↕ Vertical</span>
+        </div>
+        <div id="ghostOverlay" class="ghostOverlay" aria-hidden="true"><img id="ghostOverlayImg" alt="Guía de evidencia anterior"><div class="ghostOverlayBadge">👻 Alineación anterior · <button id="ghostOverlayClose">Cerrar</button></div></div>
+        <div id="quickCaptureBar" class="quickCaptureBar" aria-live="polite"><div class="quickCaptureInfo"><b>✓ Evidencia capturada</b><small id="quickCaptureCode">Evidencia</small><span id="quickCaptureContext">Revisando contexto…</span></div><button id="quickCaptureReview" class="isHidden">Comparar</button><button id="quickCaptureView">Ver</button><button id="quickCaptureEdit">Editar</button><button id="quickCaptureClose" aria-label="Cerrar">×</button></div>
+        <div id="layoutEditorBanner" class="layoutEditorBanner"><b>EDITAR DISEÑO</b><span id="layoutOrientationLabel">VERTICAL</span><small>Arrastra controles y marca · se guarda por orientación</small><button id="saveLayoutBtn">Guardar</button><button id="cancelLayoutBtn">Salir</button></div>
+      </section>
+    </main>
+
+    <main id="viewEvidence" class="view">
+      <section class="panel evidencePanel">
+        <div class="sectionHead evidenceHead">
+          <div><h2>📸 Evidencias</h2><p id="evidenceCount">0 registradas</p></div>
+          <div class="headActions">
+            <div class="viewSwitch" id="galleryViewSwitch" role="tablist" aria-label="Vista de evidencias">
+              <button type="button" data-gallery-view="cards" class="active" role="tab" aria-selected="true" title="Tarjetas"><span class="viewIcon">▤</span><span class="viewLabel">Tarjetas</span></button>
+              <button type="button" data-gallery-view="grid" role="tab" aria-selected="false" title="Galería"><span class="viewIcon">▦</span><span class="viewLabel">Galería</span></button>
+              <button type="button" data-gallery-view="list" role="tab" aria-selected="false" title="Lista"><span class="viewIcon">☷</span><span class="viewLabel">Lista</span></button>
+            </div>
+            <button id="selectVisibleBtn" class="btn primary small">Seleccionar</button>
+          </div>
+        </div>
+        <div class="filters">
+          <button data-filter="today" class="active">Hoy</button><button data-filter="week">Semana</button><button data-filter="15d">15 días</button><button data-filter="month">Mes</button><button data-filter="year">Año</button><button data-filter="all">Todo</button>
+        </div>
+        <input id="searchInput" class="search" placeholder="Buscar partido, candidato, distrito, tipo o código…">
+        <div id="evidenceList" class="evidenceList"></div>
+        <div id="selectionBar" class="selectionBar" aria-live="polite">
+          <div class="selectionSummary"><span class="selectionPulse">✓</span><div><b id="selectionCount">0 seleccionadas</b><small>Toca las fotos para sumar o quitar</small></div></div>
+          <button id="selectionAllBtn" type="button" class="selectionTool" aria-pressed="false"><span>✓</span><b>Todo</b></button>
+          <button id="selectionActionsBtn" type="button" class="selectionTool primary"><span>⋯</span><b>Acciones</b></button>
+          <button id="selectionCancelBtn" type="button" class="selectionTool close" aria-label="Salir de selección"><span>×</span></button>
+          <button id="selectionNoneBtn" type="button" class="isHidden" tabindex="-1" aria-hidden="true">Ninguna</button>
+        </div>
+      </section>
+    </main>
+
+    <main id="viewPlaces" class="view">
+      <section class="panel placesPanel">
+        <div class="sectionHead"><div><h2>🗺️ Territorio</h2><p id="placesCount">0 puntos</p></div><div class="placesHeadActions"><button id="placesRadarBtn" class="btn light small">◎ Mapa local</button><span class="v4Badge">5.6.2 TERRITORY UX</span></div></div>
+        <div class="placesHero"><div><b>Lugares sincronizados</b><span>Los lugares actuales nacen de evidencias reales; la memoria histórica se consulta aparte.</span></div><strong>📌</strong></div>
+        <div class="placeModeSwitch" role="tablist" aria-label="Vista de lugares">
+          <button class="active" data-place-mode="current" type="button">● Actuales</button>
+          <button data-place-mode="memory" type="button">◷ Memoria</button>
+          <button id="placesCleanupBtn" class="cleanupPlaceBtn" type="button" hidden>Limpiar sin evidencia</button>
+        </div>
+        <p id="placesModeNote" class="placesModeNote">Solo lugares vinculados a evidencias guardadas.</p>
+        <section class="territoryUxGuide" id="territoryUxGuide">
+          <div class="tuxGuideHead"><div><b>🧭 Flujo territorial</b><span>ONE SHOT organiza el trabajo en cuatro pasos. No necesitas usar todos a la vez.</span></div><button id="tuxHelpBtn" type="button">¿Cómo funciona?</button></div>
+          <div class="tuxFlowSteps">
+            <button type="button" data-tux-focus="planner"><strong>1</strong><span><b>Planifica</b><small>Define dónde trabajar y los sectores.</small></span></button>
+            <button type="button" data-tux-focus="team"><strong>2</strong><span><b>Asigna</b><small>Indica quién trabaja cada zona.</small></span></button>
+            <button type="button" data-tux-focus="coverage"><strong>3</strong><span><b>Recorre</b><small>Registra por dónde pasó la brigada.</small></span></button>
+            <button type="button" data-tux-focus="route"><strong>4</strong><span><b>Continúa</b><small>Smart Route prioriza lo que falta.</small></span></button>
+          </div>
+          <div id="tuxHelpPanel" class="tuxHelpPanel isHidden">
+            <article><b>🧭 Planificación territorial</b><p>Responde: <strong>¿dónde debemos trabajar?</strong> Crea una campaña desde bases o lugares históricos y divide el territorio en sectores.</p></article>
+            <article><b>👥 Team Missions</b><p>Responde: <strong>¿quién trabaja cada sector?</strong> Asigna responsables, pausa jornadas y deja notas para el siguiente compañero.</p></article>
+            <article><b>🗺️ Cobertura de ruta</b><p>Responde: <strong>¿por dónde realmente pasamos?</strong> La ruta azul no significa que hubo hallazgo; solo registra cobertura física.</p></article>
+            <article><b>⚡ Smart Route</b><p>Responde: <strong>¿por dónde continúo ahora?</strong> Usa las celdas pendientes y propone una secuencia para evitar repetir zonas.</p></article>
+          </div>
+        </section>
+
+        <div class="routeCoverageCard" id="routeCoverageCard">
+          <div class="routeCoverageHead"><div><b>🗺️ Cobertura de ruta</b><span>Registra por dónde pasaste, aunque una calle no tenga hallazgos.</span></div><span id="routeActiveChip" class="routeActiveChip">Recorrido inactivo</span></div>
+          <div id="routeRecoveryBanner" class="routeRecoveryBanner isHidden"><div><b>🔵 Recorrido pendiente recuperado</b><span id="routeRecoveryText">ONE SHOT conservará este recorrido hasta que pulses Finalizar.</span></div><button id="routeRecoveryContinue" type="button">Continuar</button></div>
+          <div id="routeStatus" class="routeStatus"><b>Sin recorrido activo</b><span>Inicia uno para registrar por dónde ya pasaste.</span></div>
+          <div class="routeControls">
+            <input id="routeNameInput" class="search routeNameInput" placeholder="Ej. Breña · Sector 01">
+            <button id="routeStartBtn" class="btn primary small" type="button">▶ Iniciar recorrido</button>
+            <button id="routeStopBtn" class="btn light small" type="button" disabled>■ Finalizar</button>
+            <button id="coverageMapBtn" class="btn dark small" type="button">🔥 Ver cobertura</button>
+          </div>
+          <div id="routeHistoryList" class="routeHistoryList"></div>
+        </div>
+
+        <section class="territoryPlanner" id="territoryPlanner">
+          <div class="moduleEyebrow">PASO 1 · ¿DÓNDE VAMOS A TRABAJAR?</div>
+          <div class="plannerHead">
+            <div><b>🧭 Planificación territorial</b><span>Convierte evidencias históricas y bases de campo en sectores, pendientes y una ruta de verificación.</span></div>
+            <span class="plannerVersion">5.6</span>
+          </div>
+          <div class="plannerCreateGrid">
+            <label>Campaña / semana<input id="plannerNameInput" placeholder="Ej. BREÑA · SEMANA 33"></label>
+            <label>Distrito / zona<input id="plannerDistrictInput" placeholder="Ej. Breña"></label>
+            <label>Responsable<input id="plannerAssigneeInput" placeholder="Ej. Juan Gómez"></label>
+            <label>Sectores<select id="plannerSectorCount"><option value="4">4 sectores</option><option value="6">6 sectores</option><option value="8">8 sectores</option><option value="9">9 sectores</option></select></label>
+          </div>
+          <div class="plannerCreateActions">
+            <button id="plannerCreateBtn" class="btn primary small" type="button">＋ Crear plan desde bases activas</button>
+            <label class="btn light small fileBtn">⇩ Importar avance<input id="plannerImportInput" type="file" accept=".json,application/json" hidden></label>
+            <button id="plannerExportBtn" class="btn light small" type="button">⇧ Exportar avance</button>
+          </div>
+          <section class="smartSectorCard" id="smartSectorCard">
+            <div class="smartSectorHead">
+              <div><b>🗺️ Smart Sector Coverage</b><span>Perímetro real + recorrido GPS + cobertura pendiente.</span></div>
+              <strong id="sscPercent">0%</strong>
+            </div>
+            <div class="sscMeta" id="sscMeta"><span>Sin sector activo</span><span>0 celdas cubiertas</span><span>Responsable pendiente</span></div>
+            <div class="sscControls">
+              <button id="sscDrawBtn" class="btn primary small" type="button">✎ Dibujar perímetro</button>
+              <button id="sscFinishDrawBtn" class="btn dark small" type="button" disabled>✓ Cerrar perímetro</button>
+              <button id="sscGpsSquareBtn" class="btn light small" type="button">⌖ Crear 300 m desde GPS</button>
+              <label class="btn light small fileBtn">GeoJSON<input id="sscGeoJsonInput" type="file" accept=".geojson,.json,application/geo+json,application/json" hidden></label>
+              <button id="sscContinueBtn" class="btn dark small" type="button">▶ Continuar pendiente</button>
+              <button id="sscResetBtn" class="btn light small" type="button">↺ Reiniciar sector</button>
+            </div>
+            <div id="sscMap" class="sscMap" aria-label="Mapa real de cobertura territorial"></div>
+            <div id="sscMapFallback" class="sscMapFallback isHidden">Mapa base no disponible. El GPS, el perímetro y el cálculo de cobertura siguen funcionando offline.</div>
+            <div class="sscLegend"><span><i class="pending"></i>Pendiente</span><span><i class="covered"></i>Recorrida</span><span><i class="evidence"></i>Evidencia</span><span><i class="current"></i>Tú</span></div>
+            <div id="sscPendingHint" class="sscPendingHint">Crea o importa un perímetro para comenzar.</div>
+          </section>
+          <section class="teamMissionCard" id="teamMissionCard">
+            <div class="moduleEyebrow">PASO 2 · ¿QUIÉN TRABAJA CADA SECTOR?</div>
+            <div class="tmHead"><div><b>👥 Team Missions</b><span>Asigna sectores, pausa, continúa y deja relevo al siguiente compañero.</span></div><span>5.5+</span></div>
+            <div class="tmKpis"><div><b id="tmMemberCount">0</b><span>Equipo</span></div><div><b id="tmActiveCount">0</b><span>Activas</span></div><div><b id="tmPendingCount">0</b><span>Pendientes</span></div><div><b id="tmDoneCount">0</b><span>Cerradas</span></div></div>
+            <div id="tmActiveBanner" class="tmActiveBanner isHidden"></div>
+            <div class="tmMemberForm"><input id="tmMemberName" placeholder="Nombre · Ej. Juan Gómez"><input id="tmMemberRole" placeholder="Rol · Brigada / conductor"><button id="tmAddMemberBtn" class="btn light small" type="button">＋ Integrante</button></div>
+            <div class="tmAssignForm"><select id="tmAssignMember"><option value="">Seleccionar…</option></select><input id="tmAssignSector" placeholder="Sector · Ej. S-01"><input id="tmAssignObjective" placeholder="Objetivo · Barrido general"><button id="tmCreateAssignBtn" class="btn primary small" type="button">Asignar sector</button></div>
+            <div id="tmAssignmentList" class="tmAssignmentList"></div>
+            <div class="tmHandoff"><textarea id="tmHandoffText" rows="2" placeholder="Nota para el relevo: qué faltó, calle cerrada, dónde continuar…"></textarea><button id="tmSaveNoteBtn" class="btn dark small" type="button">📝 Guardar relevo</button></div>
+            <div id="tmNotesList" class="tmNotesList"></div>
+            <div class="tmTransfer"><button id="tmExportBtn" class="btn light small" type="button">⇧ Exportar avance equipo</button><label class="btn light small fileBtn">⇩ Importar relevo<input id="tmImportInput" type="file" accept=".json,application/json" hidden></label></div>
+          </section>
+
+          <section class="smartRouteCard" id="smartRouteCard">
+            <div class="moduleEyebrow">PASO 4 · ¿POR DÓNDE CONTINÚO?</div>
+            <div class="srHead"><div><b>⚡ Smart Route 5.6</b><span>Convierte las celdas pendientes en una secuencia operativa para continuar sin repetir.</span></div><strong>RUTA</strong></div>
+            <div id="srStatus" class="srStatus"><b>Sin ruta inteligente activa</b><span>Primero define el perímetro y registra algo de cobertura. Luego ONE SHOT ordenará solo las zonas que todavía faltan.</span></div>
+            <div class="srToolbar">
+              <label>Estrategia<select id="srStrategy"><option value="nearest">Más cercano a mí</option><option value="continue">Continuar desde último punto</option><option value="priority">Prioridad / reincidencia</option><option value="sector">Orden por sector</option></select></label>
+              <label>Máximo<select id="srMaxPoints"><option value="20">20 zonas</option><option value="40" selected>40 zonas</option><option value="60">60 zonas</option><option value="100">100 zonas</option></select></label>
+              <button id="srBuildBtn" class="btn primary small" type="button">⚡ Generar ruta pendiente</button>
+            </div>
+            <div id="srNextCard" class="srNextCard isHidden">
+              <div class="srNextTop"><span>🚗 SIGUIENTE ZONA</span><b id="srProgress">0 / 0</b></div>
+              <h3 id="srNextTitle">Sin destino</h3><p id="srNextMeta"></p>
+              <div class="srActions"><button id="srNavigateBtn" class="btn primary" type="button">📍 Google Maps</button><button id="srFocusBtn" class="btn light" type="button">◎ Ver en mapa</button><button id="srReviewedBtn" class="btn dark" type="button">✓ Revisada</button><button id="srSkipBtn" class="btn light" type="button">Saltar</button><button id="srCloseBtn" class="btn light" type="button">Finalizar ruta</button></div>
+            </div>
+            <p class="srHint"><b>Automático:</b> si el GPS entra suficientemente cerca de la siguiente celda, ONE SHOT la marca cubierta y avanza. La ruta es una guía de cobertura, no navegación vial giro a giro.</p>
+          </section>
+          <div id="plannerEmpty" class="plannerEmpty">Carga una Base de Campo o registra lugares y crea tu primera campaña territorial.</div>
+          <div id="plannerWorkspace" class="plannerWorkspace isHidden">
+            <div class="plannerKpis">
+              <div><b id="plannerTotalKpi">0</b><span>Puntos</span></div>
+              <div><b id="plannerReviewedKpi">0</b><span>Revisados</span></div>
+              <div><b id="plannerPendingKpi">0</b><span>Pendientes</span></div>
+              <div><b id="plannerNewKpi">0</b><span>Nuevos</span></div>
+            </div>
+            <div class="plannerToolbar">
+              <label>Sector<select id="plannerSectorFilter"><option value="all">Todos</option></select></label>
+              <label>Estrategia<select id="plannerStrategy"><option value="nearest">Más cercanos</option><option value="oldest">Más antiguos</option><option value="sector">Orden por sector</option></select></label>
+              <label>Máx.<select id="plannerMaxPoints"><option>20</option><option selected>40</option><option>60</option><option>100</option></select></label>
+              <button id="plannerBuildRouteBtn" class="btn primary small" type="button">⚡ Generar ruta pendiente</button>
+            </div>
+            <canvas id="plannerCanvas" width="1100" height="620" aria-label="Mapa esquemático de planificación territorial"></canvas>
+            <div id="plannerLegend" class="plannerLegend"></div>
+            <div id="plannerNextCard" class="plannerNextCard isHidden">
+              <div class="plannerNextTop"><span>🚗 SIGUIENTE PUNTO</span><b id="plannerRouteProgress">0 / 0</b></div>
+              <h3 id="plannerNextAddress">Sin ruta activa</h3>
+              <p id="plannerNextMeta"></p>
+              <div class="plannerNextActions">
+                <button id="plannerNavigateBtn" class="btn primary" type="button">📍 Navegar</button>
+                <button id="plannerReviewedBtn" class="btn dark" type="button">✓ Revisado</button>
+                <button id="plannerSkipBtn" class="btn light" type="button">Saltar</button>
+                <button id="plannerCloseRouteBtn" class="btn light" type="button">Finalizar ruta</button>
+              </div>
+            </div>
+            <div class="plannerSectorBoard" id="plannerSectorBoard"></div>
+            <div class="plannerPointList" id="plannerPointList"></div>
+          </div>
+        </section>
+
+        <input id="placesSearch" class="search" placeholder="Buscar punto, local, partido, distrito o dirección…">
+        <div id="placesList" class="placesList"></div>
+      </section>
+    </main>
+
+    <main id="viewReports" class="view">
+      <section class="panel reportsPanel">
+        <div class="sectionHead"><div><h2>📊 Reportes</h2><p>Salida lista para auditoría</p></div><span id="reportReadyChip" class="readyChip">Preparando…</span></div>
+        <div class="summaryGrid">
+          <div><b id="sumExport">0</b><span>para exportar</span></div><div><b id="sumGps">0</b><span>con GPS</span></div><div><b id="sumSelected">0</b><span>seleccionadas</span></div><div><b id="sumPeriod">0</b><span>en periodo</span></div>
+        </div>
+        <div class="reportCard primaryReport">
+          <div class="reportIcon">XL</div>
+          <div><h3>Excel .XLSX con fotos</h3><p>Fotos completas, ancladas a su fila, GPS, ubicación, código verificador y datos de auditoría.</p></div>
+          <div class="reportActions">
+            <button id="previewReportBtn" class="btn light">👁 Vista previa</button>
+            <button id="downloadXlsxBtn" class="btn primary">↓ Descargar</button>
+            <button id="shareXlsxBtn" class="btn primary">↗ Compartir / WhatsApp</button>
+          </div>
+          <div class="hint">En PWA se usa el menú nativo de compartir. En APK Android se intenta abrir WhatsApp con el archivo adjunto.</div>
+        </div>
+        <details class="secondaryReport">
+          <summary>Más opciones</summary>
+          <div class="secondaryActions">
+            <button id="msgFernandoBtn" class="btn dark">💬 Solo mensaje</button>
+            <button id="exportJsonBtn" class="btn dark">🧾 Respaldo maestro</button>
+            <label class="btn light fileBtn">Importar respaldo <input id="importJsonInput" type="file" accept=".json,application/json" hidden></label>
+            <button id="downloadCsvBtn" class="btn light">CSV</button>
+          </div>
+        </details>
+      </section>
+    </main>
+
+    <main id="viewTools" class="view">
+      <section class="panel compactPanel">
+        <div class="sectionHead"><div><h2>🛠 Herramientas</h2><p>Recuperación rápida en campo</p></div></div>
+        <div class="toolGrid">
+          <button id="toolRestartCam" class="toolAction"><span>↻</span><b>Reiniciar cámara + GPS</b><small>Si quedó negro o congelado</small></button>
+          <button id="toolRefreshGps" class="toolAction"><span>⌖</span><b>Actualizar ubicación</b><small>Renueva precisión y dirección</small></button>
+          <button id="toolClearOverlays" class="toolAction"><span>⟳</span><b>Recargar interfaz</b><small>Limpia ventanas y estados</small></button>
+          <button id="toolBackup" class="toolAction"><span>▤</span><b>Respaldo maestro</b><small>Fotos originales + evidencia + metadatos</small></button>
+          <button id="toolRecoverLegacy" class="toolAction"><span>♻</span><b>Recuperar versiones anteriores</b><small>Busca y consolida evidencias sin duplicarlas</small></button>
+          <label class="toolAction legacyImportAction"><span>⇩</span><b>Importar respaldo anterior</b><small>JSON de cualquier versión ONE SHOT</small><input id="toolImportLegacyInput" type="file" accept=".json,application/json" hidden></label>
+          <button id="toolUpdateApp" class="toolAction updateAction"><span>⇧</span><b>Actualizar ONE SHOT</b><small id="updateAppText">Buscar archivos nuevos sin borrar evidencias</small></button>
+        </div>
+        <section class="missionManager">
+          <div class="missionHead"><div><b>🎯 Misión / jornada</b><small id="missionStatus">Sin misión activa · puedes capturar normalmente</small></div><span class="v45Badge">4.5</span></div>
+          <div class="missionForm"><input id="missionNameInput" placeholder="Ej. RUTA 04 · CERCADO DE LIMA"><button id="missionStartBtn" class="btn primary small">Iniciar misión</button><button id="missionEndBtn" class="btn light small">Finalizar</button></div>
+          <div id="missionProgress" class="missionProgress"></div>
+        </section>
+        <section class="fieldBaseManager">
+          <div class="fieldBaseHead"><div><b>🗂 Bases de campo</b><small id="fieldBaseStatus">Sin base activa · captura libre disponible</small></div><label class="btn primary small fileBtn">+ Cargar Excel<input id="fieldBaseExcelInput" type="file" accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden></label></div>
+          <p class="fieldBaseHint">Carga un Excel filtrado con FECHA, HORA, DIRECCIÓN/UBICACIÓN, LAT/LONG o LATITUD/LONGITUD, PROCESO, PARTIDO, CANDIDATO, TIPO y ESTADO. ONE SHOT lo usa solo como antecedente territorial; tus capturas siguen funcionando aunque no cargues ninguna base.</p>
+          <div id="fieldBaseList" class="fieldBaseList"></div>
+        </section>
+        <section class="journeyCard"><div class="journeyHead"><div><b>📍 Resumen de jornada</b><small>Actividad registrada hoy en este dispositivo</small></div><span>4.5</span></div><div id="journeySummary" class="journeySummary"></div></section>
+        <div class="healthGrid">
+          <div><span id="healthCameraDot" class="healthDot"></span><b>Cámara</b><small id="healthCamera">En espera</small></div>
+          <div><span id="healthGpsDot" class="healthDot"></span><b>GPS</b><small id="healthGps">Buscando…</small></div>
+          <div><span id="healthTimeDot" class="healthDot"></span><b>Hora</b><small id="healthTime">Local</small></div>
+          <div><span id="healthStoreDot" class="healthDot ok"></span><b>Datos</b><small id="healthStore">Local / offline</small></div>
+        </div>
+        <div class="statusBox"><b>Detalle operativo</b><p id="debugStatus">Listo.</p></div>
+      </section>
+    </main>
+
+    <main id="viewConfig" class="view">
+      <section class="panel compactPanel">
+        <div class="sectionHead"><div><h2>⚙ Configuración</h2><p>Preferencias de trabajo</p></div></div>
+        <div class="configGrid">
+          <label>Proceso de trabajo<select id="activeProcessInput"><option value="ERM">ERM</option><option value="EG">EG</option><option value="EG2V">EG 2da vuelta</option><option value="OTRO">Otro</option></select></label>
+          <label>Modo de trabajo<select id="workModeInput"><option value="mixed">Mixto · recomendado</option><option value="free">Captura libre</option><option value="follow">Seguimiento</option></select><small class="fieldHelp">Libre no consulta antecedentes. Mixto avisa sin bloquear. Seguimiento prioriza la base cargada.</small></label>
+          <label class="switchField"><span><b>Historial cercano</b><small>Avisa discretamente si existen registros próximos. Puedes apagarlo sin perder la base cargada.</small></span><input id="nearbyHistoryInput" type="checkbox" checked><i></i></label>
+          <label class="switchField"><span><b>Orientación inteligente</b><small>Usa sensor con zona muerta, espera y bloqueo anti-giros.</small></span><input id="smartOrientationInput" type="checkbox" checked><i></i></label>
+          <label>Modo de orientación<select id="orientationModeInput"><option value="auto">Auto estable</option><option value="portrait">Vertical 🔒</option><option value="landscape-right">Horizontal derecha ▶ 🔒</option><option value="landscape-left">Horizontal izquierda ◀ 🔒</option></select><small class="fieldHelp">Si Auto no coincide con cómo sostienes el equipo, fija el lado horizontal antes de capturar.</small></label>
+          <label class="switchField"><span><b>Controles en pantalla</b><small>ON visible · OFF ocultos hasta que tú los actives.</small></span><input id="controlsVisibleInput" type="checkbox" checked><i></i></label>
+          <label class="switchField"><span><b>HUD técnico</b><small>GPS, hora, conexión y orientación en cámara.</small></span><input id="hudVisibleInput" type="checkbox" checked><i></i></label>
+          <label class="switchField"><span><b>Marca en pantalla</b><small>Muestra la referencia ONE SHOT mientras encuadras.</small></span><input id="liveWatermarkVisibleInput" type="checkbox" checked><i></i></label>
+          <label class="switchField"><span><b>Modo Campo</b><small>Reduce ruido visual y prioriza cámara, disparador, zoom y datos esenciales.</small></span><input id="fieldModeInput" type="checkbox" checked><i></i></label>
+          <label>Estilo de botones<select id="controlToneInput"><option value="light">Claro</option><option value="subtle">Sutil</option><option value="dark">Oscuro</option></select></label>
+          <label>Revisor<input id="reviewerInput" placeholder="Nombre del fiscalizador"></label>
+          <label>Encuadre<select id="framingInput"><option value="exact">Exacto · sin recorte</option><option value="fill">Llenar pantalla</option></select></label>
+          <label>Calidad<select id="qualityInput"><option value="high">Alta</option><option value="medium">Media</option></select></label>
+          <label>Marca de agua<select id="watermarkPositionInput"><option value="left">Abajo izquierda</option><option value="center">Abajo centro</option><option value="right">Abajo derecha</option></select></label>
+          <label>Tamaño marca<select id="watermarkScaleInput"><option value="0.82">Pequeña</option><option value="1">Normal</option><option value="1.18">Grande</option><option value="1.34">Muy grande</option></select></label>
+          <label>Tamaño texto marca<select id="watermarkTextScaleInput"><option value="0.88">Pequeño</option><option value="1">Normal</option><option value="1.16">Grande</option><option value="1.30">Muy grande</option></select></label>
+          <label>Firma visual<select id="institutionBrandInput"><option value="oneshot">ONE SHOT · predeterminada</option><option value="custom">Personalizada</option><option value="none">Sin firma adicional</option></select></label>
+          <label>Logo personalizado<span class="fileSelect"><input id="institutionLogoInput" type="file" accept="image/png,image/jpeg,image/webp">Elegir imagen</span></label>
+          <label>Color principal<input id="accentColorInput" type="color" value="#2f6bff"></label>
+          <label>Tamaño interfaz<select id="uiScaleInput"><option value="0.92">Compacta</option><option value="1">Normal</option><option value="1.12">Grande</option><option value="1.24">Muy grande</option></select></label>
+          <label>Controles cámara<select id="dockPositionInput"><option value="center">Centro</option><option value="left">Izquierda</option><option value="right">Derecha</option></select></label>
+          <label>HUD cámara<select id="hudModeInput"><option value="normal">Normal</option><option value="compact">Sutil</option><option value="minimal">Mínimo</option></select></label>
+          <label>Auto ocultar controles<select id="autoHideInput"><option value="yes">Sí</option><option value="no">No</option></select></label>
+          <label>Tiempo visible<select id="autoHideDelayInput"><option value="5000">5 segundos</option><option value="8000">8 segundos</option><option value="12000">12 segundos</option><option value="20000">20 segundos</option><option value="0">No ocultar</option></select></label>
+          <label>Vista de evidencias<select id="galleryModeInput"><option value="compact">Lista compacta</option><option value="cards">Tarjetas grandes</option></select></label>
+          <label>Orientación / altitud<select id="sensorWatermarkInput"><option value="yes">Mostrar si existe</option><option value="no">Ocultar</option></select></label>
+          <label>Detalle de integridad<select id="integrityWatermarkInput"><option value="yes">Mostrar verificador</option><option value="no">Ocultar</option></select></label>
+        </div>
+        <div id="watermarkConfigPreview" class="watermarkConfigPreview">
+          <div class="previewPhoto">
+            <div class="previewTopBadge"><div class="previewTopText"><b>ONE SHOT</b><small>EVIDENCIA DE CAMPO</small></div><div class="previewInstitution"><span class="oneShotSeal">OS</span></div></div>
+            <div class="previewRightRail"><small>ONE SHOT VERIFIED</small><b>8902</b><b>3D7E</b><b>B91C</b></div>
+            <div class="previewBottomMeta">
+              <div class="previewTimeRow"><strong>06:38</strong><i></i><div><b>07 de ago 2026</b><span>Vie.</span></div></div>
+              <p>Industrial Desarrollo Forestal Lima,<br>Avenida Tingo María 128, 15082<br>Lima</p>
+              <em>Código de Foto: 89023D7EB91C</em>
+            </div>
+          </div>
+          <small>Vista referencial · el tamaño y color se aplican a nuevas evidencias.</small>
+        </div>
+        <section class="presetManager">
+          <div class="presetHead"><div><b>⚡ Preset de captura</b><small>Preclasifica las siguientes fotografías sin repetir los mismos campos.</small></div><label class="miniSwitch"><input id="presetEnabledInput" type="checkbox"><i></i></label></div>
+          <div class="presetGrid"><label>Partido<input id="presetPartyInput" placeholder="Partido"></label><label>Candidato<input id="presetCandidateInput" placeholder="Candidato"></label><label>Tipo<select id="presetTypeInput"><option>PENDIENTE</option><option>PINTA</option><option>PANEL</option><option>AFICHE</option><option>BANDEROLA</option><option>LOCAL PARTIDARIO</option><option>OTRO</option></select></label><label>Cargo<input id="presetCandidateTypeInput" placeholder="Cargo / candidatura"></label></div>
+          <div id="presetActiveBadge" class="presetActiveBadge">Preset desactivado</div>
+        </section>
+        <section class="recipientManager"><div class="recipientHead"><div><b>Destinatarios de WhatsApp</b><small>Elige quién recibirá fotos o reportes.</small></div><button id="addRecipientBtn" class="btn light small">+ Agregar</button></div><div id="recipientList" class="recipientList"></div></section>
+        <div class="configNote"><b>Hora confiable</b><span id="trustedTimeConfig">Se sincroniza con el servidor de la aplicación cuando hay internet; sin conexión se marca como hora local.</span></div>
+        <div class="configNote"><b>Diseño por orientación</b><span>ONE SHOT guarda posiciones independientes para vertical y horizontal. En Cámara toca ✥ y arrastra los grupos.</span></div>
+        
+        <section class="deviceCheckManager" id="deviceCheckManager">
+          <div class="deviceCheckHead"><div><b>🩺 Preparar dispositivo</b><small>Comprueba Cámara y GPS antes de salir a campo.</small></div><span class="deviceCheckBadge">5.6.3</span></div>
+          <div class="deviceCheckGrid">
+            <button id="permissionCameraBtn" type="button"><span>📷 Cámara</span><b id="deviceCheckCamera" data-state="unknown">• Revisar</b></button>
+            <button id="permissionGpsBtn" type="button"><span>📍 Ubicación</span><b id="deviceCheckGps" data-state="unknown">• Revisar</b></button>
+          </div>
+          <p>ONE SHOT distingue permiso bloqueado, cámara ocupada y errores del navegador. Si algo falla, te guía sin cerrar tu recorrido activo.</p>
+          <div class="deviceCheckActions"><button id="prepareDeviceBtn" class="btn primary" type="button">✓ Preparar ONE SHOT</button><button id="deviceCheckHelpBtn" class="btn light" type="button">¿Cómo dar permisos?</button></div>
+        </section>
+        <section class="installManager" id="installManager">
+          <div class="installManagerHead"><div><b>📲 Instalar ONE SHOT</b><small id="installStatusText">Detectando cómo estás usando la aplicación…</small></div><span id="installStatusBadge" class="installStatusBadge">REVISANDO</span></div>
+          <div class="installManagerBody">
+            <div class="installAppIcon"><img src="icon-192.png" alt="ONE SHOT"></div>
+            <div class="installManagerCopy"><strong id="installMainTitle">ONE SHOT en tu pantalla de inicio</strong><p id="installHelpText">Instálala como aplicación para abrirla a pantalla completa y acceder rápidamente desde tu celular.</p></div>
+          </div>
+          <div class="installManagerActions">
+            <button id="installAppBtn" class="btn primary" type="button">📲 Instalar ONE SHOT</button>
+            <button id="installGuideBtn" class="btn light" type="button">Ver instrucciones</button>
+            <button id="shareInstallBtn" class="btn light" type="button">↗ Compartir instalación</button>
+          </div>
+        </section>
+<div class="aboutOneShot"><div class="aboutBadge">OS</div><div><b>ONE SHOT · Desarrollo independiente</b><span>Diseño y desarrollo: Diego Rodríguez</span><small>Automatización · Sistemas · Soluciones digitales</small><a href="tel:+51977509592">📱 977 509 592 · Consultas y soporte</a></div></div>
+        <div class="configActions"><button id="restampAllBtn" class="btn light">↻ Aplicar marca a evidencias guardadas</button><button id="saveConfigBtn" class="btn primary">Guardar configuración</button></div>
+      </section>
+    </main>
+
+    <nav class="bottomNav">
+      <button data-view="Camera" class="active" aria-label="Cámara"><i>◉</i><span>Cámara</span></button>
+      <button data-view="Evidence" aria-label="Evidencias"><i>▧</i><span>Evidencias</span></button>
+      <button data-view="Places" aria-label="Lugares"><i>⌖</i><span>Lugares</span></button>
+      <button data-view="Reports" aria-label="Reportes"><i>▥</i><span>Reportes</span></button>
+      <button data-view="Tools" aria-label="Herramientas"><i>⌁</i><span>Herram.</span></button>
+      <button data-view="Config" aria-label="Configuración"><i>⚙</i><span>Config.</span></button>
+    </nav>
+  </div>
+
+  <div id="relationModal" class="modal relationModal">
+    <div class="relationSheet">
+      <button id="relationClose" class="sheetClose">×</button>
+      <div class="relationEyebrow">📍 HISTORIAL CERCANO</div>
+      <h2>Este lugar ya tiene evidencia</h2>
+      <div class="relationPrevious"><img id="relationPrevImg" alt="Evidencia anterior"><div><b id="relationTitle">Evidencia cercana</b><span id="relationDistance"></span><small id="relationMeta"></small></div></div>
+      <p>Indica qué observas ahora. ONE SHOT conservará la fotografía anterior y relacionará la nueva visita.</p>
+      <button id="relationGhostBtn" class="relationGhostBtn">👻 Alinear cámara con foto anterior</button><div class="relationGrid"><button data-relation="Permanece">✓<b>Permanece</b><small>Sigue presente</small></button><button data-relation="Modificada">↻<b>Modificada</b><small>Cambió el contenido</small></button><button data-relation="Retirada">×<b>Retirada</b><small>Ya no está</small></button><button id="relationNewPoint">＋<b>Nueva</b><small>Otro elemento/punto</small></button></div>
+    </div>
+  </div>
+
+  <div id="placeDetailModal" class="modal placeDetailModal">
+    <div class="placeDetailSheet"><div class="previewHead"><div><h2 id="placeDetailTitle">Lugar</h2><p id="placeDetailCode"></p></div><button id="placeDetailClose" class="sheetClose">×</button></div><p id="placeDetailMeta" class="placeDetailMeta"></p><button id="placeMarkLocalBtn" class="btn light placeLocalBtn">🏢 Marcar como local partidario</button><div id="placeTimeline" class="placeTimeline"></div></div>
+  </div>
+
+  <div id="viewerModal" class="modal viewerModal">
+    <div class="viewer">
+      <button id="viewerClose" class="iconBtn close">×</button>
+      <button id="viewerPrev" class="iconBtn prev">‹</button>
+      <div id="viewerImageStage" class="viewerImageStage"><img id="viewerImg" alt="Evidencia"></div>
+      <button id="viewerNext" class="iconBtn next">›</button>
+      <div class="viewerInfo">
+        <div><b id="viewerTitle">Evidencia</b><small id="viewerCaption"></small></div>
+        <div class="viewerActions">
+          <button id="viewerDownload" class="viewerAction">↓<span>Guardar</span></button>
+          <button id="viewerShare" class="viewerAction">↗<span>Compartir</span></button>
+          <button id="viewerVerify" class="viewerAction">✓<span>Verificar</span></button>
+          <button id="viewerMaps" class="viewerAction map">⌖<span>Mapa</span></button>
+          <button id="viewerInfoBtn" class="viewerAction">ⓘ<span>Ficha</span></button>
+          <button id="viewerEdit" class="viewerAction primary">✎<span>Editar</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="reportPreviewModal" class="modal">
+    <div class="reportPreviewSheet">
+      <div class="previewHead"><div><h2>Vista previa del reporte</h2><p>Así se entregarán las evidencias seleccionadas.</p></div><button id="reportPreviewClose" class="sheetClose">×</button></div>
+      <div id="reportPreviewList" class="reportPreviewList"></div>
+      <div class="previewActions"><button id="previewDownloadBtn" class="btn primary">↓ Excel</button><button id="previewShareBtn" class="btn primary">↗ Compartir</button></div>
+    </div>
+  </div>
+
+  <div id="bulkModal" class="modal sheetModal">
+    <div class="bulkSheet">
+      <div class="sheetHeader"><div><h2>Acciones de selección</h2><p id="bulkSelectionText">0 evidencias seleccionadas</p></div><button id="bulkClose" class="sheetClose">×</button></div>
+      <div class="bulkGrid">
+        <button id="bulkDownloadImages" class="bulkAction"><span>▧</span><b>Descargar imágenes</b><small>ZIP con las fotos seleccionadas</small></button>
+        <button id="bulkShareImages" class="bulkAction"><span>↗</span><b>Compartir imágenes</b><small>ZIP para WhatsApp / compartir</small></button>
+        <button id="bulkDownloadExcel" class="bulkAction"><span>XL</span><b>Descargar Excel</b><small>Reporte con fotos y metadatos</small></button>
+        <button id="bulkShareExcel" class="bulkAction"><span>↗</span><b>Compartir Excel</b><small>Envía el reporte seleccionado</small></button>
+        <button id="bulkPreview" class="bulkAction"><span>◉</span><b>Vista previa</b><small>Revisa antes de entregar</small></button>
+        <button id="bulkSelectAll" class="bulkAction"><span>✓</span><b>Seleccionar visibles</b><small>Marca todo el filtro actual</small></button>
+        <button id="bulkSelectNone" class="bulkAction"><span>○</span><b>Deseleccionar todo</b><small>Quita todas las marcas sin borrar nada</small></button>
+        <button id="bulkEditSelected" class="btn light">✎ Editar selección</button><button id="bulkDeleteSelected" class="bulkAction danger"><span>⌫</span><b>Eliminar seleccionadas</b><small>Pide confirmación antes de borrar</small></button>
+      </div>
+    </div>
+  </div>
+
+  <div id="editModal" class="modal">
+    <form id="editForm" class="editSheet">
+      <div class="sheetHeader"><div><h2>Editar evidencia</h2><p id="editCodeLabel">—</p></div><button type="button" id="editClose" class="sheetClose">×</button></div>
+      <input type="hidden" id="editId">
+      <div class="editGrid">
+        <label>Proceso<select id="editProcess"><option value="ERM">ERM</option><option value="EG">EG</option><option value="OTRO">OTRO</option></select></label>
+        <label>Tipo elección<select id="editElectionType"><option value="">Seleccionar…</option><option value="ELECCIONES REGIONALES Y MUNICIPALES">Elecciones Regionales y Municipales</option><option value="ELECCIONES GENERALES">Elecciones Generales</option><option value="PRIMERA VUELTA">Primera vuelta</option><option value="SEGUNDA VUELTA">Segunda vuelta</option><option value="OTRO">Otro</option></select></label>
+        <label>Tipo evidencia<select id="editType"><option value="PENDIENTE">PENDIENTE</option><option value="BANNER">BANNER</option><option value="PANEL">PANEL</option><option value="PINTA">PINTA</option><option value="MURAL">MURAL</option><option value="AFICHE">AFICHE</option><option value="PASACALLE">PASACALLE</option><option value="LOCAL PARTIDARIO">LOCAL PARTIDARIO</option><option value="OTROS">OTROS</option></select></label>
+        <label>Estado<select id="editStatus"><option value="Activo">Activo</option><option value="Retirado">Retirado</option><option value="Observado">Observado</option><option value="Pendiente">Pendiente</option></select></label>
+        <label>Partido<select id="editParty"><option value="">Partido pendiente</option></select></label>
+        <label>Candidato<input id="editCandidate" list="candidateList" autocomplete="off"></label><datalist id="candidateList"></datalist>
+        <label>Cargo<select id="editCandidateType"><option value="">Cargo pendiente</option><option>PRESIDENTE</option><option>VICEPRESIDENTE</option><option>CONGRESISTA</option><option>PARLAMENTO ANDINO</option><option>GOBERNADOR REGIONAL</option><option>VICEGOBERNADOR REGIONAL</option><option>CONSEJERO REGIONAL</option><option>ALCALDE PROVINCIAL</option><option>ALCALDE DISTRITAL</option><option>REGIDOR</option><option>OTRO</option></select></label>
+        <label>Distrito<input id="editDistrict" list="districtList" autocomplete="off"></label><datalist id="districtList"></datalist>
+        <label>UBIGEO<input id="editUbigeo" autocomplete="off"></label>
+        <label class="full">Observación<textarea id="editObservation" rows="3"></textarea></label>
+      </div>
+      <div class="editActions">
+        <button type="button" id="editOpenMaps" class="btn mapBtn">📍 Mapa</button>
+        <button type="button" id="editUpdateGps" class="btn light">⌖ GPS</button>
+        <button type="button" id="editUpdateAddress" class="btn light">↻ Dirección</button>
+        <button type="submit" class="btn primary">Guardar cambios</button>
+      </div>
+    </form>
+  </div>
+
+
+  <div id="recipientModal" class="modal sheetModal"><div class="bulkSheet recipientSheet"><div class="sheetHeader"><div><h2>¿A quién deseas enviar?</h2><p>Selecciona un destinatario guardado.</p></div><button id="recipientModalClose" class="sheetClose">×</button></div><div id="recipientChoiceList" class="recipientChoiceList"></div></div></div>
+  <div id="recipientEditModal" class="modal sheetModal"><form id="recipientForm" class="bulkSheet recipientSheet"><div class="sheetHeader"><div><h2>Destinatario</h2><p>Nombre, cargo y WhatsApp</p></div><button type="button" id="recipientEditClose" class="sheetClose">×</button></div><input id="recipientId" type="hidden"><label>Nombre<input id="recipientName" required placeholder="Ej. Fernando"></label><label>Cargo<input id="recipientRole" placeholder="Ej. Coordinador"></label><label>Número WhatsApp<input id="recipientPhone" inputmode="tel" required placeholder="51999999999"></label><label class="checkLine"><input id="recipientDefault" type="checkbox"> Usar como predeterminado</label><button class="btn primary wide" type="submit">Guardar destinatario</button></form></div>
+  <div id="techModal" class="modal sheetModal"><div class="bulkSheet techSheet"><div class="sheetHeader"><div><h2>Ficha técnica</h2><p id="techCode">—</p></div><button id="techClose" class="sheetClose">×</button></div><div id="techBody" class="techBody"></div></div></div>
+
+
+  
+  
+  <div id="coverageModal" class="modal coverageModal" aria-hidden="true">
+    <div class="coverageSheet">
+      <div class="sheetHeader"><div><h3>🔥 Cobertura territorial</h3><p>Ruta recorrida y hallazgos del periodo seleccionado.</p></div><button id="coverageClose" class="iconBtn" type="button">×</button></div>
+      <label class="coverageFilter">Mostrar <select id="coveragePeriod"><option value="today">Hoy</option><option value="mission">Misión actual/última</option><option value="last">Último recorrido</option><option value="all">Todo</option></select></label>
+      <div id="coverageRealMap" class="coverageRealMap" aria-label="Mapa real de cobertura"></div>
+      <div id="coverageMapFallback" class="coverageMapFallback isHidden">No se pudo cargar el mapa base. Puedes abrir la vista técnica; el recorrido GPS sigue guardado.</div>
+      <p id="coverageLegend" class="coverageLegend">Inicia un recorrido para visualizar cobertura.</p>
+      <details class="coverageTechnical"><summary>Vista técnica / diagnóstico</summary><canvas id="coverageCanvas" width="900" height="720" aria-label="Vista técnica de cobertura"></canvas></details>
+      <div class="coverageNote"><b>Cobertura ≠ hallazgos.</b> Azul indica por dónde se recorrió; amarillo dónde se tomó evidencia; rojo delimita el Smart Sector; violeta muestra la Smart Route pendiente.</div>
+    </div>
+  </div>
+
+  <div id="radarModal" class="modal sheetModal"><div class="bulkSheet radarSheet"><div class="sheetHeader"><div><b>◎ Mapa local de puntos</b><p>Vista offline aproximada alrededor de tu ubicación</p></div><button id="radarClose" class="sheetClose">×</button></div><canvas id="radarCanvas" width="800" height="520"></canvas><div id="radarLegend" class="radarLegend"></div></div></div>
+
+  <div id="bulkEditModal" class="modal sheetModal"><div class="bulkSheet bulkEditSheet"><div class="sheetHeader"><div><b>✎ Editar selección</b><p id="bulkEditCount">0 evidencias</p></div><button id="bulkEditClose" class="sheetClose">×</button></div><p class="hint">Solo se aplican los campos marcados. Los demás valores se conservan.</p><div class="bulkEditGrid"><label><input id="bulkUseProcess" type="checkbox"> Proceso<select id="bulkProcess"><option value="ERM">ERM</option><option value="EG">EG</option><option value="EG2V">EG 2da vuelta</option><option value="OTRO">Otro</option></select></label><label><input id="bulkUseType" type="checkbox"> Tipo<input id="bulkType" placeholder="PINTA / PANEL / ..."></label><label><input id="bulkUseParty" type="checkbox"> Partido<input id="bulkParty" placeholder="Partido"></label><label><input id="bulkUseCandidate" type="checkbox"> Candidato<input id="bulkCandidate" placeholder="Candidato"></label><label><input id="bulkUseStatus" type="checkbox"> Estado<select id="bulkStatus"><option>Activo</option><option>Retirada</option><option>Modificada</option><option>Pendiente</option></select></label></div><button id="bulkEditApply" class="btn primary full">Aplicar a seleccionadas</button></div></div>
+
+  <div id="installModal" class="modal sheetModal"><div class="bulkSheet installSheet"><div class="sheetHeader"><div><h2>Instalar ONE SHOT</h2><p id="installModalSubtitle">Acceso rápido desde tu celular</p></div><button id="installModalClose" class="sheetClose">×</button></div>
+    <div class="installDeviceHero"><img src="icon-192.png" alt="ONE SHOT"><div><b id="installDeviceTitle">Preparando instalación…</b><span id="installDeviceDescription">ONE SHOT detectará tu dispositivo y te mostrará el método correcto.</span></div></div>
+    <div id="installSteps" class="installSteps"></div>
+    <div class="installQrWrap"><div><b>Instalar en otro celular</b><small>Escanea este QR o comparte el enlace.</small></div><img id="installQrImage" alt="QR de instalación ONE SHOT"><code id="installUrlText"></code></div>
+    <div class="installModalActions"><button id="installModalAction" class="btn primary" type="button">Instalar ahora</button><button id="copyInstallLinkBtn" class="btn light" type="button">Copiar enlace</button><button id="dismissInstallBtn" class="btn light" type="button">Ahora no</button></div>
+  </div></div>
+
+  <div id="updateModal" class="modal sheetModal"><div class="bulkSheet updateSheet"><div class="sheetHeader"><div><h2>Actualizar ONE SHOT</h2><p id="updateModalVersion">Nueva versión disponible</p></div><button id="updateModalClose" class="sheetClose">×</button></div><div class="updateHero"><div class="updateIcon">↻</div><div><b>Nueva versión lista</b><span>Evidencias, destinatarios y configuración se conservan.</span></div></div><div class="updateActions"><button id="updateLaterBtn" class="btn light">Ahora no</button><button id="updateNowBtn" class="btn primary">Actualizar ahora</button></div></div></div>
+
+  
+  <div id="permissionModal" class="modal sheetModal permissionModal" aria-hidden="true">
+    <div class="bulkSheet permissionSheet">
+      <div class="sheetHeader"><div><h2 id="permissionModalTitle">Permisos de ONE SHOT</h2><p>Asistente de recuperación del dispositivo</p></div><button id="permissionModalClose" class="sheetClose" type="button">×</button></div>
+      <div class="permissionHero"><div id="permissionModalIcon">📷</div><p id="permissionModalText">ONE SHOT necesita permiso para continuar.</p></div>
+      <ol id="permissionModalSteps" class="permissionSteps"><li>Revisa el permiso.</li><li>Vuelve a ONE SHOT.</li><li>Prueba nuevamente.</li></ol>
+      <div class="permissionSafety"><b>Tu trabajo no se pierde.</b><span>Si existe un recorrido activo, resolver el permiso de cámara o GPS no lo finaliza.</span></div>
+      <button id="permissionTestBtn" class="btn primary full" type="button" data-kind="camera">✓ Ya di permiso · Probar</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="oneshot-erm-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

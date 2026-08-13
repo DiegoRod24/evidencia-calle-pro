@@ -1,0 +1,6 @@
+const CACHE="oneshot-v5.6.3-permission-assistant-01";
+const ASSETS=["./","index.html","styles.css","app.js","version.json","manifest.json","oneshot-erm-data.js","oneshot-logo.svg","oneshot-mark.png","oneshot-mark-transparent.png","icon-192.png","icon-512.png"];
+self.addEventListener("install",e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS).catch(()=>{})))});
+self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE&&k.startsWith("oneshot-")).map(k=>caches.delete(k)))));self.clients.claim()});
+self.addEventListener("message",e=>{if(e.data?.type==="SKIP_WAITING")self.skipWaiting();if(e.data?.type==="CLEAR_CACHES")e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith("oneshot-")).map(k=>caches.delete(k)))))});
+self.addEventListener("fetch",e=>{if(e.request.method!=="GET")return;const u=new URL(e.request.url);if(u.origin!==location.origin)return;const isVersion=u.pathname.endsWith("version.json");e.respondWith((isVersion?fetch(e.request,{cache:"no-store"}):fetch(e.request)).then(r=>{if(!isVersion){const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy)).catch(()=>{})}return r}).catch(()=>caches.match(e.request)))});

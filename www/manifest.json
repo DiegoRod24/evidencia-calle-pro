@@ -1,0 +1,26 @@
+{
+  "id": "oneshot-v5.6.3-permission-assistant",
+  "name": "ONE SHOT v5.6.3",
+  "short_name": "ONE SHOT",
+  "description": "ONE SHOT 5.6.3 Permission Assistant: permisos guiados de cámara y ubicación con diagnóstico y recuperación.",
+  "start_url": "/?v=oneshot-v5.6.3-permission-assistant-01",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#030711",
+  "background_color": "#030711",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
