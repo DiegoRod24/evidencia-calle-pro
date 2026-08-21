@@ -1,6 +1,9 @@
 const TARGET = "https://one-shot-2.pages.dev/api/dropbox/write-test";
 
-export async function onRequestPost(context) {
+export async function onRequest(context) {
+  const method = context.request.method.toUpperCase();
+  if (method === "OPTIONS") return new Response(null, { status: 204 });
+
   const auth = context.request.headers.get("authorization") || "";
   const upstream = await fetch(TARGET, {
     method: "POST",
