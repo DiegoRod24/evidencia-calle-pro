@@ -1,6 +1,15 @@
 const TARGET = "https://one-shot-2.pages.dev/api/dropbox/upload";
 
-export async function onRequestPost(context) {
+export async function onRequest(context) {
+  const method = context.request.method.toUpperCase();
+  if (method === "OPTIONS") return new Response(null, { status: 204 });
+  if (method !== "POST") {
+    return new Response(JSON.stringify({ ok: false, message: `Método no permitido: ${method}` }), {
+      status: 405,
+      headers: { "content-type": "application/json; charset=utf-8", allow: "POST, OPTIONS" },
+    });
+  }
+
   const auth = context.request.headers.get("authorization") || "";
   const contentType = context.request.headers.get("content-type") || "";
   const body = await context.request.arrayBuffer();
