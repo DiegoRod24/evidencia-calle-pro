@@ -13,6 +13,7 @@ export async function onRequest(context) {
       element(el) {
         el.append('<script src="/one-dropbox-legacy-sync.js"></script>', { html: true });
         el.append('<script src="/one-dropbox-write-diagnostic.js"></script>', { html: true });
+        el.append('<script src="/one-dropbox-same-origin-proxy.js"></script>', { html: true });
       },
     })
     .transform(response);
