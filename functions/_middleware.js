@@ -15,6 +15,7 @@ export async function onRequest(context) {
         el.append('<script src="/one-dropbox-write-diagnostic.js"></script>', { html: true });
         el.append('<script src="/one-dropbox-same-origin-proxy.js"></script>', { html: true });
         el.append('<script src="/one-phase1-batch-migration.js"></script>', { html: true });
+        el.append('<script src="/one-migrate-to-one-shot2.js"></script>', { html: true });
       },
     })
     .transform(response);
