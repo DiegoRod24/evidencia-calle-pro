@@ -1,8 +1,8 @@
 {
-  "version": "v5.6.3 PERMISSION ASSISTANT",
-  "build": "oneshot-v5.6.3-permission-assistant-01",
-  "released": "2026-08-13",
-  "notes": "Asistente de permisos: diagnóstico de cámara bloqueada/ocupada/no disponible, guía Android-Samsung-iPhone, prueba de cámara y GPS, chequeo previo del dispositivo y recuperación sin cerrar recorridos activos.",
+  "version": "v5.6.4 · MIGRAR A ONE SHOT 2",
+  "build": "one-shop-v5.6.4-migrate-to-one-shot2-01",
+  "released": "2026-08-24",
+  "notes": "ONE SHOP incorpora asistente seguro para pasar a ONE SHOT 2. Antes de cambiar revisa y respalda todas las evidencias recuperables usando el backend central; no borra el almacenamiento antiguo. Solo habilita abrir ONE SHOT 2 cuando el respaldo termina sin errores.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOT_v5_6_3_PERMISSION_ASSISTANT.apk"
+  "apkFilename": "ONE_SHOP_v5_6_4_MIGRAR_ONE_SHOT_2.apk"
 }
