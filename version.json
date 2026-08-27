@@ -1,8 +1,8 @@
 {
-  "version": "v5.7.2 · EVIDENCIA SIMPLE + MARCO RESPONSIVE",
-  "build": "one-shop-v5.7.2-field-essential-01",
+  "version": "v5.7.3 · PANEL + FOTO ESTÁNDAR",
+  "build": "one-shop-v5.7.3-field-essential-01",
   "released": "2026-08-27",
-  "notes": "ONE SHOP de campo mantiene cámara/GPS estables y simplifica la revisión: Editar evidencia muestra solo tipo, organización, candidato opcional y empresa únicamente para BANNER. Partido y empresa tienen búsqueda progresiva; la empresa permite agregar un proveedor no listado. El editor de marco ahora abre a pantalla completa, permite arrastrar, zoom y rotar 90° conservando el original. El visor y las tarjetas estandarizan fotos verticales/horizontales sin deformar ni exigir desplazamiento para ver la imagen completa. Ubicación se presenta compacta con Región, Provincia, Distrito y Dirección. Tramos de carteles/pancartas se mantienen bajo demanda.",
+  "notes": "Corrección de clasificación en ONE SHOP: Empresa / proveedor aparece únicamente para PANEL; BANNER, PINTA y LOCAL PARTIDARIO no solicitan empresa y limpian cualquier valor anterior al guardar. El tipo de evidencia es exclusivo: LOCAL PARTIDARIO no se cuenta simultáneamente como panel, banner o pinta. La lista de proveedores mantiene búsqueda progresiva y permite agregar otro nombre manual. El Excel normaliza todas las fotos a un marco 4:3 idéntico y las inserta con la misma medida, conservando proporción en fotos verticales y horizontales sin deformarlas. Se mantienen editor de marco, ubicación compacta y tramos bajo demanda.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOP_v5_7_2_EVIDENCIA_SIMPLE.apk"
+  "apkFilename": "ONE_SHOP_v5_7_3_PANEL_FOTO_ESTANDAR.apk"
 }
