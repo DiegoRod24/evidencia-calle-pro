@@ -1,8 +1,8 @@
 {
-  "version": "v5.7.3 · PANEL + FOTO ESTÁNDAR",
-  "build": "one-shop-v5.7.3-field-essential-01",
+  "version": "v5.7.4 · REPORTE TERRITORIAL MUNICIPAL",
+  "build": "one-shop-v5.7.4-field-essential-01",
   "released": "2026-08-27",
-  "notes": "Corrección de clasificación en ONE SHOP: Empresa / proveedor aparece únicamente para PANEL; BANNER, PINTA y LOCAL PARTIDARIO no solicitan empresa y limpian cualquier valor anterior al guardar. El tipo de evidencia es exclusivo: LOCAL PARTIDARIO no se cuenta simultáneamente como panel, banner o pinta. La lista de proveedores mantiene búsqueda progresiva y permite agregar otro nombre manual. El Excel normaliza todas las fotos a un marco 4:3 idéntico y las inserta con la misma medida, conservando proporción en fotos verticales y horizontales sin deformarlas. Se mantienen editor de marco, ubicación compacta y tramos bajo demanda.",
+  "notes": "ONE SHOP mejora el reporte de campo para control territorial y municipal. Todas las fotografías se normalizan a un marco 4:3 idéntico y se insertan en Excel con exactamente la misma medida visual (220 x 165 px), conservando proporción en tomas verticales y horizontales sin deformarlas. La hoja EVIDENCIAS prioriza Código, Tipo, Organización, Candidato, Empresa/Proveedor solo para PANEL, Región, Provincia, Distrito, Dirección, Latitud, Longitud, precisión GPS, Proceso, Estado y enlace a mapa. Se agrega RESUMEN_TERRITORIAL agrupado por Región/Provincia/Distrito con conteos por PANEL, BANNER, PINTA y LOCAL PARTIDARIO para apoyar la identificación de la jurisdicción municipal. Los valores territoriales se toman de la georreferenciación guardada por ONE SHOP y si faltan se marcan como PENDIENTE en vez de inventarlos. Tramos continúan en hoja separada.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOP_v5_7_3_PANEL_FOTO_ESTANDAR.apk"
+  "apkFilename": "ONE_SHOP_v5_7_4_REPORTE_TERRITORIAL.apk"
 }
