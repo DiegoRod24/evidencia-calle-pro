@@ -1,8 +1,8 @@
 {
-  "version": "v5.7.1 · EVIDENCIA + MARCO + TRAMOS",
-  "build": "one-shop-v5.7.1-field-essential-01",
+  "version": "v5.7.2 · EVIDENCIA SIMPLE + MARCO RESPONSIVE",
+  "build": "one-shop-v5.7.2-field-essential-01",
   "released": "2026-08-27",
-  "notes": "Mantiene el arranque estable de v5.7.0 y agrega solo bajo demanda: clasificación rápida en Editar con buscador de organizaciones y logos, tipos PANEL/BANNER/PINTA/LOCAL PARTIDARIO, empresa/proveedor para PANEL y BANNER, corrección de marco 4:3 no destructiva y flujo de carteles/pancartas por tramo con foto muestra, A/B, dibujo de recorrido, distancia y conteo. El Excel prioriza el marco corregido, estandariza vertical/horizontal sin deformar, agrega EMPRESA/PROVEEDOR y TRAMOS_PROPAGANDA. Cámara/GPS siguen independientes de nube y estas herramientas no cargan al iniciar.",
+  "notes": "ONE SHOP de campo mantiene cámara/GPS estables y simplifica la revisión: Editar evidencia muestra solo tipo, organización, candidato opcional y empresa únicamente para BANNER. Partido y empresa tienen búsqueda progresiva; la empresa permite agregar un proveedor no listado. El editor de marco ahora abre a pantalla completa, permite arrastrar, zoom y rotar 90° conservando el original. El visor y las tarjetas estandarizan fotos verticales/horizontales sin deformar ni exigir desplazamiento para ver la imagen completa. Ubicación se presenta compacta con Región, Provincia, Distrito y Dirección. Tramos de carteles/pancartas se mantienen bajo demanda.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOP_v5_7_1_EVIDENCIA_MARCO_TRAMOS.apk"
+  "apkFilename": "ONE_SHOP_v5_7_2_EVIDENCIA_SIMPLE.apk"
 }
