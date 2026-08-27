@@ -1,8 +1,8 @@
 {
-  "version": "v5.6.4 · MIGRAR A ONE SHOT 2",
-  "build": "one-shop-v5.6.4-migrate-to-one-shot2-01",
-  "released": "2026-08-24",
-  "notes": "ONE SHOP incorpora asistente seguro para pasar a ONE SHOT 2. Antes de cambiar revisa y respalda todas las evidencias recuperables usando el backend central; no borra el almacenamiento antiguo. Solo habilita abrir ONE SHOT 2 cuando el respaldo termina sin errores.",
+  "version": "v5.7.0 · CAMPO ESTABLE",
+  "build": "one-shop-v5.7.0-campo-estable-01",
+  "released": "2026-08-27",
+  "notes": "Versión de producción para brigadas. Cámara primero; Excel, mapas y nube se cargan solo cuando se usan. Se elimina el aviso automático de migración y la actualización deja de interrumpir el trabajo. La recuperación histórica se difiere para no frenar la cámara. El historial cercano no abre ventanas después de capturar. La nube/migración queda como herramienta opcional del responsable; la captura y el Excel funcionan sin clave.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOP_v5_6_4_MIGRAR_ONE_SHOT_2.apk"
+  "apkFilename": "ONE_SHOP_v5_7_0_CAMPO_ESTABLE.apk"
 }
