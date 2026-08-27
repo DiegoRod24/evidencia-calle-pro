@@ -29,6 +29,7 @@ document.addEventListener('click',e=>{
 document.addEventListener('change',e=>{if(e.__oneShopReplay)return;const el=e.target;if(!el)return;if(el.id==='fieldBaseExcelInput'){e.stopImmediatePropagation();excel().then(()=>replay(el,'change')).catch(err=>toast(err.message||String(err),3200))}},true);
 
 function patchBoot(){
+  try{if(typeof State!=='undefined'&&!window.State)window.State=State}catch(_){}
   try{localStorage.setItem('oneshotAppliedBuild',BUILD);localStorage.setItem('oneshotRuntimeBuild',BUILD)}catch(_){}
   try{if(typeof AppUpdater!=='undefined'&&!AppUpdater.__oneShopStable){AppUpdater.__oneShopStable=true;const base=AppUpdater.check.bind(AppUpdater);AppUpdater.check=async(force=false)=>{if(!force){const t=$('updateAppText');if(t)t.textContent='Actualización manual · app operativa';return}return base(true)}}}catch(_){}
   try{if(typeof EasyInstall!=='undefined')EasyInstall.maybePrompt=()=>{}}catch(_){}
