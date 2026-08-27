@@ -1,8 +1,8 @@
-/* ONE SHOP v5.7.1 · CAMPO ESTABLE + HERRAMIENTAS LAZY */
+/* ONE SHOP v5.7.2 · CAMPO ESTABLE + HERRAMIENTAS LAZY */
 (()=>{
 'use strict';
 if(window.ONE_SHOP_STABLE_RUNTIME)return;
-const BUILD='one-shop-v5.7.1-field-essential-01';
+const BUILD='one-shop-v5.7.2-field-essential-01';
 const $=id=>document.getElementById(id);
 const idle=cb=>('requestIdleCallback'in window?requestIdleCallback(cb,{timeout:7000}):setTimeout(cb,3500));
 const loaded=new Map();
@@ -27,14 +27,13 @@ document.addEventListener('click',e=>{
   e.preventDefault();e.stopImmediatePropagation();const old=el.disabled;el.disabled=true;toast(`Preparando ${label}…`,1300);dep.then(()=>{el.disabled=old;replay(el)}).catch(err=>{el.disabled=old;toast(err.message||String(err),3200)});
 },true);
 document.addEventListener('change',e=>{if(e.__oneShopReplay)return;const el=e.target;if(!el)return;if(el.id==='fieldBaseExcelInput'){e.stopImmediatePropagation();excel().then(()=>replay(el,'change')).catch(err=>toast(err.message||String(err),3200))}},true);
-
 function patchBoot(){
   try{if(typeof State!=='undefined'&&!window.State)window.State=State}catch(_){}
   try{localStorage.setItem('oneshotAppliedBuild',BUILD);localStorage.setItem('oneshotRuntimeBuild',BUILD)}catch(_){}
   try{if(typeof AppUpdater!=='undefined'&&!AppUpdater.__oneShopStable){AppUpdater.__oneShopStable=true;const base=AppUpdater.check.bind(AppUpdater);AppUpdater.check=async(force=false)=>{if(!force){const t=$('updateAppText');if(t)t.textContent='Actualización manual · app operativa';return}return base(true)}}}catch(_){}
   try{if(typeof EasyInstall!=='undefined')EasyInstall.maybePrompt=()=>{}}catch(_){}
   try{if(typeof Places!=='undefined'&&Places.promptRelation&&!Places.__stablePrompt){const base=Places.promptRelation.bind(Places);Places.__stablePrompt=base;Places.promptRelation=()=>null}}catch(_){}
-  try{if(typeof State!=='undefined'&&State.settings){if(localStorage.getItem('oneShopStablePrefs571')!=='1'||State.settings.nearbyHistoryEnabled!==false){State.settings.nearbyHistoryEnabled=false;localStorage.setItem('oneShopStablePrefs571','1');try{Store?.saveLite?.()}catch(_){}}}}catch(_){}
+  try{if(typeof State!=='undefined'&&State.settings){if(localStorage.getItem('oneShopStablePrefs572')!=='1'||State.settings.nearbyHistoryEnabled!==false){State.settings.nearbyHistoryEnabled=false;localStorage.setItem('oneShopStablePrefs572','1');try{Store?.saveLite?.()}catch(_){}}}}catch(_){}
   try{if(typeof LegacyVault!=='undefined'&&LegacyVault.recover&&!LegacyVault.__stableDeferred){LegacyVault.__stableDeferred=true;const base=LegacyVault.recover.bind(LegacyVault);let scheduled=false;LegacyVault.recover=async(auto=false)=>{if(!auto)return base(false);if(!scheduled){scheduled=true;idle(()=>base(true).catch(()=>{}))}return{found:0,added:0,updated:0,deferred:true}}}}catch(_){}
   try{if(typeof Places!=='undefined'&&Places.migrate&&!Places.__stableDeferredMigrate){Places.__stableDeferredMigrate=true;const base=Places.migrate.bind(Places);let scheduled=false;Places.migrate=async()=>{if(!scheduled){scheduled=true;idle(()=>base().catch(()=>{}))}return 0}}}catch(_){}
   const deferNames=[['TerritoryPlanner','render'],['SmartSectorCoverage','render'],['TeamMissions','render'],['SmartRoute','render'],['FieldBases','render'],['Reports','renderSummary']];
