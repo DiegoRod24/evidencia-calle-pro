@@ -21,7 +21,7 @@ jobs:
           node --check one-shop-field-tools-v571.js
           node --check one-field-report-standard.js
           node --check service-worker.js
-      - name: Version consistency
+      - name: Version and field rules
         run: |
           node - <<'NODE'
           const fs=require('fs');
@@ -29,9 +29,15 @@ jobs:
           const sw=fs.readFileSync('service-worker.js','utf8');
           const rt=fs.readFileSync('one-shop-stable-runtime.js','utf8');
           const tools=fs.readFileSync('one-shop-field-tools-v571.js','utf8');
-          if(v.build!=='one-shop-v5.7.2-field-essential-01') throw new Error('version.json build inesperada: '+v.build);
-          if(!sw.includes('oneshop-v5.7.2-field-essential-01')) throw new Error('Service Worker no apunta a 5.7.2');
-          if(!rt.includes("one-shop-v5.7.2-field-essential-01")) throw new Error('Runtime no apunta a 5.7.2');
-          if(!tools.includes("one-shop-v5.7.2-field-tools-01")) throw new Error('Field tools no apunta a 5.7.2');
-          console.log('ONE SHOP 5.7.2 consistente');
+          const report=fs.readFileSync('one-field-report-standard.js','utf8');
+          if(v.build!=='one-shop-v5.7.3-field-essential-01') throw new Error('version.json build inesperada: '+v.build);
+          if(!sw.includes('oneshop-v5.7.3-field-essential-01')) throw new Error('Service Worker no apunta a 5.7.3');
+          if(!rt.includes("one-shop-v5.7.3-field-essential-01")) throw new Error('Runtime no apunta a 5.7.3');
+          if(!tools.includes("one-shop-v5.7.3-field-tools-01")) throw new Error('Field tools no apunta a 5.7.3');
+          if(!tools.includes("type==='PANEL'")) throw new Error('Empresa no está condicionada a PANEL');
+          if(!tools.includes('LOCAL PARTIDARIO es una evidencia distinta')) throw new Error('Falta regla visual de tipo exclusivo');
+          if(!report.includes("==='PANEL'")) throw new Error('Excel no limita proveedor a PANEL');
+          if(!report.includes('ext:{width:180,height:135}')) throw new Error('Excel no usa medida fotográfica fija 4:3');
+          if(!report.includes('one-field-report-standard-v4')) throw new Error('Reporte estándar no está en v4');
+          console.log('ONE SHOP 5.7.3 consistente · PANEL exclusivo · foto Excel 4:3 fija');
           NODE
