@@ -1,6 +1,6 @@
-const CACHE="oneshop-v5.7.0-campo-estable-01";
+const CACHE="oneshop-v5.7.1-field-essential-01";
 const CORE=["./","index.html","styles.css","app.js","version.json","manifest.json","oneshot-erm-data.js","one-shop-stable-runtime.js","oneshot-logo.svg","oneshot-mark.png","oneshot-mark-transparent.png","icon-192.png","icon-512.png"];
-const OPTIONAL=["one-field-report-standard.js","one-migrate-to-one-shot2.js","one-dropbox-legacy-sync.js","one-dropbox-write-diagnostic.js","one-dropbox-same-origin-proxy.js","one-phase1-batch-migration.js","one-dropbox-legacy-sync.css"];
+const OPTIONAL=["one-shop-field-tools-v571.js","one-field-report-standard.js","one-migrate-to-one-shot2.js","one-dropbox-legacy-sync.js","one-dropbox-write-diagnostic.js","one-dropbox-same-origin-proxy.js","one-phase1-batch-migration.js","one-dropbox-legacy-sync.css"];
 function slimShell(html){return String(html||"").replace(/\s*<link[^>]+leaflet@1\.9\.4\/dist\/leaflet\.css[^>]*>/ig,"").replace(/\s*<script[^>]+exceljs@4\.4\.0\/dist\/exceljs\.min\.js[^>]*><\/script>/ig,"").replace(/\s*<script[^>]+leaflet@1\.9\.4\/dist\/leaflet\.js[^>]*><\/script>/ig,"")}
 async function shell(request){const c=await caches.open(CACHE);let r;try{r=await fetch(request,{cache:"no-store"})}catch(_){r=await c.match("index.html")||await c.match("./")}if(!r)throw new Error("ONE SHOP no disponible");return new Response(slimShell(await r.text()),{status:200,headers:{"Content-Type":"text/html; charset=utf-8","Cache-Control":"no-store"}})}
 self.addEventListener("install",e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE).catch(()=>{})))});
