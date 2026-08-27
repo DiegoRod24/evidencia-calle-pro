@@ -28,8 +28,10 @@ jobs:
           const v=JSON.parse(fs.readFileSync('version.json','utf8'));
           const sw=fs.readFileSync('service-worker.js','utf8');
           const rt=fs.readFileSync('one-shop-stable-runtime.js','utf8');
-          if(v.build!=='one-shop-v5.7.1-field-essential-01') throw new Error('version.json build inesperada: '+v.build);
-          if(!sw.includes('oneshop-v5.7.1-field-essential-01')) throw new Error('Service Worker no apunta a 5.7.1');
-          if(!rt.includes("one-shop-v5.7.1-field-essential-01")) throw new Error('Runtime no apunta a 5.7.1');
-          console.log('ONE SHOP 5.7.1 consistente');
+          const tools=fs.readFileSync('one-shop-field-tools-v571.js','utf8');
+          if(v.build!=='one-shop-v5.7.2-field-essential-01') throw new Error('version.json build inesperada: '+v.build);
+          if(!sw.includes('oneshop-v5.7.2-field-essential-01')) throw new Error('Service Worker no apunta a 5.7.2');
+          if(!rt.includes("one-shop-v5.7.2-field-essential-01")) throw new Error('Runtime no apunta a 5.7.2');
+          if(!tools.includes("one-shop-v5.7.2-field-tools-01")) throw new Error('Field tools no apunta a 5.7.2');
+          console.log('ONE SHOP 5.7.2 consistente');
           NODE
