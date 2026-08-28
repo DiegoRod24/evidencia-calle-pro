@@ -1,8 +1,8 @@
 {
-  "version": "v5.7.6 · CAMPO 4:3 + TERRITORIO SANEADO",
-  "build": "one-shop-v5.7.6-field-quality-01",
+  "version": "v5.7.7 · FOTO DERECHA + PROVINCIA LIMA",
+  "build": "one-shop-v5.7.7-orientation-province-01",
   "released": "2026-08-27",
-  "notes": "La versión de campo activa el runtime estable que antes no estaba conectado al arranque productivo. Cada captura nueva conserva la imagen original y genera inmediatamente una derivada 4:3 de 1600x1200, centrada y sin deformación, que se utiliza para la evidencia marcada y el Excel. Se refuerza Región/Provincia/Distrito, con Provincia=Lima y UBIGEO por distrito para Lima Metropolitana y Callao cuando corresponde; además se limpian IDs numéricos que estaban contaminando campos textuales. El Excel territorial mantiene 18 columnas de entrega, corrige Región/Dirección, usa Empresa/Proveedor solo en PANEL, deja Clima como dato climático real si existe y agrega DATOS_TECNICOS con GPS, UBIGEO, resoluciones y hashes.",
+  "notes": "Corrige la causa de las fotografías que salían de costado aunque el marco fuera 4:3. La captura usa el frame visual del video en vez del still EXIF problemático de algunos Android; conserva el original, corrige orientación y crea el reporte 1600x1200 sin deformar. Al exportar, las evidencias antiguas se recomponen desde la imagen original antes de volver a colocar la marca. En territorio, Lima Metropolitana queda Región=Lima y Provincia=Lima. El distrito ya no se inventa usando la ciudad: cuando no existe nivel distrital confiable se muestra FALTA CONFIRMAR DISTRITO hasta validarlo exactamente. El Excel usa el generador v8 y añade datos técnicos de orientación/pipeline.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOP_v5_7_6_CAMPO_4_3_TERRITORIO.apk"
+  "apkFilename": "ONE_SHOP_v5_7_7_FOTO_DERECHA_PROVINCIA_LIMA.apk"
 }
