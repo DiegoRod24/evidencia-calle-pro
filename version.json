@@ -4,5 +4,5 @@
   "released": "2026-08-27",
   "notes": "La versión de campo activa el runtime estable que antes no estaba conectado al arranque productivo. Cada captura nueva conserva la imagen original y genera inmediatamente una derivada 4:3 de 1600x1200, centrada y sin deformación, que se utiliza para la evidencia marcada y el Excel. Se refuerza Región/Provincia/Distrito, con Provincia=Lima y UBIGEO por distrito para Lima Metropolitana y Callao cuando corresponde; además se limpian IDs numéricos que estaban contaminando campos textuales. El Excel territorial mantiene 18 columnas de entrega, corrige Región/Dirección, usa Empresa/Proveedor solo en PANEL, deja Clima como dato climático real si existe y agrega DATOS_TECNICOS con GPS, UBIGEO, resoluciones y hashes.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOP_v5_7_6_CAMPO_4_3_TERRITORIO.xlsx"
+  "apkFilename": "ONE_SHOP_v5_7_6_CAMPO_4_3_TERRITORIO.apk"
 }
