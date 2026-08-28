@@ -1,8 +1,8 @@
 {
-  "version": "v5.7.8 · EVIDENCIA NATIVA + EXCEL UNIFORME",
-  "build": "one-shop-v5.7.8-evidence-report-split-01",
+  "version": "v5.7.9 · EXCEL SUAVE SIN BORDES NEGROS",
+  "build": "one-shop-v5.7.9-excel-thumb-softfill-01",
   "released": "2026-08-28",
-  "notes": "Se separa definitivamente la evidencia fotográfica del formato de reporte. La foto principal conserva su orientación real (vertical u horizontal), no se mete dentro de un canvas 4:3 y la marca ONE SHOT se dibuja dentro de la propia imagen, estilo Timemark, sin barras grises ni efecto de foto alejada. Para Excel se genera aparte una miniatura fija 1600x1200 con fondo extendido/desenfocado de la misma foto y la evidencia completa centrada, de modo que todas las filas mantienen exactamente el mismo tamaño visual sin deformación. Lima Metropolitana continúa como Región=Lima y Provincia=Lima; el distrito solo se informa cuando el geocodificador entrega un nivel administrativo confiable o existe UBIGEO validado.",
+  "notes": "Se mantiene intacta la evidencia principal del ZIP, que conserva su orientación real y la marca dentro de la foto. El único cambio es la miniatura del Excel: continúa siendo 1600x1200 para que todas las filas tengan el mismo tamaño visual, pero el relleno lateral/superior deja de usar un fondo oscuro. Ahora se genera con la propia foto ampliada, desenfocada y aclarada, sin overlay negro, con menor margen interno y la imagen central ocupando más espacio. El objetivo es acercar el aspecto del reporte al estilo Timemark sin deformar ni recortar la evidencia principal. La lógica de Región/Provincia/Distrito de v5.7.8 se mantiene sin cambios.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOP_v5_7_8_EVIDENCIA_NATIVA_EXCEL_UNIFORME.apk"
+  "apkFilename": "ONE_SHOP_v5_7_9_EXCEL_SUAVE.apk"
 }
