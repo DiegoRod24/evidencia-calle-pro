@@ -2,22 +2,22 @@ window.ONE_SHOT_DATA={parties:["ALIANZA PARA EL PROGRESO","FUERZA POPULAR","PART
 
 (()=>{
 'use strict';
-const BUILD='one-shop-field-boot-20260827-01';
+const BUILD='one-shop-field-boot-20260827-02-v577';
 function load(src,key){
   if(key&&window[key])return Promise.resolve(window[key]);
-  return new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.async=false;s.onload=()=>resolve(key?window[key]:true);s.onerror=()=>reject(new Error('No se pudo cargar '+src));document.head.appendChild(s)});
+  return new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.async=false;s.dataset.oneShopBuild=BUILD;s.onload=()=>resolve(key?window[key]:true);s.onerror=()=>reject(new Error('No se pudo cargar '+src));document.head.appendChild(s)});
 }
 async function boot(){
   if(window.__ONE_SHOP_FIELD_BOOT===BUILD)return;window.__ONE_SHOP_FIELD_BOOT=BUILD;
   try{
-    await load('/one-shop-stable-runtime.js?v=20260827-01','ONE_SHOP_STABLE_RUNTIME');
-    await load('/one-shop-field-quality-v576.js?v=20260827-01','ONE_SHOP_FIELD_QUALITY');
-    await load('/one-field-report-standard.js?v=20260827-01','ONE_FIELD_REPORT_STANDARD');
+    await load('/one-shop-stable-runtime.js?v=20260827-02-v577','ONE_SHOP_STABLE_RUNTIME');
+    await load('/one-shop-field-quality-v577.js?v=20260827-02-v577','ONE_SHOP_FIELD_QUALITY_V577');
+    await load('/one-field-report-standard.js?v=20260827-02-v8','ONE_FIELD_REPORT_STANDARD_V8');
     try{window.ONE_SHOP_STABLE_RUNTIME?.patchBoot?.()}catch(_){}
-    try{window.ONE_SHOP_FIELD_QUALITY?.patchAll?.()}catch(_){}
-    try{window.ONE_FIELD_REPORT_STANDARD?.patch?.()}catch(_){}
-    console.info('[ONE SHOP] flujo de campo activo',BUILD);
-  }catch(e){console.warn('[ONE SHOP] no se pudo completar el arranque de campo',e)}
+    try{window.ONE_SHOP_FIELD_QUALITY_V577?.patchAll?.()}catch(_){}
+    try{window.ONE_FIELD_REPORT_STANDARD_V8?.patch?.()}catch(_){}
+    console.info('[ONE SHOP] orientación/provincia activas',BUILD);
+  }catch(e){console.warn('[ONE SHOP] no se pudo completar el arranque v5.7.7',e)}
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else setTimeout(boot,0);
 })();
