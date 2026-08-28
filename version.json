@@ -1,8 +1,8 @@
 {
-  "version": "v5.7.7 · FOTO DERECHA + PROVINCIA LIMA",
-  "build": "one-shop-v5.7.7-orientation-province-01",
-  "released": "2026-08-27",
-  "notes": "Corrige la causa de las fotografías que salían de costado aunque el marco fuera 4:3. La captura usa el frame visual del video en vez del still EXIF problemático de algunos Android; conserva el original, corrige orientación y crea el reporte 1600x1200 sin deformar. Al exportar, las evidencias antiguas se recomponen desde la imagen original antes de volver a colocar la marca. En territorio, Lima Metropolitana queda Región=Lima y Provincia=Lima. El distrito ya no se inventa usando la ciudad: cuando no existe nivel distrital confiable se muestra FALTA CONFIRMAR DISTRITO hasta validarlo exactamente. El Excel usa el generador v8 y añade datos técnicos de orientación/pipeline.",
+  "version": "v5.7.8 · EVIDENCIA NATIVA + EXCEL UNIFORME",
+  "build": "one-shop-v5.7.8-evidence-report-split-01",
+  "released": "2026-08-28",
+  "notes": "Se separa definitivamente la evidencia fotográfica del formato de reporte. La foto principal conserva su orientación real (vertical u horizontal), no se mete dentro de un canvas 4:3 y la marca ONE SHOT se dibuja dentro de la propia imagen, estilo Timemark, sin barras grises ni efecto de foto alejada. Para Excel se genera aparte una miniatura fija 1600x1200 con fondo extendido/desenfocado de la misma foto y la evidencia completa centrada, de modo que todas las filas mantienen exactamente el mismo tamaño visual sin deformación. Lima Metropolitana continúa como Región=Lima y Provincia=Lima; el distrito solo se informa cuando el geocodificador entrega un nivel administrativo confiable o existe UBIGEO validado.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOP_v5_7_7_FOTO_DERECHA_PROVINCIA_LIMA.apk"
+  "apkFilename": "ONE_SHOP_v5_7_8_EVIDENCIA_NATIVA_EXCEL_UNIFORME.apk"
 }
