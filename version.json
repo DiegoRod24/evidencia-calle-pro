@@ -1,8 +1,8 @@
 {
-  "version": "v5.7.5 · CAPTURA 4:3 + REPORTE SGVC",
-  "build": "one-shop-v5.7.5-capture-report-01",
+  "version": "v5.7.6 · CAMPO 4:3 + TERRITORIO SANEADO",
+  "build": "one-shop-v5.7.6-field-quality-01",
   "released": "2026-08-27",
-  "notes": "ONE SHOP cambia el flujo para que cada nueva evidencia conserve el original y genere inmediatamente una derivada reportImage4x3 de 1600x1200. Esa versión se usa para reporte uniforme sin importar si la toma original fue vertical u horizontal. La georreferenciación normaliza Región, Provincia y Distrito al guardar; cuando Nominatim omite Provincia, se usa city como fallback administrativo y Lima Metropolitana queda Provincia=Lima. El Excel adopta el modelo SGVC de 18 columnas: ID, Foto, Fecha, Hora, Ubicación, Empresa, Nota, Lat/Long, Clima, Altitud, Zona, RegiOn, Provincia, Distrito, DirecciOn, Alcalde, Tipo y Proceso. Empresa siempre imprime ONPE-SGVC, Nota contiene el partido, Ubicación y Lat/Long son enlaces a Maps y todas las fotos se insertan a exactamente 128x96 px (4:3). Alcalde queda PENDIENTE hasta completar el cruce nacional por directorio/UBIGEO.",
+  "notes": "La versión de campo activa el runtime estable que antes no estaba conectado al arranque productivo. Cada captura nueva conserva la imagen original y genera inmediatamente una derivada 4:3 de 1600x1200, centrada y sin deformación, que se utiliza para la evidencia marcada y el Excel. Se refuerza Región/Provincia/Distrito, con Provincia=Lima y UBIGEO por distrito para Lima Metropolitana y Callao cuando corresponde; además se limpian IDs numéricos que estaban contaminando campos textuales. El Excel territorial mantiene 18 columnas de entrega, corrige Región/Dirección, usa Empresa/Proveedor solo en PANEL, deja Clima como dato climático real si existe y agrega DATOS_TECNICOS con GPS, UBIGEO, resoluciones y hashes.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOP_v5_7_5_CAPTURA_4_3_REPORTE_SGVC.apk"
+  "apkFilename": "ONE_SHOP_v5_7_6_CAMPO_4_3_TERRITORIO.xlsx"
 }
