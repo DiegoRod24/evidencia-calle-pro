@@ -1,8 +1,8 @@
 {
   "version": "v5.8.0 · CAPTURA RÁPIDA + CÁMARA TRASERA",
-  "build": "one-shop-v5.8.0-fast-capture-rear-01",
+  "build": "one-shop-v5.8.0-fast-capture-rear-02",
   "released": "2026-08-29",
-  "notes": "Optimización de flujo de campo. ONE SHOP prioriza de verdad la cámara trasera/environment desde el primer intento en lugar de usar primero el índice 0 del dispositivo, que en algunos Android corresponde a la cámara frontal. Si el navegador aun así entrega la frontal, la app corrige automáticamente hacia un lente trasero disponible. Al volver a la vista Cámara se reanuda de inmediato sin exigir volver a tocar Abrir cámara cuando el permiso ya existe. También se adelanta el inicio de cámara al entrar a la app, se reanuda más rápido al volver desde segundo plano y la barra posterior a una captura se oculta antes para facilitar capturas consecutivas. Se mantienen sin cambios la evidencia nativa, la marca de agua, el ZIP y el formato de Excel de v5.7.9.",
+  "notes": "Optimización de flujo de campo. ONE SHOP intenta primero la cámara environment/trasera incluso cuando Android todavía no expone etiquetas de dispositivos; solo usa un deviceId directo cuando ya está identificado como cámara posterior. Si el navegador entrega frontal, la app corrige automáticamente a un lente trasero disponible. Al volver a la vista Cámara se reanuda de inmediato sin exigir tocar otra vez Abrir cámara cuando ya existe permiso. También se adelanta el inicio al entrar, se reanuda antes al volver desde segundo plano y la barra posterior a una captura se oculta a los 3.2 s para facilitar capturas consecutivas. Se mantienen sin cambios la evidencia nativa, marca de agua, ZIP y Excel de v5.7.9.",
   "apkUrl": "",
   "apkFilename": "ONE_SHOP_v5_8_0_CAPTURA_RAPIDA_TRASERA.apk"
 }
