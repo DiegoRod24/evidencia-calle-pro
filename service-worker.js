@@ -1,4 +1,4 @@
-const CACHE="oneshop-v5.7.9-excel-thumb-softfill-01";
+const CACHE="oneshop-v5.8.0-fast-capture-rear-01";
 const CORE=["./","index.html","styles.css","app.js","version.json","manifest.json","oneshot-erm-data.js","one-shop-stable-runtime.js","one-shop-field-quality-v578.js","one-shop-excel-thumb-v579.js","one-shop-storage-lite-v578.js","one-shop-field-tools-v571.js","one-field-report-standard.js","oneshot-logo.svg","oneshot-mark.png","oneshot-mark-transparent.png","icon-192.png","icon-512.png"];
 const OPTIONAL=["one-migrate-to-one-shot2.js","one-dropbox-legacy-sync.js","one-dropbox-write-diagnostic.js","one-dropbox-same-origin-proxy.js","one-phase1-batch-migration.js","one-dropbox-legacy-sync.css"];
 function slimShell(html){return String(html||"").replace(/\s*<link[^>]+leaflet@1\.9\.4\/dist\/leaflet\.css[^>]*>/ig,"").replace(/\s*<script[^>]+exceljs@4\.4\.0\/dist\/exceljs\.min\.js[^>]*><\/script>/ig,"").replace(/\s*<script[^>]+leaflet@1\.9\.4\/dist\/leaflet\.js[^>]*><\/script>/ig,"")}
