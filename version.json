@@ -1,8 +1,8 @@
 {
-  "version": "v5.8.6 · PREVIEW = EVIDENCIA",
-  "build": "one-shop-v5.8.6-preview-parity-01",
+  "version": "v5.8.7 · TRAMOS DE PROPAGANDA",
+  "build": "one-shop-v5.8.7-tramos-01",
   "released": "2026-09-04",
-  "notes": "Se corrige el problema persistente de fotografías horizontales que quedaban giradas al revisar la evidencia. Para la cámara trasera se deja de usar ImageCapture.takePhoto como fuente principal, evitando la doble rotación por EXIF/orientación aplicada por Android y ONE SHOT. La captura se toma directamente del mismo stream de video que ve el operador: lo que se ve al disparar es lo que se guarda. Si el frame del video ya coincide con la orientación física no se rota; solo se aplica 90/-90 cuando las dimensiones realmente no coinciden. Se mantiene zoom, recorte, resolución del stream, marca de agua y se registran ángulo/pipeline de captura para diagnóstico.",
+  "notes": "Se incorpora control territorial por tramos para pancartas/carteles repetitivos en postes. Desde Territorio se pueden crear y editar tramos por vía, desde/hasta, distrito, partido, lado, sentido, conteo exacto o estimado, estado y observación; dibujar una LineString sobre mapa o marcar A/B con GPS; visualizar todos los tramos con colores rojo pendiente, amarillo parcial y verde cubierto; vincular evidencias manualmente desde la tarjeta de Evidencias sin convertir PANEL, BANNER, PINTA ni LOCAL PARTIDARIO en tramos; guardar orden y subtipo de tramo por evidencia; y exportar TRAMOS_PROPAGANDA, TRAMO_EVIDENCIAS, TRAMOS_DESTINOS y GeoJSON. Se mantiene separado del recorrido de brigada/RouteCoverage.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOP_v5_8_6_PREVIEW_IGUAL_EVIDENCIA.apk"
+  "apkFilename": "ONE_SHOP_v5_8_7_TRAMOS_PROPAGANDA.apk"
 }
