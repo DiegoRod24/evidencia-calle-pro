@@ -1,8 +1,8 @@
 {
-  "version": "v5.8.2 · ARRANQUE RÁPIDO + UI FLUIDA",
-  "build": "one-shop-v5.8.2-fast-ui-01",
+  "version": "v5.8.3 · ORIENTACIÓN REFORZADA",
+  "build": "one-shop-v5.8.3-orientation-01",
   "released": "2026-09-04",
-  "notes": "Corrección de rendimiento en Android/PWA. La interfaz y botones se enlazan inmediatamente; la carga de evidencias completas desde IndexedDB se hidrata después sin bloquear el arranque; se elimina la preparación automática del Excel al entrar a Reportes; las migraciones históricas pesadas dejan de ejecutarse durante el inicio; localStorage guarda metadatos livianos en lugar de volver a serializar fotos completas tras cada operación. Se mantienen las mejoras v5.8.1 de Excel liviano, orden cronológico, fondo borroso, antiduplicados SHA-256 y validación de GPS.",
+  "notes": "Corrección reforzada de orientación de cámara para Android/iOS. Se normalizan ángulos 0/90/180/270 (incluido 270°, que antes podía caer al lado equivocado), la orientación física se vuelve a leer exactamente al disparar para evitar usar un estado antiguo de la interfaz, se corrige de forma explícita el modo portrait-secondary de 180° y se actualiza la orientación inmediatamente al girar el equipo. También se unifica la carga de parches para evitar dobles ejecuciones y conservar el arranque rápido v5.8.2, junto con Excel liviano, orden cronológico, fondo borroso, antiduplicados y GPS válido de v5.8.1.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOP_v5_8_2_ARRANQUE_RAPIDO.apk"
+  "apkFilename": "ONE_SHOP_v5_8_3_ORIENTACION_REFORZADA.apk"
 }
