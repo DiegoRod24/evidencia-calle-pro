@@ -1,8 +1,8 @@
 {
-  "version": "v5.8.1 · EXCEL LIVIANO + GPS + ANTIDUPLICADOS",
-  "build": "one-shop-v5.8.1-excel-gps-dedup-01",
+  "version": "v5.8.2 · ARRANQUE RÁPIDO + UI FLUIDA",
+  "build": "one-shop-v5.8.2-fast-ui-01",
   "released": "2026-09-04",
-  "notes": "Producción ONE SHOP: exportación Excel ordenada desde la evidencia más antigua a la más reciente; imágenes del Excel optimizadas y comprimidas con marco uniforme y fondo borroso sin modificar la evidencia original; control de duplicados exactos por SHA-256 tanto en captura como en consolidación; ZIP de seleccionadas también sale en orden cronológico; validación reforzada de GPS para no aceptar latitud/longitud cero como posición válida y evitar exportar o abrir Maps con coordenadas inválidas.",
+  "notes": "Corrección de rendimiento en Android/PWA. La interfaz y botones se enlazan inmediatamente; la carga de evidencias completas desde IndexedDB se hidrata después sin bloquear el arranque; se elimina la preparación automática del Excel al entrar a Reportes; las migraciones históricas pesadas dejan de ejecutarse durante el inicio; localStorage guarda metadatos livianos en lugar de volver a serializar fotos completas tras cada operación. Se mantienen las mejoras v5.8.1 de Excel liviano, orden cronológico, fondo borroso, antiduplicados SHA-256 y validación de GPS.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOP_v5_8_1_EXCEL_GPS_ANTIDUPLICADOS.apk"
+  "apkFilename": "ONE_SHOP_v5_8_2_ARRANQUE_RAPIDO.apk"
 }
