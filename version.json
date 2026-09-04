@@ -1,8 +1,8 @@
 {
-  "version": "v5.8.7 · TRAMOS DE PROPAGANDA",
-  "build": "one-shop-v5.8.7-tramos-01",
+  "version": "v5.8.8 · FOTO + VIDEO POR TRAMO",
+  "build": "one-shop-v5.8.8-tramo-media-01",
   "released": "2026-09-04",
-  "notes": "Se incorpora control territorial por tramos para pancartas/carteles repetitivos en postes. Desde Territorio se pueden crear y editar tramos por vía, desde/hasta, distrito, partido, lado, sentido, conteo exacto o estimado, estado y observación; dibujar una LineString sobre mapa o marcar A/B con GPS; visualizar todos los tramos con colores rojo pendiente, amarillo parcial y verde cubierto; vincular evidencias manualmente desde la tarjeta de Evidencias sin convertir PANEL, BANNER, PINTA ni LOCAL PARTIDARIO en tramos; guardar orden y subtipo de tramo por evidencia; y exportar TRAMOS_PROPAGANDA, TRAMO_EVIDENCIAS, TRAMOS_DESTINOS y GeoJSON. Se mantiene separado del recorrido de brigada/RouteCoverage.",
+  "notes": "Cada tramo territorial puede conservar una foto principal y un video principal capturados desde ONE SHOT. Se incorpora cámara propia del tramo con cambio de lente, captura fotográfica y grabación mediante canvas/MediaRecorder para que la marca ONE SHOT quede incorporada en el archivo final. Foto y video incluyen hora, fecha, vía, desde/hasta, distancia, GPS, ID de tramo, código multimedia y sello ONE SHOT VERIFIED. Los archivos completos se guardan en IndexedDB para no inflar localStorage; las tarjetas del tramo muestran miniaturas, duración y acciones para ver, repetir/regrabar y descargar. La grabación respeta orientación vertical/horizontal y mantiene el vínculo permanente con el tramo.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOP_v5_8_7_TRAMOS_PROPAGANDA.apk"
+  "apkFilename": "ONE_SHOP_v5_8_8_FOTO_VIDEO_TRAMOS.apk"
 }
