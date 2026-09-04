@@ -1,8 +1,8 @@
 {
-  "version": "v5.8.0 · CAPTURA RÁPIDA + CÁMARA TRASERA",
-  "build": "one-shop-v5.8.0-fast-capture-rear-02",
-  "released": "2026-08-29",
-  "notes": "Optimización de flujo de campo. ONE SHOP intenta primero la cámara environment/trasera incluso cuando Android todavía no expone etiquetas de dispositivos; solo usa un deviceId directo cuando ya está identificado como cámara posterior. Si el navegador entrega frontal, la app corrige automáticamente a un lente trasero disponible. Al volver a la vista Cámara se reanuda de inmediato sin exigir tocar otra vez Abrir cámara cuando ya existe permiso. También se adelanta el inicio al entrar, se reanuda antes al volver desde segundo plano y la barra posterior a una captura se oculta a los 3.2 s para facilitar capturas consecutivas. Se mantienen sin cambios la evidencia nativa, marca de agua, ZIP y Excel de v5.7.9.",
+  "version": "v5.8.1 · EXCEL LIVIANO + GPS + ANTIDUPLICADOS",
+  "build": "one-shop-v5.8.1-excel-gps-dedup-01",
+  "released": "2026-09-04",
+  "notes": "Producción ONE SHOP: exportación Excel ordenada desde la evidencia más antigua a la más reciente; imágenes del Excel optimizadas y comprimidas con marco uniforme y fondo borroso sin modificar la evidencia original; control de duplicados exactos por SHA-256 tanto en captura como en consolidación; ZIP de seleccionadas también sale en orden cronológico; validación reforzada de GPS para no aceptar latitud/longitud cero como posición válida y evitar exportar o abrir Maps con coordenadas inválidas.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOP_v5_8_0_CAPTURA_RAPIDA_TRASERA.apk"
+  "apkFilename": "ONE_SHOP_v5_8_1_EXCEL_GPS_ANTIDUPLICADOS.apk"
 }
