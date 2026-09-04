@@ -1,8 +1,8 @@
 {
-  "version": "v5.8.3 · ORIENTACIÓN REFORZADA",
-  "build": "one-shop-v5.8.3-orientation-01",
+  "version": "v5.8.4 · EVIDENCIAS UX + ACCIONES",
+  "build": "one-shop-v5.8.4-evidence-ux-01",
   "released": "2026-09-04",
-  "notes": "Corrección reforzada de orientación de cámara para Android/iOS. Se normalizan ángulos 0/90/180/270 (incluido 270°, que antes podía caer al lado equivocado), la orientación física se vuelve a leer exactamente al disparar para evitar usar un estado antiguo de la interfaz, se corrige de forma explícita el modo portrait-secondary de 180° y se actualiza la orientación inmediatamente al girar el equipo. También se unifica la carga de parches para evitar dobles ejecuciones y conservar el arranque rápido v5.8.2, junto con Excel liviano, orden cronológico, fondo borroso, antiduplicados y GPS válido de v5.8.1.",
+  "notes": "Corrección integral de la pantalla Evidencias en móvil: se recuperan acciones visibles por registro (Ver, Editar, Mapa, Local partidario y Borrar), se lleva Local partidario directamente a cada evidencia, se corrigen superposiciones del modo selección, el check deja de quedar cortado, la barra inferior de selección se compacta sin tapar la navegación, se equilibran header y selector de vistas, se reducen espacios muertos, se mejora lista/cuadrícula/tarjeta, se corrige singular/plural de visibles y se mantiene el resto de mejoras de rendimiento, GPS, Excel y orientación.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOP_v5_8_3_ORIENTACION_REFORZADA.apk"
+  "apkFilename": "ONE_SHOP_v5_8_4_EVIDENCIAS_UX.apk"
 }
