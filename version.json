@@ -1,8 +1,8 @@
 {
-  "version": "v5.8.5 · EVIDENCIAS SELECTOR ESTABLE",
-  "build": "one-shop-v5.8.5-evidence-switch-01",
+  "version": "v5.8.6 · PREVIEW = EVIDENCIA",
+  "build": "one-shop-v5.8.6-preview-parity-01",
   "released": "2026-09-04",
-  "notes": "Se corrige el selector de vistas de Evidencias para que pueda cambiar repetidamente entre tarjeta, cuadrícula y lista sin quedar bloqueado tras el primer toque. El selector queda por encima de las tarjetas, con captura táctil estable y sin listeners duplicados. Se corrigen los botones vacíos en cuadrícula y las acciones Ver, Editar, Mapa, Local y Borrar permanecen visibles en todos los modos. Los filtros Hoy/Semana/15 días/Mes/Año/Todo ya no quedan cortados en móvil. Se limita la altura de la vista grande, se equilibran cuadrícula y lista y se mantienen las mejoras anteriores de selección, rendimiento, GPS, orientación y Excel.",
+  "notes": "Se corrige el problema persistente de fotografías horizontales que quedaban giradas al revisar la evidencia. Para la cámara trasera se deja de usar ImageCapture.takePhoto como fuente principal, evitando la doble rotación por EXIF/orientación aplicada por Android y ONE SHOT. La captura se toma directamente del mismo stream de video que ve el operador: lo que se ve al disparar es lo que se guarda. Si el frame del video ya coincide con la orientación física no se rota; solo se aplica 90/-90 cuando las dimensiones realmente no coinciden. Se mantiene zoom, recorte, resolución del stream, marca de agua y se registran ángulo/pipeline de captura para diagnóstico.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOP_v5_8_5_EVIDENCIAS_SELECTOR_ESTABLE.apk"
+  "apkFilename": "ONE_SHOP_v5_8_6_PREVIEW_IGUAL_EVIDENCIA.apk"
 }
