@@ -1,8 +1,8 @@
 {
-  "version": "v5.8.9 · EDITOR DE REVISIÓN",
-  "build": "one-shop-v5.8.9-editor-review-01",
+  "version": "v5.9.0 · EVIDENCIAS RECIENTES PRIMERO",
+  "build": "one-shop-v5.9.0-evidence-latest-first-01",
   "released": "2026-09-05",
-  "notes": "Se reconstruye Editar evidencia para revisión rápida. Las fotos se ordenan explícitamente desde la última toma hacia la más antigua; se añade tira de miniaturas, foto principal, contador y navegación Más nueva/Más antigua; Guardar y ver más antigua; bloques separados de Clasificación, Identificación política, Relación territorial, Ubicación, Corrección de orientación y Observación; selector de Punto/Local y Tramo; tipos PANCARTA EN POSTE y PROPAGANDA REPETITIVA; indicadores de GPS, orientación, integridad, ubicación y clasificación; explicación de pendientes y filtros Todas/Pendientes/Completas; filtrado de candidatos por partido usando datos existentes; corrección izquierda/derecha/180 y restauración del original con historial y hashes; y protección de cambios sin guardar con Guardar y continuar, Descartar o Cancelar.",
+  "notes": "Se corrige el alcance de la mejora anterior: el orden desde la última toma hacia la más antigua pertenece a la pantalla Evidencias, no al editor. Se retira del loader el editor de revisión v5.8.9 y se restaura el Editor simple para correcciones puntuales. Evidencias conserva todos sus filtros existentes pero ahora ordena explícitamente por fecha/hora de captura descendente, mostrando siempre primero la fotografía más reciente. Se añade un indicador 'Última toma primero'. El Excel mantiene su regla independiente de más antiguo a más reciente mediante su pipeline de reporte.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOP_v5_8_9_EDITOR_REVISION.apk"
+  "apkFilename": "ONE_SHOP_v5_9_0_EVIDENCIAS_RECIENTES.apk"
 }
