@@ -1,8 +1,8 @@
 {
-  "version": "v5.9.0 · EVIDENCIAS RECIENTES PRIMERO",
-  "build": "one-shop-v5.9.0-evidence-latest-first-01",
+  "version": "v5.9.1 · EVIDENCIAS RÁPIDAS + TRAMO DESDE FOTO",
+  "build": "one-shop-v5.9.1-evidence-fast-tramo-01",
   "released": "2026-09-05",
-  "notes": "Se corrige el alcance de la mejora anterior: el orden desde la última toma hacia la más antigua pertenece a la pantalla Evidencias, no al editor. Se retira del loader el editor de revisión v5.8.9 y se restaura el Editor simple para correcciones puntuales. Evidencias conserva todos sus filtros existentes pero ahora ordena explícitamente por fecha/hora de captura descendente, mostrando siempre primero la fotografía más reciente. Se añade un indicador 'Última toma primero'. El Excel mantiene su regla independiente de más antiguo a más reciente mediante su pipeline de reporte.",
+  "notes": "Se optimiza la selección individual de evidencias: cada toque actualiza solo la tarjeta seleccionada y el contador, sin reconstruir toda la galería ni recargar imágenes. Se reemplazan los filtros visuales extensos por dos combos compactos: período (24 h, 48 h, Hoy, 7 días, 15 días, Mes, Año, Todo) y revisión (Todas, Solo pendientes, Clasificadas). Se mantiene el orden última toma primero en Evidencias y el orden independiente antiguo→nuevo para reportes/Excel. Se compacta la barra de selección para que Todo, Acciones y Cerrar queden en una sola fila sin superponerse. El botón Tramo de una evidencia ahora abre directamente el mapa centrado en el GPS de esa foto, fija A en el lugar de captura, muestra la ubicación actual del operador, activa el dibujo para marcar B y, al guardar un tramo nuevo, vincula automáticamente la evidencia origen. Los campos vía/distrito/partido se prellenan desde la evidencia y los extremos intentan completar dirección automáticamente.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOP_v5_9_0_EVIDENCIAS_RECIENTES.apk"
+  "apkFilename": "ONE_SHOP_v5_9_1_EVIDENCIAS_RAPIDAS_TRAMO.apk"
 }
