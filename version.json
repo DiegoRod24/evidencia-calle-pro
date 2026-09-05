@@ -1,8 +1,8 @@
 {
-  "version": "v5.9.1 · EVIDENCIAS RÁPIDAS + TRAMO DESDE FOTO",
-  "build": "one-shop-v5.9.1-evidence-fast-tramo-01",
+  "version": "v5.9.2 · SELECCIÓN RESPONSIVE",
+  "build": "one-shop-v5.9.2-selection-bar-01",
   "released": "2026-09-05",
-  "notes": "Se optimiza la selección individual de evidencias: cada toque actualiza solo la tarjeta seleccionada y el contador, sin reconstruir toda la galería ni recargar imágenes. Se reemplazan los filtros visuales extensos por dos combos compactos: período (24 h, 48 h, Hoy, 7 días, 15 días, Mes, Año, Todo) y revisión (Todas, Solo pendientes, Clasificadas). Se mantiene el orden última toma primero en Evidencias y el orden independiente antiguo→nuevo para reportes/Excel. Se compacta la barra de selección para que Todo, Acciones y Cerrar queden en una sola fila sin superponerse. El botón Tramo de una evidencia ahora abre directamente el mapa centrado en el GPS de esa foto, fija A en el lugar de captura, muestra la ubicación actual del operador, activa el dibujo para marcar B y, al guardar un tramo nuevo, vincula automáticamente la evidencia origen. Los campos vía/distrito/partido se prellenan desde la evidencia y los extremos intentan completar dirección automáticamente.",
+  "notes": "Se corrige la superposición de controles al seleccionar evidencias. La barra de selección pasa a una distribución responsive en dos niveles: contador y cerrar arriba; Todo y Acciones abajo, sin solaparse incluso en pantallas angostas. Se elimina el conteo duplicado dentro del botón Acciones porque ya aparece en el resumen, se normalizan tamaños, anchos y áreas de grid, y se conserva la selección rápida incorporada en v5.9.1 sin reconstruir toda la galería.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOP_v5_9_1_EVIDENCIAS_RAPIDAS_TRAMO.apk"
+  "apkFilename": "ONE_SHOP_v5_9_2_SELECCION_RESPONSIVE.apk"
 }
