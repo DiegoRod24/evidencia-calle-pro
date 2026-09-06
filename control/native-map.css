@@ -1,0 +1,15 @@
+/* ONE SHOT CONTROL native map v0.4 */
+#map{overflow:hidden;touch-action:none;user-select:none;cursor:grab}
+#map:active{cursor:grabbing}
+.nm-tiles,.nm-markers,.nm-svg{position:absolute;inset:0}
+.nm-tiles{overflow:hidden;background:#dce8f2}
+.nm-tiles img{position:absolute;width:256px;height:256px;max-width:none;pointer-events:none}
+.nm-markers{pointer-events:none;overflow:hidden}
+.nm-marker{position:absolute;left:0;top:0;width:17px;height:17px;padding:0;border:3px solid #fff;border-radius:50%;background:var(--mc,#2563eb);box-shadow:0 1px 5px #0005;pointer-events:auto;cursor:pointer;z-index:4}
+.nm-marker:hover,.nm-marker.active{width:22px;height:22px;z-index:8}
+.nm-marker.selected{outline:4px solid #2563eb55;width:22px;height:22px}
+.nm-svg{pointer-events:none;z-index:5;overflow:visible}
+.nm-controls{position:absolute;left:10px;top:10px;z-index:10;display:grid;border:1px solid #b7c4d5;border-radius:8px;overflow:hidden;box-shadow:0 1px 5px #0002}
+.nm-controls button{width:34px;height:34px;border:0;border-bottom:1px solid #d4deea;background:#fff;color:#173e72;font-weight:900;font-size:20px;line-height:1}
+.nm-controls button:last-child{border-bottom:0}
+.nm-attr{position:absolute;right:5px;bottom:4px;z-index:7;background:#ffffffd9;padding:2px 5px;font-size:9px;color:#43546b;border-radius:4px}
