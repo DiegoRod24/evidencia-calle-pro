@@ -19,7 +19,7 @@
 - Los tramos se consolidan en la base central mediante un registro compatible y también se conservan localmente como respaldo.
 - Las fotos y videos incluidos en cada ZIP se conservan en IndexedDB del navegador de CONTROL sin contratar almacenamiento adicional.
 - Si la base central no responde, el paquete sigue abriéndose en modo local.
-- Leaflet se carga bajo demanda para evitar bloquear la primera pintura del dashboard.
+- El dashboard conserva el mapa nativo gratuito y no necesita cargar Leaflet.
 
 ## Compatibilidad
 
