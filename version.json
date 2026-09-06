@@ -1,8 +1,8 @@
 {
-  "version": "v5.9.3 · PAQUETES PARA CONTROL",
-  "build": "one-shop-v5.9.3-dashboard-packages-01",
+  "version": "v5.9.4 · LUGARES GUIADOS",
+  "build": "one-shop-v5.9.4-lugares-guiados-01",
   "released": "2026-09-06",
-  "notes": "Se agregan tres descargas separadas y validadas para ONE SHOT CONTROL: Carteles como tramos A-B con Excel, GeoJSON, foto y video; Locales partidarios como categoría exclusiva; y Evidencias solo para Banner, Panel y Pinta. Los videos de tramo ahora pueden grabarse o elegirse del teléfono y la copia elegida se procesa localmente para incorporar la marca de agua, con máximo de 90 segundos y 80 MB. El dashboard recibe cada paquete en su zona correcta, rechaza categorías cruzadas, dibuja los carteles como líneas y conserva la carga local si la base central no está disponible.",
+  "notes": "Lugares incorpora un único flujo guiado para carteles y pancartas: una foto con GPS fija el punto A; el punto B puede marcarse en el mapa, tomarse de la ubicación actual o de otra foto; también puede dibujarse un recorrido con varios puntos. La vía, distrito, Desde y Hasta se completan desde las coordenadas cuando hay conexión y siguen siendo editables. Sin conexión se conserva el tramo con coordenadas. La descarga Carteles incluye la geometría A-B, las fotos de muestra y la multimedia del tramo.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOP_v5_9_3_PAQUETES_CONTROL.apk"
+  "apkFilename": "ONE_SHOP_v5_9_4_LUGARES_GUIADOS.apk"
 }

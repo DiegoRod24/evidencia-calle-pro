@@ -1,4 +1,4 @@
 "use strict";
-// ONE SHOP production loader · v5.9.3
-// Núcleo → correcciones → arranque rápido → orientación → Evidencias UX → selector estable → Preview=Evidencia → Tramos → Foto/Video de tramo → orden Evidencias → selección/filtros/tramo desde foto → barra selección responsive → paquetes separados para CONTROL.
+// ONE SHOP production loader · v5.9.4
+// Núcleo → correcciones → arranque rápido → orientación → Evidencias UX → selector estable → Preview=Evidencia → tramo guiado desde foto/GPS/mapa → Foto/Video de tramo → orden Evidencias → barra selección responsive → paquetes separados para CONTROL.
 document.write('<script src="app-core-v5.6.3.js"><\/script><script src="one-shop-hotfix-v581.js"><\/script><script src="one-shop-fast-boot-v582.js"><\/script><script src="one-shop-orientation-v583.js"><\/script><script src="one-shop-evidence-v584.js"><\/script><script src="one-shop-evidence-v585.js"><\/script><script src="one-shop-camera-parity-v586.js"><\/script><script src="one-shop-tramos-v587.js"><\/script><script src="one-shop-tramo-media-v588.js"><\/script><script src="one-shop-evidence-order-v590.js"><\/script><script src="one-shop-evidence-fast-v591.js"><\/script><script src="one-shop-selection-bar-v592.js"><\/script><script src="one-shop-dashboard-packages-v593.js"><\/script>');
