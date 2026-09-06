@@ -1,5 +1,8 @@
 export async function onRequest(context) {
   const response = await context.next();
+  const pathname = new URL(context.request.url).pathname;
+  // CONTROL es un dashboard independiente: no debe recibir el runtime de la cámara móvil.
+  if (pathname === "/control" || pathname.startsWith("/control/")) return response;
   const contentType = response.headers.get("content-type") || "";
   if (!contentType.includes("text/html")) return response;
 

@@ -1,8 +1,8 @@
 {
-  "version": "v5.9.2 · SELECCIÓN RESPONSIVE",
-  "build": "one-shop-v5.9.2-selection-bar-01",
-  "released": "2026-09-05",
-  "notes": "Se corrige la superposición de controles al seleccionar evidencias. La barra de selección pasa a una distribución responsive en dos niveles: contador y cerrar arriba; Todo y Acciones abajo, sin solaparse incluso en pantallas angostas. Se elimina el conteo duplicado dentro del botón Acciones porque ya aparece en el resumen, se normalizan tamaños, anchos y áreas de grid, y se conserva la selección rápida incorporada en v5.9.1 sin reconstruir toda la galería.",
+  "version": "v5.9.3 · PAQUETES PARA CONTROL",
+  "build": "one-shop-v5.9.3-dashboard-packages-01",
+  "released": "2026-09-06",
+  "notes": "Se agregan tres descargas separadas y validadas para ONE SHOT CONTROL: Carteles como tramos A-B con Excel, GeoJSON, foto y video; Locales partidarios como categoría exclusiva; y Evidencias solo para Banner, Panel y Pinta. Los videos de tramo ahora pueden grabarse o elegirse del teléfono y la copia elegida se procesa localmente para incorporar la marca de agua, con máximo de 90 segundos y 80 MB. El dashboard recibe cada paquete en su zona correcta, rechaza categorías cruzadas, dibuja los carteles como líneas y conserva la carga local si la base central no está disponible.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOP_v5_9_2_SELECCION_RESPONSIVE.apk"
+  "apkFilename": "ONE_SHOP_v5_9_3_PAQUETES_CONTROL.apk"
 }
