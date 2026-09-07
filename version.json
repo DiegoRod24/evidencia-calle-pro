@@ -1,8 +1,8 @@
 {
-  "version": "v5.9.6 · PAQUETE EDITABLE CONTROL",
-  "build": "oneshot-v5.9.6-editable-control-package-01",
+  "version": "v5.9.7 · CATÁLOGO DE PARTIDOS AMPLIADO",
+  "build": "oneshot-v5.9.7-party-catalog-01",
   "released": "2026-09-06",
-  "notes": "La app agrega un Paquete editable CONTROL que conserva por evidencia la foto ORIGINAL y la foto FINAL con marco, además de GPS, UBIGEO, clasificación, hashes, orientación y parámetros de marca. Esto permite auditar/corregir desde CONTROL sin destruir el original.",
+  "notes": "ONE SHOT amplía el catálogo operativo de partidos y mantiene sincronización con CONTROL/Supabase. Se agregan partidos usados en los repositorios operativos y un fallback local para trabajo sin conexión.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOT_v5_9_6_PAQUETE_EDITABLE_CONTROL.apk"
+  "apkFilename": "ONE_SHOT_v5_9_7_PARTIDOS_AMPLIADOS.apk"
 }
