@@ -1,8 +1,8 @@
 {
-  "version": "v5.9.9 · GUARDADO DURABLE DE TRAMOS",
-  "build": "one-shop-v5.9.9-tramos-durables-01",
+  "version": "v5.9.10 · FILTRO DE EVIDENCIAS CORREGIDO",
+  "build": "one-shop-v5.9.10-evidence-filter-recovery-01",
   "released": "2026-09-07",
-  "notes": "Los tramos se guardan ahora en un almacenamiento local independiente y verificado, evitando que una galería grande o el límite de localStorage impidan finalizar. La app restaura los tramos al abrir, confirma únicamente después de comprobar la escritura y revierte el cambio si el teléfono rechaza el almacenamiento.",
+  "notes": "Evidencias abre mostrando todo el historial. Si una combinación de período, revisión o búsqueda deja cero resultados, aparece un botón para limpiar los filtros y recuperar inmediatamente todas las evidencias.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOP_v5_9_9_TRAMOS_DURABLES.apk"
+  "apkFilename": "ONE_SHOP_v5_9_10_FILTRO_EVIDENCIAS.apk"
 }

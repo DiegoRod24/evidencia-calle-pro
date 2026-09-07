@@ -3,7 +3,7 @@
 (function(){
   if(window.ONE_SHOP_EVIDENCE_FAST_591)return;
   window.ONE_SHOP_EVIDENCE_FAST_591=true;
-  const BUILD="one-shop-v5.9.1-evidence-fast-tramo-01";
+  const BUILD="one-shop-v5.9.10-evidence-filter-recovery-01";
 
   const captureTime=r=>{
     const t=Date.parse(String(r?.createdAt||""));
@@ -15,8 +15,9 @@
   const isPending=r=>String(r?.type||"PENDIENTE").trim().toUpperCase()==="PENDIENTE";
   const validGps=g=>g&&Number.isFinite(+g.latitude)&&Number.isFinite(+g.longitude)&&Math.abs(+g.latitude)>1e-6&&Math.abs(+g.longitude)>1e-6;
 
-  State.settings.evidenceRange=State.settings.evidenceRange||(["today","week","15d","month","year","all"].includes(State.filter)?State.filter:"today");
+  State.settings.evidenceRange=State.settings.evidenceRange||(["today","week","15d","month","year","all"].includes(State.filter)?State.filter:"all");
   State.settings.evidenceReviewFilter=State.settings.evidenceReviewFilter||"all";
+  let rangeTouched=false;
 
   function visible(){
     const now=Date.now(),today=Dates.date(new Date(now));
@@ -54,6 +55,8 @@
 #selectionBar .selectionTool span{font-size:17px!important}#selectionBar .selectionTool b{font-size:8px!important;white-space:nowrap!important}
 #selectionBar #selectionActionsBtn b{white-space:normal!important;line-height:1.05!important}
 .tramoEvidenceOrigin591{padding:9px 10px;margin:8px 0;border-radius:12px;background:#eaf2ff;color:#174b9a;font-size:10px;font-weight:850;line-height:1.35}
+.eFilterRecovery591{display:grid;gap:5px;justify-items:center;margin:10px auto 0;padding:12px 16px;border:1px solid #b8d1f7;border-radius:14px;background:#eef5ff;color:#154584;font-weight:900;cursor:pointer}
+.eFilterRecovery591 small{font-size:9px;font-weight:750;color:#61758e}
 @media(max-width:390px){.eQuickFilters591{grid-template-columns:1fr 1fr}.eQuickFilter591{padding:7px 8px}.eQuickFilter591 select{font-size:11px}#selectionBar{grid-template-columns:minmax(0,1fr) 54px 80px 44px!important;left:7px!important;right:7px!important;padding:7px!important}#selectionBar .selectionSummary b{font-size:10px!important}}
 `;
   const style=document.createElement("style");style.id="oneShopEvidenceFast591Css";style.textContent=css;document.head.appendChild(style);
@@ -62,15 +65,17 @@
     const panel=document.querySelector("#viewEvidence .evidencePanel"),search=document.getElementById("searchInput");
     if(!panel||!search||document.getElementById("eQuickFilters591"))return;
     const box=document.createElement("div");box.id="eQuickFilters591";box.className="eQuickFilters591";
-    box.innerHTML=`<label class="eQuickFilter591"><span>Período</span><select id="eRange591"><option value="24h">Últimas 24 horas</option><option value="48h">Últimas 48 horas</option><option value="today">Hoy</option><option value="week">Últimos 7 días</option><option value="15d">Últimos 15 días</option><option value="month">Último mes</option><option value="year">Último año</option><option value="all">Todo</option></select></label><label class="eQuickFilter591"><span>Revisión</span><select id="eReview591"><option value="all">Todas</option><option value="pending">Solo pendientes</option><option value="complete">Clasificadas</option></select></label><div id="eQuickCount591">Última toma primero</div>`;
+    box.innerHTML=`<label class="eQuickFilter591"><span>Período</span><select id="eRange591"><option value="all">Todo el historial</option><option value="today">Hoy</option><option value="24h">Últimas 24 horas</option><option value="48h">Últimas 48 horas</option><option value="week">Últimos 7 días</option><option value="15d">Últimos 15 días</option><option value="month">Último mes</option><option value="year">Último año</option></select></label><label class="eQuickFilter591"><span>Revisión</span><select id="eReview591"><option value="all">Todas las revisiones</option><option value="pending">Solo pendientes</option><option value="complete">Clasificadas</option></select></label><div id="eQuickCount591">Última toma primero</div>`;
     search.insertAdjacentElement("beforebegin",box);
-    $("eRange591").value=State.settings.evidenceRange||"today";
+    $("eRange591").value=State.settings.evidenceRange||"all";
     $("eReview591").value=State.settings.evidenceReviewFilter||"all";
-    $("eRange591").onchange=e=>{State.settings.evidenceRange=e.target.value;State.filter=e.target.value;Store.saveLite();Gallery.render();paintQuickCount();};
+    $("eRange591").onchange=e=>{rangeTouched=true;State.settings.evidenceRange=e.target.value;State.filter=e.target.value;Store.saveLite();Gallery.render();paintQuickCount();};
     $("eReview591").onchange=e=>{State.settings.evidenceReviewFilter=e.target.value;Store.saveLite();Gallery.render();paintQuickCount();};
     paintQuickCount();
   }
   function paintQuickCount(){const x=$("eQuickCount591");if(!x)return;const n=Evidence.visible().length,p=Evidence.visible().filter(isPending).length;x.textContent=`↓ Última toma primero · ${n} visibles${p?` · ${p} pendientes`:""}`;}
+  function clearEvidenceFilters(){rangeTouched=true;State.settings.evidenceRange="all";State.settings.evidenceReviewFilter="all";State.filter="all";State.search="";if($("eRange591"))$("eRange591").value="all";if($("eReview591"))$("eReview591").value="all";if($("searchInput"))$("searchInput").value="";Store.saveLite();Gallery.render();UI.toast(`✓ Mostrando las ${State.records.length} evidencias`,1500,{placement:"top",tone:"soft"});}
+  function paintEmptyRecovery(){if(Evidence.visible().length||!State.records.length)return;const host=$("evidenceList"),empty=host?.querySelector(".hint");if(!empty||empty.querySelector(".eFilterRecovery591"))return;const b=document.createElement("button");b.type="button";b.className="eFilterRecovery591";b.innerHTML=`Ver las ${State.records.length} evidencias<small>Limpiar período, revisión y búsqueda</small>`;b.onclick=clearEvidenceFilters;empty.appendChild(b);}
 
   // Seleccionar una foto ya no reconstruye las 100+ tarjetas ni vuelve a cargar imágenes.
   function paintCardSelection(r){
@@ -91,7 +96,7 @@
 
   // Mantiene el contador compacto actualizado tras renders normales.
   const baseRender=Gallery.render.bind(Gallery);
-  Gallery.render=function(){const out=baseRender();requestAnimationFrame(()=>{paintQuickCount();});return out;};
+  Gallery.render=function(){if(!rangeTouched&&State.records.length&&State.settings.evidenceRange==="today"){const keep=State.settings.evidenceRange;State.settings.evidenceRange="today";if(!visible().length){State.settings.evidenceRange="all";State.filter="all";if($("eRange591"))$("eRange591").value="all";Store.saveLite();}else State.settings.evidenceRange=keep;}const out=baseRender();requestAnimationFrame(()=>{paintQuickCount();paintEmptyRecovery();});return out;};
 
   async function reverseLabel(p,fallback=""){
     try{
@@ -159,5 +164,5 @@
 
   function boot(){injectFilters();patchTramos();try{Gallery.render();localStorage.setItem('oneshotRuntimeBuild',BUILD);}catch(_){};let n=0;const t=setInterval(()=>{if(patchTramos()||++n>30)clearInterval(t)},100);}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else setTimeout(boot,0);
-  console.info('[ONE SHOP] v5.9.1 selección rápida + filtros + tramo desde foto');
+  console.info('[ONE SHOP] v5.9.10 filtros de Evidencias recuperables');
 })();
