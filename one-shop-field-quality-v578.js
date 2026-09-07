@@ -2,7 +2,7 @@
 (()=>{
 'use strict';
 if(window.ONE_SHOP_FIELD_QUALITY_V578)return;
-const BUILD='one-shop-v5.7.8-evidence-report-split-01';
+const BUILD='one-shop-v5.9.13-ios-softfill-01';
 const txt=v=>String(v??'').trim();
 const norm=v=>txt(v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]+/g,' ').replace(/\s+/g,' ').trim();
 const pending=v=>!txt(v)||/pendiente|no disponible|sin dato/i.test(txt(v));
@@ -12,11 +12,24 @@ const LIMA_UBIGEO={'LIMA':'150101','CERCADO DE LIMA':'150101','ANCON':'150102','
 const CALLAO_UBIGEO={'CALLAO':'070101','BELLAVISTA':'070102','CARMEN DE LA LEGUA REYNOSO':'070103','CARMEN DE LA LEGUA':'070103','LA PERLA':'070104','LA PUNTA':'070105','VENTANILLA':'070106','MI PERU':'070107'};
 let mayorPromise=null,mayorMap=null;
 function loadImage(src){return new Promise((res,rej)=>{if(!src)return rej(new Error('Imagen vacía'));const i=new Image();i.onload=()=>res(i);i.onerror=()=>rej(new Error('No se pudo leer la imagen'));i.src=src})}
+function drawSoftCover(ctx,img,W,H,alpha=.78){
+ const low=document.createElement('canvas'),mid=document.createElement('canvas');
+ low.width=80;low.height=60;mid.width=320;mid.height=240;
+ const lx=low.getContext('2d',{alpha:false}),mx=mid.getContext('2d',{alpha:false});
+ const cover=Math.max(low.width/Math.max(1,img.naturalWidth),low.height/Math.max(1,img.naturalHeight));
+ const bw=img.naturalWidth*cover,bh=img.naturalHeight*cover;
+ lx.imageSmoothingEnabled=true;lx.imageSmoothingQuality='high';
+ lx.drawImage(img,(low.width-bw)/2,(low.height-bh)/2,bw,bh);
+ mx.imageSmoothingEnabled=true;mx.imageSmoothingQuality='high';mx.drawImage(low,0,0,mid.width,mid.height);
+ ctx.save();ctx.globalAlpha=alpha;ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+ try{ctx.filter='blur(18px) brightness(.60) saturate(.90)'}catch(_){}
+ ctx.drawImage(mid,-24,-18,W+48,H+36);ctx.restore();
+}
 function rotateImage(src,deg){return new Promise(async resolve=>{try{if(!deg)return resolve(src);const i=await loadImage(src),d=((deg%360)+360)%360,c=document.createElement('canvas'),x=c.getContext('2d',{alpha:false});if(d===90||d===270){c.width=i.naturalHeight;c.height=i.naturalWidth}else{c.width=i.naturalWidth;c.height=i.naturalHeight}x.fillStyle='#000';x.fillRect(0,0,c.width,c.height);x.save();if(d===90){x.translate(c.width,0);x.rotate(Math.PI/2)}else if(d===270){x.translate(0,c.height);x.rotate(-Math.PI/2)}else if(d===180){x.translate(c.width,c.height);x.rotate(Math.PI)}x.drawImage(i,0,0);x.restore();resolve(c.toDataURL('image/jpeg',.94))}catch(_){resolve(src)}})}
 function intendedOrientation(r){const k=txt(r?.captureOrientationKey).toLowerCase();if(k.startsWith('landscape'))return'landscape';if(k==='portrait')return'portrait';const d=norm(r?.deviceOrientation);return d==='LANDSCAPE'?'landscape':d==='PORTRAIT'?'portrait':''}
 async function uprightOriginal(r,source){try{const i=await loadImage(source),actual=i.naturalWidth>=i.naturalHeight?'landscape':'portrait',wanted=intendedOrientation(r);if(!wanted||actual===wanted)return source;const side=txt(r?.captureOrientationSide).toLowerCase();let deg=0;if(wanted==='portrait'&&actual==='landscape')deg=side==='left'?90:-90;else if(wanted==='landscape'&&actual==='portrait')deg=side==='left'?-90:90;return rotateImage(source,deg)}catch(_){return source}}
 function visualKey(r){const g=r?.gps||{},s=typeof State!=='undefined'?State.settings||{}:{};return [r?.sourceHash||'',r?.verifyCode||'',r?.address||'',g.latitude??'',g.longitude??'',g.accuracy??'',r?.fecha||'',r?.hora||'',s.watermarkPosition||'',s.watermarkScale||1,s.watermarkTextScale||1,s.integrityWatermark!==false,s.accentColor||'',s.institutionBrand||''].join('|')}
-async function reportThumbnail(src){try{if(!/^data:image\//i.test(src||''))return src||'';const i=await loadImage(src),W=1600,H=1200,c=document.createElement('canvas'),x=c.getContext('2d',{alpha:false});c.width=W;c.height=H;x.fillStyle='#0A1019';x.fillRect(0,0,W,H);const cover=Math.max(W/i.naturalWidth,H/i.naturalHeight),bw=i.naturalWidth*cover,bh=i.naturalHeight*cover;x.save();x.globalAlpha=.78;try{x.filter='blur(34px) brightness(.60) saturate(.90)'}catch(_){}x.drawImage(i,(W-bw)/2,(H-bh)/2,bw,bh);x.restore();x.fillStyle='rgba(7,12,20,.12)';x.fillRect(0,0,W,H);const pad=10,fit=Math.min((W-pad*2)/i.naturalWidth,(H-pad*2)/i.naturalHeight),fw=i.naturalWidth*fit,fh=i.naturalHeight*fit;x.drawImage(i,(W-fw)/2,(H-fh)/2,fw,fh);return c.toDataURL('image/jpeg',.91)}catch(_){return src||''}}
+async function reportThumbnail(src){try{if(!/^data:image\//i.test(src||''))return src||'';const i=await loadImage(src),W=1600,H=1200,c=document.createElement('canvas'),x=c.getContext('2d',{alpha:false});c.width=W;c.height=H;x.fillStyle='#0A1019';x.fillRect(0,0,W,H);drawSoftCover(x,i,W,H,.78);x.fillStyle='rgba(7,12,20,.12)';x.fillRect(0,0,W,H);const pad=10,fit=Math.min((W-pad*2)/i.naturalWidth,(H-pad*2)/i.naturalHeight),fw=i.naturalWidth*fit,fh=i.naturalHeight*fit;x.drawImage(i,(W-fw)/2,(H-fh)/2,fw,fh);return c.toDataURL('image/jpeg',.91)}catch(_){return src||''}}
 async function ensureVisuals(r,{persist=false,force=false}={}){if(!r)return r;const key=visualKey(r);if(!force&&r.visualBuild===BUILD&&r.visualKey===key&&r.stampedImage&&r.reportThumbnailImage)return r;const source=r.correctedImage||r.image||r.originalImage||r.rescuedImage||'';if(!source)return r;const upright=await uprightOriginal(r,source);let stamped=upright;try{if(typeof Watermark!=='undefined'&&Watermark?.stamp)stamped=await Watermark.stamp(upright,r)}catch(_){}r.stampedImage=stamped;r.evidenceImageVersion='native-full-bleed-v1';r.evidenceOrientation=intendedOrientation(r)||'';try{const si=await loadImage(stamped);r.evidenceImageWidth=si.naturalWidth;r.evidenceImageHeight=si.naturalHeight}catch(_){};try{if(typeof Evidence!=='undefined'&&Evidence?.imageHash)r.stampedHash=await Evidence.imageHash(stamped)}catch(_){}r.reportThumbnailImage=await reportThumbnail(stamped);r.reportThumbnailVersion='4:3-blur-contain-v1';r.reportThumbnailWidth=1600;r.reportThumbnailHeight=1200;r.visualBuild=BUILD;r.visualKey=key;r.visualUpdatedAt=new Date().toISOString();if(persist&&typeof Store!=='undefined')await Store.save(r);return r}
 async function prepareReportImage(r){await ensureVisuals(r,{persist:false});return r?.reportThumbnailImage||r?.stampedImage||r?.image||''}
 function markLegacyDistrict(r,oldProvince){if(!r)return;const city=clean(r.city),dist=clean(r.district);if(pending(oldProvince)&&city&&dist&&norm(city)===norm(dist)&&!r.districtSource){r.districtStatus='REVISAR';r.districtConfidence='LOW';r.districtReviewReason='El geocodificador antiguo usó ciudad como distrito'}}
@@ -32,6 +45,6 @@ async function repairExisting(){try{if(typeof State==='undefined'||!Array.isArra
 function patchAll(){return[patchReverse(),patchCapture(),patchEvidence(),patchBranding()].some(Boolean)}
 function boot(){patchAll();setTimeout(patchAll,180);setTimeout(()=>{patchAll();repairExisting()},900);try{localStorage.setItem('oneShopFieldQualityBuild',BUILD)}catch(_){}}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-window.ONE_SHOP_FIELD_QUALITY_V578={BUILD,reportThumbnail,uprightOriginal,ensureVisuals,prepareReportImage,normalizeTerritory,sanitizeLabels,enrichMayor,patchAll,repairExisting};
+window.ONE_SHOP_FIELD_QUALITY_V578={BUILD,drawSoftCover,reportThumbnail,uprightOriginal,ensureVisuals,prepareReportImage,normalizeTerritory,sanitizeLabels,enrichMayor,patchAll,repairExisting};
 window.ONE_SHOP_FIELD_QUALITY=window.ONE_SHOP_FIELD_QUALITY_V578;
 })();

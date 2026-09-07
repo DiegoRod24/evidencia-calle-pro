@@ -2,7 +2,7 @@
 (()=>{
 'use strict';
 if(window.ONE_SHOP_STABLE_RUNTIME)return;
-const BUILD='one-shop-v5.7.5-capture-report-01';
+const BUILD='one-shop-v5.9.13-ios-softfill-01';
 const $=id=>document.getElementById(id);
 const idle=cb=>('requestIdleCallback'in window?requestIdleCallback(cb,{timeout:7000}):setTimeout(cb,3500));
 const loaded=new Map();
@@ -14,6 +14,12 @@ function loadCss(href){if(document.querySelector(`link[data-one-shop-css="${href
 async function excel(){await loadScript('https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js','ExcelJS');await loadScript('/one-field-report-standard.js','ONE_FIELD_REPORT_STANDARD');try{window.ONE_FIELD_REPORT_STANDARD?.patch?.()}catch(_){}return window.ExcelJS}
 function leaflet(){loadCss('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css');return loadScript('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js','L')}
 function fieldTools(){return loadScript('/one-shop-field-tools-v571.js','ONE_SHOP_FIELD_TOOLS')}
+function drawSoftCover(ctx,img,W,H){
+  const low=document.createElement('canvas'),mid=document.createElement('canvas');low.width=80;low.height=60;mid.width=320;mid.height=240;
+  const lx=low.getContext('2d',{alpha:false}),mx=mid.getContext('2d',{alpha:false}),cover=Math.max(low.width/Math.max(1,img.naturalWidth),low.height/Math.max(1,img.naturalHeight)),bw=img.naturalWidth*cover,bh=img.naturalHeight*cover;
+  lx.imageSmoothingEnabled=true;lx.imageSmoothingQuality='high';lx.drawImage(img,(low.width-bw)/2,(low.height-bh)/2,bw,bh);mx.imageSmoothingEnabled=true;mx.imageSmoothingQuality='high';mx.drawImage(low,0,0,mid.width,mid.height);
+  ctx.save();ctx.globalAlpha=.34;ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';try{ctx.filter='blur(18px) brightness(.72)'}catch(_){}ctx.drawImage(mid,-24,-18,W+48,H+36);ctx.restore();
+}
 function replay(el,type='click'){const ev=type==='click'?new MouseEvent('click',{bubbles:true,cancelable:true,view:window}):new Event(type,{bubbles:true,cancelable:true});Object.defineProperty(ev,'__oneShopReplay',{value:true});el.dispatchEvent(ev)}
 const excelIds=new Set(['previewReportBtn','downloadXlsxBtn','shareXlsxBtn','previewDownloadBtn','previewShareBtn','bulkDownloadExcel','bulkShareExcel']);
 const mapIds=new Set(['coverageOpenBtn','placesRadarBtn','editOpenMaps','viewerMaps','sscStartDrawBtn','sscGpsSquareBtn']);
@@ -40,10 +46,7 @@ function report43(dataUrl){
       const W=1600,H=1200,c=document.createElement('canvas');c.width=W;c.height=H;
       const ctx=c.getContext('2d',{alpha:false});
       ctx.fillStyle='#0B1320';ctx.fillRect(0,0,W,H);
-      const bg=Math.max(W/Math.max(1,img.naturalWidth),H/Math.max(1,img.naturalHeight));
-      const bw=img.naturalWidth*bg,bh=img.naturalHeight*bg;
-      ctx.save();ctx.globalAlpha=.34;try{ctx.filter='blur(28px) brightness(.72)'}catch(_){};
-      ctx.drawImage(img,(W-bw)/2,(H-bh)/2,bw,bh);ctx.restore();
+      drawSoftCover(ctx,img,W,H);
       const pad=18,fg=Math.min((W-pad*2)/Math.max(1,img.naturalWidth),(H-pad*2)/Math.max(1,img.naturalHeight));
       const fw=img.naturalWidth*fg,fh=img.naturalHeight*fg;
       ctx.drawImage(img,(W-fw)/2,(H-fh)/2,fw,fh);
@@ -118,5 +121,5 @@ function injectOptionalCloud(){const grid=document.querySelector('.toolGrid');if
 function styleEvidence(){if($('oneShopStableCss'))return;const s=document.createElement('style');s.id='oneShopStableCss';s.textContent=`#evidenceList .eMedia{background:#071326!important;overflow:hidden!important;aspect-ratio:4/3!important}#evidenceList .eMedia img,.reportPreviewList img{object-fit:contain!important;object-position:center!important;background:#071326!important}#oneShopOptionalCloud small{color:inherit;opacity:.72}`;document.head.appendChild(s)}
 function boot(){patchBoot();styleEvidence();injectOptionalCloud();setTimeout(()=>{patchBoot();injectOptionalCloud()},500);setTimeout(()=>{patchBoot();injectOptionalCloud()},1800)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-window.ONE_SHOP_STABLE_RUNTIME={BUILD,excel,leaflet,fieldTools,patchBoot,report43,normalizeTerritory};
+window.ONE_SHOP_STABLE_RUNTIME={BUILD,excel,leaflet,fieldTools,patchBoot,drawSoftCover,report43,normalizeTerritory};
 })();

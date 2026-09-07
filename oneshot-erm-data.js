@@ -2,7 +2,7 @@ window.ONE_SHOT_DATA={parties:["ALIANZA PARA EL PROGRESO","FUERZA POPULAR","PART
 
 (()=>{
 'use strict';
-const BUILD='one-shop-field-boot-20260829-02-fastcapture';
+const BUILD='one-shop-field-boot-20260907-01-ios-softfill';
 function load(src,key){if(key&&window[key])return Promise.resolve(window[key]);return new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.async=false;s.dataset.oneShopBuild=BUILD;s.onload=()=>resolve(key?window[key]:true);s.onerror=()=>reject(new Error('No se pudo cargar '+src));document.head.appendChild(s)});}
 function patchFastCapture(){
   try{
@@ -26,9 +26,9 @@ async function boot(){
   if(window.__ONE_SHOP_FIELD_BOOT===BUILD)return;window.__ONE_SHOP_FIELD_BOOT=BUILD;
   let n=0;const fast=setInterval(()=>{if(patchFastCapture()||++n>100)clearInterval(fast)},25);
   try{
-    await load('/one-shop-stable-runtime.js?v=20260829-02-fastcapture','ONE_SHOP_STABLE_RUNTIME');
-    await load('/one-shop-field-quality-v578.js?v=20260829-02-fastcapture','ONE_SHOP_FIELD_QUALITY_V578');
-    await load('/one-shop-excel-thumb-v579.js?v=20260829-02-fastcapture','ONE_SHOP_EXCEL_THUMB_V579');
+    await load('/one-shop-stable-runtime.js?v=20260907-01-ios-softfill','ONE_SHOP_STABLE_RUNTIME');
+    await load('/one-shop-field-quality-v578.js?v=20260907-01-ios-softfill','ONE_SHOP_FIELD_QUALITY_V578');
+    await load('/one-shop-excel-thumb-v579.js?v=20260907-01-ios-softfill','ONE_SHOP_EXCEL_THUMB_V579');
     await load('/one-shop-storage-lite-v578.js?v=20260829-02-fastcapture','ONE_SHOP_STORAGE_LITE_V578');
     await load('/one-field-report-standard.js?v=20260829-02-fastcapture','ONE_FIELD_REPORT_STANDARD_V8');
     patchFastCapture();

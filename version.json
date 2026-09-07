@@ -1,8 +1,8 @@
 {
-  "version": "v5.9.12 · ARRANQUE SEGURO",
-  "build": "one-shop-v5.9.12-safe-boot-01",
+  "version": "v5.9.13 · FOTOS IPHONE 4:3",
+  "build": "one-shop-v5.9.13-ios-softfill-01",
   "released": "2026-09-07",
-  "notes": "Arranque resistente a conexiones lentas: el splash siempre se libera, los archivos principales abren desde caché y las actualizaciones eliminan cachés antiguos sin tocar las evidencias.",
+  "notes": "Las fotos verticales de iPhone ahora se presentan en 4:3 con la imagen completa centrada y un fondo realmente desenfocado, incluso cuando Safari no admite el filtro blur de canvas. El original permanece intacto y el mismo acabado se usa en evidencias, descargas y Excel. Incluye además el arranque seguro de v5.9.12.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOP_v5_9_12_ARRANQUE_SEGURO.apk"
+  "apkFilename": "ONE_SHOP_v5_9_13_FOTOS_IPHONE_4X3.apk"
 }
