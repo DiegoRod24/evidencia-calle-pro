@@ -1,8 +1,8 @@
 {
-  "version": "v5.9.11 · FILTRO DE EVIDENCIAS CORREGIDO",
-  "build": "one-shop-v5.9.11-evidence-filter-recovery-02",
+  "version": "v5.9.12 · ARRANQUE SEGURO",
+  "build": "one-shop-v5.9.12-safe-boot-01",
   "released": "2026-09-07",
-  "notes": "Evidencias abre mostrando todo el historial. Si una combinación de período, revisión o búsqueda deja cero resultados, aparece un botón para limpiar los filtros y recuperar inmediatamente todas las evidencias.",
+  "notes": "Arranque resistente a conexiones lentas: el splash siempre se libera, los archivos principales abren desde caché y las actualizaciones eliminan cachés antiguos sin tocar las evidencias.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOP_v5_9_11_FILTRO_EVIDENCIAS.apk"
+  "apkFilename": "ONE_SHOP_v5_9_12_ARRANQUE_SEGURO.apk"
 }

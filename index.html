@@ -26,6 +26,13 @@
     <div class="splashSub">UNA TOMA. EVIDENCIA REAL.</div>
     <div class="splashCapture">CAPTURANDO EVIDENCIA</div>
   </div>
+  <script>
+    (()=>{
+      const releaseSplash=()=>{const splash=document.getElementById("splash");if(!splash)return;splash.style.opacity="0";splash.style.visibility="hidden";splash.style.pointerEvents="none";setTimeout(()=>splash.remove(),450)};
+      window.addEventListener("load",()=>setTimeout(releaseSplash,150),{once:true});
+      setTimeout(releaseSplash,4500);
+    })();
+  </script>
 
   <div class="appShell">
     <header class="topbar">
