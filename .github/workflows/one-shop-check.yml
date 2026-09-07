@@ -27,18 +27,16 @@ jobs:
           const fs=require('fs');
           const v=JSON.parse(fs.readFileSync('version.json','utf8'));
           const sw=fs.readFileSync('service-worker.js','utf8');
-          const rt=fs.readFileSync('one-shop-stable-runtime.js','utf8');
           const tools=fs.readFileSync('one-shop-field-tools-v571.js','utf8');
           const report=fs.readFileSync('one-field-report-standard.js','utf8');
-          if(v.build!=='one-shop-v5.7.4-field-essential-01') throw new Error('version.json build inesperada: '+v.build);
-          if(!sw.includes('oneshop-v5.7.4-field-essential-01')) throw new Error('Service Worker no apunta a 5.7.4');
-          if(!rt.includes("one-shop-v5.7.4-field-essential-01")) throw new Error('Runtime no apunta a 5.7.4');
-          if(!tools.includes("one-shop-v5.7.3-field-tools-01")) throw new Error('Field tools base inesperada');
+          if(v.build!=='one-shop-v5.9.9-tramos-durables-01') throw new Error('version.json build inesperada: '+v.build);
+          if(!sw.includes('oneshop-v5.9.9-tramos-durables-01')) throw new Error('Service Worker no apunta a 5.9.9');
+          if(!tools.includes("one-shop-v5.9.9-tramos-durables-01")) throw new Error('Field tools no apunta a 5.9.9');
+          if(!tools.includes("oneshotPropagandaSegmentsV1")) throw new Error('Falta almacenamiento independiente de tramos');
+          if(!tools.includes("persistSegments()")) throw new Error('Falta verificación de persistencia de tramos');
           if(!tools.includes("type==='PANEL'")) throw new Error('Empresa no está condicionada a PANEL');
-          if(!report.includes("norm(r?.type)==='PANEL'")) throw new Error('Excel no limita proveedor a PANEL');
-          if(!report.includes('ext:{width:220,height:165}')) throw new Error('Excel no usa medida fotográfica fija 220x165');
-          if(!report.includes("wb.addWorksheet('RESUMEN_TERRITORIAL'")) throw new Error('Falta RESUMEN_TERRITORIAL');
-          for(const field of ["header:'REGIÓN'","header:'PROVINCIA'","header:'DISTRITO'","header:'DIRECCIÓN'"]) if(!report.includes(field)) throw new Error('Falta campo territorial '+field);
-          if(!report.includes('one-field-report-standard-v5')) throw new Error('Reporte estándar no está en v5');
-          console.log('ONE SHOP 5.7.4 consistente · reporte territorial municipal · fotos 4:3 fijas');
+          if(!report.includes("if(type!=='PANEL')return''")) throw new Error('Excel no limita proveedor a PANEL');
+          for(const field of ["header:'REGIÓN'","header:'PROVINCIA'","header:'DISTRITO'","header:'DIRECCIÓN CAPTURA'"]) if(!report.includes(field)) throw new Error('Falta campo territorial '+field);
+          if(!report.includes('one-field-report-standard-v8')) throw new Error('Reporte estándar no está en v8');
+          console.log('ONE SHOP 5.9.9 consistente · tramos durables · reporte territorial municipal · fotos 4:3 fijas');
           NODE

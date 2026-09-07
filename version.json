@@ -1,8 +1,8 @@
 {
-  "version": "v5.9.8 · GUARDADO INMEDIATO DE TRAMOS",
-  "build": "one-shop-v5.9.8-guardado-tramos-01",
+  "version": "v5.9.9 · GUARDADO DURABLE DE TRAMOS",
+  "build": "one-shop-v5.9.9-tramos-durables-01",
   "released": "2026-09-07",
-  "notes": "Finalizar tramo ahora guarda primero en el teléfono y confirma inmediatamente, sin esperar la actualización de la foto en IndexedDB. El botón muestra el progreso, impide pulsaciones repetidas y presenta los errores junto al botón. Si el conteo está en Aproximado o Exacto con cantidad cero, se resalta y enfoca el campo; No contado permite guardar con cero. Después aparece una confirmación verde y el tramo queda disponible para Descargar Carteles. Se conservan el catálogo ampliado, la sincronización con CONTROL y el paquete editable original más final.",
+  "notes": "Los tramos se guardan ahora en un almacenamiento local independiente y verificado, evitando que una galería grande o el límite de localStorage impidan finalizar. La app restaura los tramos al abrir, confirma únicamente después de comprobar la escritura y revierte el cambio si el teléfono rechaza el almacenamiento.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOP_v5_9_8_GUARDADO_TRAMOS.apk"
+  "apkFilename": "ONE_SHOP_v5_9_9_TRAMOS_DURABLES.apk"
 }
