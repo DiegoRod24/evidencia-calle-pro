@@ -1,8 +1,8 @@
 {
-  "version": "v5.9.5 · CATÁLOGOS COMPARTIDOS",
-  "build": "oneshop-v5.9.5-shared-catalogs-01",
+  "version": "v5.9.6 · PAQUETE EDITABLE CONTROL",
+  "build": "oneshot-v5.9.6-editable-control-package-01",
   "released": "2026-09-06",
-  "notes": "ONE SHOT y ONE SHOT CONTROL comparten catálogos maestros de proceso, partido, candidato, cargo, tipo de evidencia y proveedor. CONTROL incorpora selección en cascada, validación de calidad y administración de catálogos. La app móvil sincroniza los catálogos desde Supabase y conserva una copia local para trabajo offline.",
+  "notes": "La app agrega un Paquete editable CONTROL que conserva por evidencia la foto ORIGINAL y la foto FINAL con marco, además de GPS, UBIGEO, clasificación, hashes, orientación y parámetros de marca. Esto permite auditar/corregir desde CONTROL sin destruir el original.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOT_v5_9_5_CATALOGOS_COMPARTIDOS.apk"
+  "apkFilename": "ONE_SHOT_v5_9_6_PAQUETE_EDITABLE_CONTROL.apk"
 }
