@@ -1,8 +1,8 @@
 {
-  "version": "v5.9.13 · FOTOS IPHONE 4:3",
-  "build": "one-shop-v5.9.13-ios-softfill-01",
+  "version": "v5.9.14 · IPHONE 4:3 + UBICACIÓN",
+  "build": "one-shop-v5.9.14-ios-location-01",
   "released": "2026-09-07",
-  "notes": "Las fotos verticales de iPhone ahora se presentan en 4:3 con la imagen completa centrada y un fondo realmente desenfocado, incluso cuando Safari no admite el filtro blur de canvas. El original permanece intacto y el mismo acabado se usa en evidencias, descargas y Excel. Incluye además el arranque seguro de v5.9.12.",
+  "notes": "Conserva la mejora de fotos iPhone 4:3 con fondo desenfocado y agrega el asistente de ubicación para iPhone y Android: solicita permiso mediante un toque, explica cómo desbloquearlo, detecta GPS apagado o sin señal y evita nuevas evidencias sin coordenadas válidas.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOP_v5_9_13_FOTOS_IPHONE_4X3.apk"
+  "apkFilename": "ONE_SHOP_v5_9_14_IPHONE_UBICACION.apk"
 }
