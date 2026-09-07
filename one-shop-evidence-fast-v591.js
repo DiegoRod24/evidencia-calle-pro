@@ -3,7 +3,7 @@
 (function(){
   if(window.ONE_SHOP_EVIDENCE_FAST_591)return;
   window.ONE_SHOP_EVIDENCE_FAST_591=true;
-  const BUILD="one-shop-v5.9.10-evidence-filter-recovery-01";
+  const BUILD="one-shop-v5.9.11-evidence-filter-recovery-02";
 
   const captureTime=r=>{
     const t=Date.parse(String(r?.createdAt||""));
@@ -21,7 +21,7 @@
 
   function visible(){
     const now=Date.now(),today=Dates.date(new Date(now));
-    const range=State.settings.evidenceRange||"today",review=State.settings.evidenceReviewFilter||"all";
+    const range=State.settings.evidenceRange||"all",review=State.settings.evidenceReviewFilter||"all";
     let list=[...State.records];
     if(range==="24h")list=list.filter(r=>now-captureTime(r)<=24*3600000);
     else if(range==="48h")list=list.filter(r=>now-captureTime(r)<=48*3600000);
@@ -122,7 +122,9 @@
   }
 
   function patchTramos(){
-    const T=window.PropagandaTramos;if(!T||T.__evidence591)return false;T.__evidence591=true;
+    const T=window.PropagandaTramos;if(!T||T.__evidence591)return false;
+    if(typeof T.assign!=="function"||typeof T.save!=="function"||typeof T.open!=="function"||typeof T.paint!=="function")return false;
+    T.__evidence591=true;
     const baseAssign=T.assign.bind(T),baseSave=T.save.bind(T);
     T.assign=async function(id){
       const r=State.records.find(x=>x.id===id);if(!r)return;
@@ -164,5 +166,5 @@
 
   function boot(){injectFilters();patchTramos();try{Gallery.render();localStorage.setItem('oneshotRuntimeBuild',BUILD);}catch(_){};let n=0;const t=setInterval(()=>{if(patchTramos()||++n>30)clearInterval(t)},100);}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else setTimeout(boot,0);
-  console.info('[ONE SHOP] v5.9.10 filtros de Evidencias recuperables');
+  console.info('[ONE SHOP] v5.9.11 filtros de Evidencias recuperables');
 })();
