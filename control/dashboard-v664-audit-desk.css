@@ -1,0 +1,43 @@
+/* ONE SHOT CONTROL v6.64 · mesa de auditoría */
+#geoAuditModal .gaShell{display:flex;flex-direction:column;overflow:hidden;max-width:1440px;width:min(94vw,1440px);height:min(94vh,980px)}
+#geoAuditModal .gaBody{flex:1;min-height:0;min-width:0;overflow:hidden;grid-template-columns:minmax(360px,42%) minmax(0,58%)}
+#geoAuditModal .gaPhotoPane,#geoAuditModal .gaContent,#geoAuditModal .gaPane{min-width:0;max-width:100%}
+#geoAuditModal .gaContent{overflow-x:hidden!important;overflow-y:auto!important;overscroll-behavior:contain}
+#geoAuditModal .gaPane{overflow-x:hidden!important}
+#geoAuditModal .gaPartyGrid{min-width:0!important;max-width:100%!important;overflow-x:hidden!important;grid-template-columns:repeat(3,minmax(0,1fr))!important}
+#geoAuditModal .gaParty{min-width:0!important;max-width:100%;overflow:hidden}
+#geoAuditModal .gaParty span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#geoAuditModal .gaPhotoStage{background:#07192d;display:flex;align-items:center;justify-content:center;min-height:280px;max-height:52vh;overflow:hidden}
+#geoAuditModal .gaPhotoStage img{width:100%;height:100%;max-height:52vh;object-fit:contain!important;background:#07192d}
+#geoAuditModal .gaPhotoPane{overflow-y:auto;overflow-x:hidden;background:#0c2948;overscroll-behavior:contain}
+#geoAuditModal .gaHead{flex:0 0 auto}
+#geoAuditModal .gaTabs{flex:0 0 auto}
+
+.v664AuditBar{display:flex;align-items:center;gap:10px;padding:8px 14px;background:#fff;border-bottom:1px solid #dbe5ef;flex-wrap:wrap;flex:0 0 auto}
+.v664AuditState{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:900;padding:6px 10px;border-radius:999px;background:#fff7ed;color:#9a4d08;border:1px solid #fed7aa}
+.v664AuditState.blocked{background:#fff1f2;color:#9f1239;border-color:#fecdd3}.v664AuditState.ready{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}.v664AuditState.accepted{background:#ecfdf5;color:#166534;border-color:#bbf7d0}
+.v664Checks{display:flex;gap:6px;flex-wrap:wrap;min-width:0}.v664Check{font-size:9px;font-weight:900;padding:5px 8px;border-radius:999px;background:#fff7ed;color:#92400e;border:1px solid #fde68a;white-space:nowrap}.v664Check.ok{background:#ecfdf5;color:#166534;border-color:#bbf7d0}.v664Check.bad{background:#fff1f2;color:#991b1b;border-color:#fecaca}
+.v664Progress{margin-left:auto;font-size:9px;font-weight:800;color:#64748b;white-space:nowrap}
+
+.v664Nav{display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:12px}.v664Nav button{border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.09);color:white;border-radius:9px;padding:7px 10px;font-weight:900;cursor:pointer}.v664Nav button:disabled{opacity:.35;cursor:not-allowed}.v664Nav span{font-size:10px;font-weight:900;color:#dbeafe;min-width:52px;text-align:center}
+
+#geoAuditModal .deliveryReview.v664Delivery{background:#fff;color:#0f2744;border-radius:14px;margin:10px;padding:12px;box-shadow:none}
+.v664DeliveryHead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.v664DeliveryHead h4{margin:0;font-size:14px}.v664DeliveryHead p{margin:3px 0 0;font-size:9px;color:#6b7e94}.v664Origin{font-size:8px;font-weight:900;background:#eef4fb;border-radius:999px;padding:5px 7px;color:#536a84;white-space:nowrap}
+.v664StateGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:10px 0}.v664State{border:1px solid #d7e2ee;border-radius:10px;padding:8px;background:#f8fbff}.v664State small{display:block;font-size:7px;font-weight:900;color:#71859c}.v664State b{display:block;margin-top:3px;font-size:10px}.v664State.ok{background:#ecfdf5;border-color:#bbf7d0;color:#166534}.v664State.warn{background:#fff8e8;border-color:#f6d68a;color:#92510b}.v664State.bad{background:#fff1f2;border-color:#fecaca;color:#991b1b}
+.v664Views{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.v664Views button{border:1px solid #cfdce9;background:#fff;color:#27445f;border-radius:999px;padding:6px 9px;font-size:8px;font-weight:900;cursor:pointer}.v664Views button.on{background:#0d3a69;color:#fff;border-color:#0d3a69}.v664Views button:disabled{opacity:.45;cursor:not-allowed}
+.v664Validation{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.v664ValidateCard{border:1px solid #dce5ef;border-radius:11px;padding:9px;background:#fbfdff}.v664ValidateCard header{display:flex;justify-content:space-between;align-items:center;gap:6px}.v664ValidateCard header b{font-size:10px}.v664ValidateCard header span{font-size:8px;font-weight:900;color:#6b7e94}.v664ValidateBtns{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:7px}.v664ValidateBtns button{border:1px solid #cddbe8;border-radius:8px;background:#fff;padding:7px 6px;font-size:8px;font-weight:900;cursor:pointer}.v664ValidateBtns .yes{background:#effcf3;color:#166534;border-color:#b9e6c4}.v664ValidateBtns .no{background:#fff4f4;color:#991b1b;border-color:#f1c5c5}
+.v664Note{width:100%;box-sizing:border-box;border:1px solid #d6e1ec;border-radius:9px;padding:8px 9px;font:inherit;font-size:9px;margin-top:8px}
+.v664Tools{margin-top:8px;border:1px solid #dbe5ef;border-radius:10px;background:#f8fbff;padding:8px}.v664Tools summary{cursor:pointer;font-size:9px;font-weight:900;color:#264967}.v664ToolGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:8px}.v664ToolGrid button{border:1px solid #cddbe8;background:#fff;border-radius:8px;padding:7px;font-size:8px;font-weight:900;cursor:pointer}.v664ToolGrid button:disabled{opacity:.42;cursor:not-allowed}.v664Safety{font-size:8px;color:#6c8196;line-height:1.4;margin-top:7px}.v664Safety.warn{color:#9a5b0c;background:#fff7e8;border-radius:8px;padding:7px}
+.v664AcceptBox{margin-top:9px}.v664AcceptBox button{width:100%;border:0;border-radius:9px;padding:10px;font-weight:950;font-size:9px;background:#e8eef5;color:#6d7e91;cursor:not-allowed}.v664AcceptBox button.ready{background:#16a34a;color:#fff;cursor:pointer}.v664AcceptBox small{display:block;margin-top:5px;font-size:8px;color:#687b90;line-height:1.35}
+.v664Tech details{margin-top:8px}.v664Tech summary{font-size:8px;font-weight:900;color:#60748b;cursor:pointer}.v664Tech p{font-size:8px!important;margin:6px 0!important;color:#6d8093!important}
+
+.v664SelectedParty{display:flex;align-items:center;gap:9px;border:1px solid #bdd4ff;background:#f1f6ff;border-radius:11px;padding:8px 10px;margin:7px 0}.v664SelectedParty i{width:38px;height:38px;border-radius:9px;background:white;border:1px solid #d9e4ef;display:flex;align-items:center;justify-content:center;overflow:hidden;flex:0 0 auto}.v664SelectedParty img{width:100%;height:100%;object-fit:contain;padding:3px;box-sizing:border-box}.v664SelectedParty div{min-width:0}.v664SelectedParty small{display:block;font-size:7px;font-weight:900;color:#53708e}.v664SelectedParty b{display:block;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v664SelectedParty button{margin-left:auto;border:1px solid #b8cbe0;background:#fff;border-radius:8px;padding:6px 8px;font-size:8px;font-weight:900;cursor:pointer}
+#geoAuditModal .gaPartyGrid.v664PartyCompact .gaParty{display:none}#geoAuditModal .gaPartyGrid.v664PartyCompact .gaParty.v664Show{display:flex}#geoAuditModal .gaPartyGrid.v664PartyCompact.v664All .gaParty{display:flex}
+#geoAuditModal .gaPartyGrid.v664PartyCompact.v664Searching .gaParty{display:flex}
+#v650CatalogSummary,.v650CatalogSummary,#geoAuditModal .catalogSummary{display:none!important}
+.v664PartyToggle{border:1px solid #cbd9e8;background:#fff;border-radius:8px;padding:6px 9px;font-size:8px;font-weight:900;color:#2d4a67;cursor:pointer;margin:6px 0}
+
+.v664Footer{flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:9px 14px;background:#fff;border-top:1px solid #d7e2ed;box-shadow:0 -5px 16px rgba(15,39,68,.08);z-index:8}.v664Footer .spacer{flex:1}.v664Footer button{border:1px solid #cad8e5;background:#fff;border-radius:9px;padding:8px 12px;font-size:9px;font-weight:900;cursor:pointer}.v664Footer .save{color:#144a7b}.v664Footer .next{background:#1769e0;color:#fff;border-color:#1769e0}.v664Footer button:disabled{opacity:.4;cursor:not-allowed}.v664Footer span{font-size:8px;color:#6d7f92;font-weight:800}
+
+@media(max-width:1050px){#geoAuditModal .gaBody{grid-template-columns:1fr}.v664Validation{grid-template-columns:1fr}#geoAuditModal .gaPhotoPane{max-height:44vh}.v664Progress{display:none}}
+@media(max-width:760px){#geoAuditModal .gaPartyGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.v664Footer span{display:none}.v664Footer button{padding:8px}.v664StateGrid{grid-template-columns:1fr}.v664Nav{margin-left:0}.v664Nav span{display:none}}
