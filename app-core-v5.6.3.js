@@ -1050,8 +1050,8 @@ const Watermark = {
 
     // technical metadata gets its own quieter row
     const metaY=addrY+addressH+rowGap;
-    const gpsText=r.gps?`${Number(r.gps.latitude).toFixed(6)}, ${Number(r.gps.longitude).toFixed(6)} · ±${Math.round(r.gps.accuracy)}m`:`GPS pendiente`;
-    ctx.font=`550 ${metaSize}px system-ui`;ctx.fillStyle="rgba(255,255,255,.86)";shadow(.48);ctx.fillText(`GPS ${gpsText}`,pad,metaY+metaSize);clearShadow();
+    const gpsText=r.gps?`GPS ${Number(r.gps.latitude).toFixed(6)}, ${Number(r.gps.longitude).toFixed(6)} · ±${Math.round(r.gps.accuracy)}m`:`GPS pendiente`;
+    ctx.font=`550 ${metaSize}px system-ui`;ctx.fillStyle="rgba(255,255,255,.86)";shadow(.48);ctx.fillText(gpsText,pad,metaY+metaSize);clearShadow();
 
     // code line has its own separator and spacing
     const lineY=metaY+metaH+rowGap*.60;
