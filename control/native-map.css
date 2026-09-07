@@ -5,10 +5,21 @@
 .nm-tiles{overflow:hidden;background:#dce8f2}
 .nm-tiles img{position:absolute;width:256px;height:256px;max-width:none;pointer-events:none}
 .nm-markers{pointer-events:none;overflow:hidden}
-.nm-marker{position:absolute;left:0;top:0;width:17px;height:17px;padding:0;border:3px solid #fff;border-radius:50%;background:var(--mc,#2563eb);box-shadow:0 1px 5px #0005;pointer-events:auto;cursor:pointer;z-index:4}
+.nm-marker{position:absolute;left:0;top:0;width:17px;height:17px;padding:0;border:3px solid #fff;border-radius:50%;background:var(--mc,#2563eb);box-shadow:0 1px 5px #0005;pointer-events:auto;cursor:pointer;z-index:4;color:#fff;font-size:0}
 .nm-marker:hover,.nm-marker.active{width:22px;height:22px;z-index:8}
 .nm-marker.selected{outline:4px solid #2563eb55;width:22px;height:22px}
+.nm-marker.localMarker{width:25px;height:25px;border-radius:8px;background:#0f766e;font-size:17px;line-height:18px;font-weight:900;box-shadow:0 2px 8px #073b3970}
+.nm-marker.localMarker:hover,.nm-marker.localMarker.active{width:31px;height:31px;font-size:20px}
 .nm-svg{pointer-events:none;z-index:5;overflow:visible}
+.corridorGroup{pointer-events:visibleStroke;cursor:pointer}
+.corridorHit{fill:none;stroke:transparent;stroke-width:26;pointer-events:stroke}
+.corridorLine{fill:none;stroke:#7c3aed;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;opacity:.9;pointer-events:none;filter:drop-shadow(0 2px 2px #3b076455)}
+.corridorGroup:hover .corridorLine,.corridorGroup.active .corridorLine{stroke:#5b21b6;stroke-width:11;opacity:1}
+.corridorMid{fill:#fff;stroke:#7c3aed;stroke-width:3;pointer-events:none}
+.corridorEnd{stroke:#fff;stroke-width:3;pointer-events:none;filter:drop-shadow(0 1px 2px #0005)}
+.corridorEnd.a{fill:#16a34a}.corridorEnd.b{fill:#dc2626}
+.corridorEndText{fill:#fff;font:900 10px Inter,system-ui,sans-serif;text-anchor:middle;pointer-events:none}
+.corridorLabel{fill:#321b6f;paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round;font:900 11px Inter,system-ui,sans-serif;text-anchor:middle;pointer-events:none}
 .nm-controls{position:absolute;left:10px;top:10px;z-index:10;display:grid;border:1px solid #b7c4d5;border-radius:8px;overflow:hidden;box-shadow:0 1px 5px #0002}
 .nm-controls button{width:34px;height:34px;border:0;border-bottom:1px solid #d4deea;background:#fff;color:#173e72;font-weight:900;font-size:20px;line-height:1}
 .nm-controls button:last-child{border-bottom:0}

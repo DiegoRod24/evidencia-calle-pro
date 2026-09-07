@@ -1,0 +1,32 @@
+.corridorAB {
+  display: block;
+  margin-top: 7px;
+  line-height: 2;
+}
+
+.corridorAB i {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: #16a34a;
+  color: #fff;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.corridorAB i.b {
+  background: #dc2626;
+}
+
+@media (max-width: 620px) {
+  .v663Legend {
+    padding: 7px 8px;
+  }
+
+  .corridorLabel {
+    font-size: 10px;
+  }
+}
