@@ -1,8 +1,8 @@
 {
-  "version": "v5.9.14 · IPHONE 4:3 + UBICACIÓN",
-  "build": "one-shop-v5.9.14-ios-location-01",
-  "released": "2026-09-07",
-  "notes": "Conserva la mejora de fotos iPhone 4:3 con fondo desenfocado y agrega el asistente de ubicación para iPhone y Android: solicita permiso mediante un toque, explica cómo desbloquearlo, detecta GPS apagado o sin señal y evita nuevas evidencias sin coordenadas válidas.",
+  "version": "v5.9.15 · RENDIMIENTO",
+  "build": "one-shop-v5.9.15-fast-media-01",
+  "released": "2026-09-08",
+  "notes": "Arranque más ligero: ya no hidrata todas las fotografías pesadas al iniciar. Las imágenes se cargan bajo demanda al verlas, los módulos secundarios se difieren, el catálogo usa caché y el asistente GPS reduce trabajo en segundo plano.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOP_v5_9_14_IPHONE_UBICACION.apk"
+  "apkFilename": "ONE_SHOT_v5_9_15_RENDIMIENTO.apk"
 }
