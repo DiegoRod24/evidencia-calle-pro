@@ -2,7 +2,7 @@
 /* ONE SHOT v5.9.16 · Evidencias: feedback + render progresivo + borrado masivo por lotes */
 (()=>{
 if(window.ONE_SHOT_EVIDENCE_PROGRESS_598)return;window.ONE_SHOT_EVIDENCE_PROGRESS_598=true;
-const BUILD='one-shop-v5.9.16-evidence-progress-01';
+const BUILD='one-shop-v5.9.16-evidence-progress-02';
 const $=id=>document.getElementById(id);
 const sleepFrame=()=>new Promise(r=>requestAnimationFrame(()=>r()));
 const deviceMem=Number(navigator.deviceMemory||4);
@@ -16,6 +16,7 @@ function css(){if($('eProgress598Css'))return;const s=document.createElement('st
 .eWorkTrack598{grid-column:1/-1;height:4px;overflow:hidden;border-radius:99px;background:#dbe7f7;margin-top:3px}.eWorkTrack598 i{display:block;width:35%;height:100%;border-radius:inherit;background:#2563eb;animation:eInd598 1.15s ease-in-out infinite}.eWorkProgress598.determinate .eWorkTrack598 i{animation:none;width:var(--p,0%);transition:width .16s ease}.eWorkProgress598.done .eWorkTrack598 i{animation:none;width:100%;background:#24a866}
 .ePageFooter598{display:grid;gap:8px;justify-items:center;padding:14px 8px 4px;color:#64748b;font-size:10px;font-weight:800}.ePageFooter598 button{min-height:44px;padding:9px 16px;border:1px solid #a8c4ef;border-radius:13px;background:#eef5ff;color:#174b9a;font-size:11px;font-weight:950}.ePageFooter598 button:active{transform:scale(.98)}
 #viewEvidence.eDeleting598{pointer-events:none}#viewEvidence.eDeleting598 .eWorkProgress598{pointer-events:auto}
+#evidenceList img.eImgPending598{min-height:120px;background:linear-gradient(110deg,#eef3fa 28%,#f7faff 40%,#eef3fa 52%);background-size:220% 100%}
 @keyframes eSpin598{to{transform:rotate(360deg)}}@keyframes eInd598{0%{transform:translateX(-110%)}50%{transform:translateX(120%)}100%{transform:translateX(310%)}}
 @media(max-width:390px){#viewEvidence .eWorkProgress598{gap:8px;padding:8px 9px}.eWorkCopy598 b{font-size:10px}.eWorkTime598{font-size:8px}.ePageFooter598 button{width:100%}}
 @media(prefers-reduced-motion:reduce){.eWorkSpin598,.eWorkTrack598 i{animation:none!important}}
@@ -34,7 +35,7 @@ Gallery.render=function(meta={}){
   const t0=performance.now(),all=originalVisible(),shown=Math.min(limit,all.length),realVisible=Evidence.visible;
   Evidence.visible=()=>all.slice(0,shown);
   let out;try{out=baseRender()}finally{Evidence.visible=realVisible}
-  try{Gallery.updateSelectionUI?.()}catch(_){}
+  try{Gallery.updateSelectionUI?.();Reports.renderSummary?.()}catch(_){}
   const count=$('evidenceCount');if(count)count.textContent=`${State.records.length} registradas · ${all.length} filtradas · ${shown} mostradas`;
   document.querySelectorAll('#evidenceList .eCard img').forEach(img=>{if(!img.getAttribute('src')){img.removeAttribute('src');img.classList.add('eImgPending598')}});
   footer(all.length,shown);
