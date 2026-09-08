@@ -1,6 +1,6 @@
 "use strict";
-// ONE SHOT production loader · v5.9.16 FAST + PROGRESO
+// ONE SHOT production loader · v5.9.17 FAST + PROGRESO + DRIVE
 // Arranque crítico: núcleo → almacenamiento ligero → rendimiento → cámara/evidencias.
 // Evidencias usa render progresivo, feedback de filtros y borrado masivo por lotes.
-// Tramos, catálogos y paquetes de reportes se cargan después del primer render.
+// Drive, tramos, catálogos y paquetes de reportes se cargan después del primer render.
 document.write('<script src="app-core-v5.6.3.js"><\/script><script src="one-shop-hotfix-v581.js"><\/script><script src="one-shop-fast-boot-v582.js"><\/script><script src="one-shop-performance-v595.js"><\/script><script src="one-shop-orientation-v583.js"><\/script><script src="one-shop-evidence-v584.js"><\/script><script src="one-shop-evidence-v585.js"><\/script><script src="one-shop-camera-parity-v586.js"><\/script><script src="one-shop-evidence-order-v590.js"><\/script><script src="one-shop-evidence-fast-v591.js"><\/script><script src="one-shop-location-guard-v594.js"><\/script><script src="one-shop-selection-bar-v592.js"><\/script><script src="one-shop-evidence-progress-v598.js"><\/script><script src="one-shop-lazy-modules-v596.js"><\/script>');
