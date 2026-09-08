@@ -1,8 +1,8 @@
 {
-  "version": "v5.9.16 · EVIDENCIAS FLUIDAS",
-  "build": "one-shop-v5.9.16-evidence-progress-02",
+  "version": "v5.9.17 · DRIVE SEGURO",
+  "build": "one-shop-v5.9.17-drive-sync-01",
   "released": "2026-09-08",
-  "notes": "Evidencias ya no intenta pintar todas las fotos de un filtro grande de golpe. Renderiza por lotes según el dispositivo, muestra Procesando filtro/Buscando/Cargando más con tiempo visible, deja cargar más evidencias bajo demanda y el borrado múltiple elimina por lotes mostrando progreso real.",
+  "notes": "Mantiene Evidencias fluidas y añade sincronización diferida a Google Drive para ORIGINAL y FINAL, sin bloquear la captura. La cola usa código + SHA-256 para evitar duplicados exactos y conserva conflictos/variantes para revisión.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOT_v5_9_16_EVIDENCIAS_FLUIDAS.apk"
+  "apkFilename": "ONE_SHOT_v5_9_17_DRIVE_SEGURO.apk"
 }
