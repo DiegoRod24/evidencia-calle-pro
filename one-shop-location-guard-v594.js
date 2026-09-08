@@ -1,5 +1,5 @@
 "use strict";
-/* ONE SHOT v5.9.14 · asistente GPS para iPhone y Android */
+/* ONE SHOT v5.9.15 · asistente GPS eficiente para iPhone y Android */
 (()=>{
   if(window.ONE_SHOP_LOCATION_GUARD_594)return;
   window.ONE_SHOP_LOCATION_GUARD_594=true;
@@ -64,8 +64,8 @@
   };
   const baseRefresh=GPS.refresh.bind(GPS);
   GPS.refresh=async function(){const out=await baseRefresh();if(!fresh(State.gps))showGuide();sync();return out};
-  document.addEventListener("visibilitychange",()=>{if(!document.hidden){GPS.start();setTimeout(sync,1000)}});
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden){if(!State.gpsWatchId)GPS.start();setTimeout(sync,700)}});
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",()=>{inject();setTimeout(sync,1200)},{once:true});else{inject();setTimeout(sync,1200)}
-  setInterval(sync,2000);
-  console.info("[ONE SHOP] v5.9.14 asistente GPS activo");
+  setInterval(()=>{if(!document.hidden&&$("viewCamera")?.classList.contains("active"))sync()},8000);
+  console.info("[ONE SHOT] v5.9.15 asistente GPS eficiente activo");
 })();
