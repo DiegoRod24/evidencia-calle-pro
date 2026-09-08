@@ -1,8 +1,8 @@
 {
-  "version": "v5.9.15 · RENDIMIENTO",
-  "build": "one-shop-v5.9.15-fast-media-01",
+  "version": "v5.9.16 · EVIDENCIAS FLUIDAS",
+  "build": "one-shop-v5.9.16-evidence-progress-02",
   "released": "2026-09-08",
-  "notes": "Arranque más ligero: ya no hidrata todas las fotografías pesadas al iniciar. Las imágenes se cargan bajo demanda al verlas, los módulos secundarios se difieren, el catálogo usa caché y el asistente GPS reduce trabajo en segundo plano.",
+  "notes": "Evidencias ya no intenta pintar todas las fotos de un filtro grande de golpe. Renderiza por lotes según el dispositivo, muestra Procesando filtro/Buscando/Cargando más con tiempo visible, deja cargar más evidencias bajo demanda y el borrado múltiple elimina por lotes mostrando progreso real.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOT_v5_9_15_RENDIMIENTO.apk"
+  "apkFilename": "ONE_SHOT_v5_9_16_EVIDENCIAS_FLUIDAS.apk"
 }
