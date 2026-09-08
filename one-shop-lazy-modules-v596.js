@@ -1,5 +1,5 @@
 "use strict";
-/* ONE SHOT v5.9.15 · módulos secundarios después del primer render */
+/* ONE SHOT v5.9.17 · módulos secundarios después del primer render */
 (()=>{
 if(window.ONE_SHOT_LAZY_MODULES_596)return;window.ONE_SHOT_LAZY_MODULES_596=true;
 const loaded=new Map();
@@ -9,16 +9,18 @@ async function seq(list){for(const s of list)await load(s)}
 const groups={
  catalogs:['one-shot-party-fallback-v597.js','one-shot-catalog-sync-v620.js'],
  territory:['one-shop-tramos-v587.js','one-shop-tramo-media-v588.js'],
- reports:['one-shop-dashboard-packages-v593.js','one-shop-dashboard-packages-v640.js']
+ reports:['one-shop-dashboard-packages-v593.js','one-shop-dashboard-packages-v640.js'],
+ drive:['one-shop-drive-sync-v599.js']
 };
 function loadGroup(name){return seq(groups[name]||[])}
-document.addEventListener('click',e=>{const nav=e.target.closest?.('.bottomNav button[data-view]');if(nav?.dataset.view==='Places')loadGroup('territory');if(nav?.dataset.view==='Reports')loadGroup('reports');if(e.target.closest?.('#viewerEdit,#quickCaptureEdit,#editForm'))loadGroup('catalogs')},{capture:true,passive:true});
+document.addEventListener('click',e=>{const nav=e.target.closest?.('.bottomNav button[data-view]');if(nav?.dataset.view==='Places')loadGroup('territory');if(nav?.dataset.view==='Reports')loadGroup('reports');if(nav?.dataset.view==='Config')loadGroup('drive');if(e.target.closest?.('#viewerEdit,#quickCaptureEdit,#editForm'))loadGroup('catalogs')},{capture:true,passive:true});
 const start=()=>{
  idle(()=>loadGroup('catalogs'),1600);
  idle(()=>loadGroup('territory'),3200);
  idle(()=>loadGroup('reports'),5200);
+ idle(()=>loadGroup('drive'),7000);
 };
 if(document.readyState==='complete')start();else window.addEventListener('load',start,{once:true});
 window.ONE_SHOT_LAZY_596={load,loadGroup};
-console.info('[ONE SHOT] v5.9.15 módulos secundarios en diferido');
+console.info('[ONE SHOT] v5.9.17 módulos secundarios en diferido');
 })();
