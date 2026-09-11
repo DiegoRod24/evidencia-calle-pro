@@ -1,8 +1,8 @@
 {
-  "version": "v5.9.17 · DRIVE SEGURO",
-  "build": "one-shop-v5.9.17-drive-sync-01",
-  "released": "2026-09-08",
-  "notes": "Mantiene Evidencias fluidas y añade sincronización diferida a Google Drive para ORIGINAL y FINAL, sin bloquear la captura. La cola usa código + SHA-256 para evitar duplicados exactos y conserva conflictos/variantes para revisión.",
+  "version": "v5.9.18 · RECUPERACIÓN SEGURA DE FOTOS",
+  "build": "one-shop-v5.9.18-photo-recovery-01",
+  "released": "2026-09-10",
+  "notes": "Evidencias recupera explícitamente las fotos visibles desde IndexedDB y, si faltan en la base actual, revisa almacenamientos ONE SHOT anteriores sin borrar ni reemplazar evidencias. Añade estado visible y recuperación manual de todas las fotos.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOT_v5_9_17_DRIVE_SEGURO.apk"
+  "apkFilename": "ONE_SHOT_v5_9_18_RECUPERACION_FOTOS.apk"
 }
