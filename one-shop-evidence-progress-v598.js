@@ -29,7 +29,7 @@ function busyError(detail='No se pudo completar'){const box=injectBusy();if(!box
 function filterSig(){return JSON.stringify([State.settings?.evidenceRange||'',State.settings?.evidenceReviewFilter||'',State.filter||'',State.search||'',State.settings?.galleryView||State.galleryView||'cards'])}
 
 const originalVisible=Evidence.visible.bind(Evidence),baseRender=Gallery.render.bind(Gallery);
-function footer(total,shown){const host=$('evidenceList');if(!host)return;host.querySelector('#ePageFooter598')?.remove();if(total<=shown)return;const left=total-shown,next=Math.min(PAGE,left),f=document.createElement('div');f.id='ePageFooter598';f.className='ePageFooter598';f.innerHTML=`<span>Mostrando ${shown} de ${total} · las demás fotos aún no se cargan</span><button type="button">Cargar ${next} más (${left} pendientes)</button>`;f.querySelector('button').onclick=()=>{limit=Math.min(total,limit+PAGE);busyStart('Cargando más evidencias…',`${shown} → ${Math.min(total,limit)} de ${total}`);requestAnimationFrame(()=>setTimeout(()=>Gallery.render({reason:'more'}),0));};host.appendChild(f)}
+function footer(total,shown){const host=$('evidenceList');if(!host)return;host.querySelector('#ePageFooter598')?.remove();if(total<=shown)return;const left=total-shown,f=document.createElement('div');f.id='ePageFooter598';f.className='ePageFooter598';f.innerHTML=`<span>Mostrando ${shown} de ${total} · ${left} pendientes</span><button type="button">Cargar las ${left} restantes</button>`;const btn=f.querySelector('button');btn.onclick=()=>{btn.disabled=true;btn.textContent='Cargando…';limit=total;busyStart('Cargando todas las evidencias…',`${shown} → ${total}`);requestAnimationFrame(()=>setTimeout(()=>Gallery.render({reason:'more-all'}),0));};host.appendChild(f)}
 Gallery.render=function(meta={}){
   const sig=filterSig(),changed=sig!==lastFilterSig;if(changed){lastFilterSig=sig;limit=PAGE;busyStart(State.search?'Buscando evidencias…':'Aplicando filtro…','Calculando coincidencias sin cargar todas las fotos');}
   const t0=performance.now(),all=originalVisible(),shown=Math.min(limit,all.length),realVisible=Evidence.visible;
@@ -41,7 +41,7 @@ Gallery.render=function(meta={}){
   footer(all.length,shown);
   const took=Math.round(performance.now()-t0);
   if(changed)busyDone(`${all.length} coincidencia${all.length===1?'':'s'} · ${shown} en pantalla · ${took} ms`,Math.max(500,Math.min(950,took+300)));
-  else if(meta?.reason==='more')busyDone(`${shown} de ${all.length} mostradas`,500);
+  else if(meta?.reason==='more'||meta?.reason==='more-all')busyDone(`${shown} de ${all.length} mostradas`,500);
   return out
 };
 
