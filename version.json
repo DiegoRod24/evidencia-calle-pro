@@ -1,8 +1,8 @@
 {
-  "version": "v5.9.18 · RECUPERACIÓN SEGURA DE FOTOS",
-  "build": "one-shop-v5.9.18-photo-recovery-01",
-  "released": "2026-09-10",
-  "notes": "Evidencias recupera explícitamente las fotos visibles desde IndexedDB y, si faltan en la base actual, revisa almacenamientos ONE SHOT anteriores sin borrar ni reemplazar evidencias. Añade estado visible y recuperación manual de todas las fotos.",
+  "version": "v5.9.19 · BLINDAJE DE FOTOS + RESCATE DRIVE",
+  "build": "one-shop-v5.9.19-media-safety-01",
+  "released": "2026-09-18",
+  "notes": "Evita que registros ligeros sin multimedia sobrescriban fotos completas en IndexedDB durante arranque/background/pagehide. Si una foto local falta, Recuperación intenta restaurar FINAL y ORIGINAL desde Google Drive cuando el puente está configurado.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOT_v5_9_18_RECUPERACION_FOTOS.apk"
+  "apkFilename": "ONE_SHOT_v5_9_19_BLINDAJE_FOTOS.apk"
 }
