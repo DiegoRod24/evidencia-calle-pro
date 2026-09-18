@@ -1,8 +1,8 @@
 {
-  "version": "v5.9.19 · BLINDAJE DE FOTOS + RESCATE DRIVE",
-  "build": "one-shop-v5.9.19-media-safety-01",
+  "version": "v5.9.20 · LOCAL-FIRST + RESCATE MÁXIMO",
+  "build": "one-shop-v5.9.20-local-media-vault-01",
   "released": "2026-09-18",
-  "notes": "Evita que registros ligeros sin multimedia sobrescriban fotos completas en IndexedDB durante arranque/background/pagehide. Si una foto local falta, Recuperación intenta restaurar FINAL y ORIGINAL desde Google Drive cuando el puente está configurado.",
+  "notes": "Las evidencias permanecen en el celular. Añade un baúl local de multimedia independiente, evita que metadatos borren fotos, vigila espacio disponible y recupera desde IndexedDB actual, baúl local, bases antiguas y solo de forma opcional desde Drive si ya estaba configurado.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOT_v5_9_19_BLINDAJE_FOTOS.apk"
+  "apkFilename": "ONE_SHOT_v5_9_20_LOCAL_FIRST.apk"
 }
