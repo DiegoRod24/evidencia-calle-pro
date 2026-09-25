@@ -1,8 +1,8 @@
 {
-  "version": "v5.9.21 · LOCAL-FIRST + RESCATE AUTOMÁTICO",
-  "build": "one-shop-v5.9.21-auto-photo-rescue-01",
+  "version": "v5.9.22 · FOTO PERSISTENTE + REPARACIÓN VISUAL",
+  "build": "one-shop-v5.9.22-photo-persistence-repair-01",
   "released": "2026-09-25",
-  "notes": "Corrige el empaquetado Android que dejaba fuera los módulos local-first. Al abrir la versión corregida revisa automáticamente las evidencias existentes, recupera multimedia desde IndexedDB, baúl local, bases anteriores y Drive configurado, y vuelve a sembrar cada foto encontrada en un baúl local independiente. No revive evidencias borradas intencionalmente.",
+  "notes": "Corrige tarjetas con imagen rota aunque la evidencia conserve metadatos o una copia alternativa de la foto. Añade un puente de runtime para que los módulos de blindaje, baúl local y rescate automático se conecten realmente con State/Store/Camera del núcleo. Si una imagen falla, busca otra copia válida del mismo registro y luego intenta rescate local por ID antes de marcarla como no encontrada.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOT_v5_9_21_PHOTO_RESCUE.apk"
+  "apkFilename": "ONE_SHOT_v5_9_22_PHOTO_PERSISTENCE_REPAIR.apk"
 }
