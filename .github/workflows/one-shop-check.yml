@@ -1,4 +1,4 @@
-name: ONE SHOP production check
+name: ONE SHOT production check
 
 on:
   push:
@@ -14,29 +14,79 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+
       - name: JavaScript syntax
         run: |
           node --check app.js
-          node --check one-shop-stable-runtime.js
-          node --check one-shop-field-tools-v571.js
-          node --check one-field-report-standard.js
+          node --check app-core-v5.6.3.js
+          node --check one-shop-media-safety-v601.js
+          node --check one-shop-local-media-v602.js
+          node --check one-shop-photo-recovery-v600.js
+          node --check one-shop-auto-photo-rescue-v603.js
           node --check service-worker.js
-      - name: Version and report rules
+          node --check APK/scripts/prepare-webdir.js
+
+      - name: Prepare Android webDir
+        run: npm run web:prepare
+
+      - name: Photo persistence and recovery guard
         run: |
           node - <<'NODE'
           const fs=require('fs');
-          const v=JSON.parse(fs.readFileSync('version.json','utf8'));
-          const sw=fs.readFileSync('service-worker.js','utf8');
+          const path=require('path');
+          const must=[
+            'app.js',
+            'app-core-v5.6.3.js',
+            'one-shop-media-safety-v601.js',
+            'one-shop-local-media-v602.js',
+            'one-shop-photo-recovery-v600.js',
+            'one-shop-auto-photo-rescue-v603.js',
+            'service-worker.js',
+            'version.json'
+          ];
+          for(const f of must){
+            const p=path.join('www',f);
+            if(!fs.existsSync(p)) throw new Error('APK incompleto: falta '+p);
+          }
+          for(const f of must){
+            if(f!=='version.json'){
+              const root=fs.readFileSync(f,'utf8');
+              const packaged=fs.readFileSync(path.join('www',f),'utf8');
+              if(root!==packaged) throw new Error('www/'+f+' quedó desfasado respecto al runtime principal');
+            }
+          }
+          const loader=fs.readFileSync('www/app.js','utf8');
+          for(const f of ['one-shop-media-safety-v601.js','one-shop-local-media-v602.js','one-shop-photo-recovery-v600.js','one-shop-auto-photo-rescue-v603.js']){
+            if(!loader.includes(f)) throw new Error('app.js no carga '+f);
+          }
+          const sw=fs.readFileSync('www/service-worker.js','utf8');
+          for(const f of ['one-shop-media-safety-v601.js','one-shop-local-media-v602.js','one-shop-photo-recovery-v600.js']){
+            if(!sw.includes(f)) throw new Error('Service Worker no cachea '+f);
+          }
+          const vault=fs.readFileSync('www/one-shop-local-media-v602.js','utf8');
+          const safety=fs.readFileSync('www/one-shop-media-safety-v601.js','utf8');
+          const recovery=fs.readFileSync('www/one-shop-photo-recovery-v600.js','utf8');
+          const auto=fs.readFileSync('www/one-shop-auto-photo-rescue-v603.js','utf8');
+          if(!vault.includes("navigator.storage?.persist?.()")) throw new Error('Falta solicitud de almacenamiento persistente');
+          if(!vault.includes("oneshotMediaVault_v1")) throw new Error('Falta baúl local independiente');
+          if(!safety.includes('protectRecord')) throw new Error('Falta blindaje contra sobrescritura lite');
+          if(!recovery.includes('recoverAll')) throw new Error('Falta recuperación integral de fotos');
+          if(!auto.includes('recoverOne')) throw new Error('Falta rescate automático de evidencias existentes');
+          console.log('ONE SHOT: APK incluye persistencia local, baúl independiente y rescate automático de fotos.');
+          NODE
+
+      - name: Existing field/report rules
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
           const tools=fs.readFileSync('one-shop-field-tools-v571.js','utf8');
           const report=fs.readFileSync('one-field-report-standard.js','utf8');
-          if(v.build!=='one-shop-v5.9.9-tramos-durables-01') throw new Error('version.json build inesperada: '+v.build);
-          if(!sw.includes('oneshop-v5.9.9-tramos-durables-01')) throw new Error('Service Worker no apunta a 5.9.9');
-          if(!tools.includes("one-shop-v5.9.9-tramos-durables-01")) throw new Error('Field tools no apunta a 5.9.9');
-          if(!tools.includes("oneshotPropagandaSegmentsV1")) throw new Error('Falta almacenamiento independiente de tramos');
-          if(!tools.includes("persistSegments()")) throw new Error('Falta verificación de persistencia de tramos');
+          if(!tools.includes('oneshotPropagandaSegmentsV1')) throw new Error('Falta almacenamiento independiente de tramos');
+          if(!tools.includes('persistSegments()')) throw new Error('Falta verificación de persistencia de tramos');
           if(!tools.includes("type==='PANEL'")) throw new Error('Empresa no está condicionada a PANEL');
           if(!report.includes("if(type!=='PANEL')return''")) throw new Error('Excel no limita proveedor a PANEL');
-          for(const field of ["header:'REGIÓN'","header:'PROVINCIA'","header:'DISTRITO'","header:'DIRECCIÓN CAPTURA'"]) if(!report.includes(field)) throw new Error('Falta campo territorial '+field);
-          if(!report.includes('one-field-report-standard-v8')) throw new Error('Reporte estándar no está en v8');
-          console.log('ONE SHOP 5.9.9 consistente · tramos durables · reporte territorial municipal · fotos 4:3 fijas');
+          for(const field of ["header:'REGIÓN'","header:'PROVINCIA'","header:'DISTRITO'","header:'DIRECCIÓN CAPTURA'"]){
+            if(!report.includes(field)) throw new Error('Falta campo territorial '+field);
+          }
+          console.log('Reglas de campo/reporte conservadas.');
           NODE

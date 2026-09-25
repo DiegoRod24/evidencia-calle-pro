@@ -1,8 +1,8 @@
 {
-  "version": "v5.9.20 · LOCAL-FIRST + RESCATE MÁXIMO",
-  "build": "one-shop-v5.9.20-local-media-vault-01",
-  "released": "2026-09-18",
-  "notes": "Las evidencias permanecen en el celular. Añade un baúl local de multimedia independiente, evita que metadatos borren fotos, vigila espacio disponible y recupera desde IndexedDB actual, baúl local, bases antiguas y solo de forma opcional desde Drive si ya estaba configurado.",
+  "version": "v5.9.21 · LOCAL-FIRST + RESCATE AUTOMÁTICO",
+  "build": "one-shop-v5.9.21-auto-photo-rescue-01",
+  "released": "2026-09-25",
+  "notes": "Corrige el empaquetado Android que dejaba fuera los módulos local-first. Al abrir la versión corregida revisa automáticamente las evidencias existentes, recupera multimedia desde IndexedDB, baúl local, bases anteriores y Drive configurado, y vuelve a sembrar cada foto encontrada en un baúl local independiente. No revive evidencias borradas intencionalmente.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOT_v5_9_20_LOCAL_FIRST.apk"
+  "apkFilename": "ONE_SHOT_v5_9_21_PHOTO_RESCUE.apk"
 }
