@@ -22,6 +22,7 @@ jobs:
           node --check one-shop-media-safety-v601.js
           node --check one-shop-local-media-v602.js
           node --check one-shop-photo-recovery-v600.js
+          node --check one-shop-auto-photo-rescue-v603.js
           node --check service-worker.js
           node --check APK/scripts/prepare-webdir.js
 
@@ -39,6 +40,7 @@ jobs:
             'one-shop-media-safety-v601.js',
             'one-shop-local-media-v602.js',
             'one-shop-photo-recovery-v600.js',
+            'one-shop-auto-photo-rescue-v603.js',
             'service-worker.js',
             'version.json'
           ];
@@ -47,14 +49,14 @@ jobs:
             if(!fs.existsSync(p)) throw new Error('APK incompleto: falta '+p);
           }
           for(const f of must){
-            if(!['version.json'].includes(f)){
+            if(f!=='version.json'){
               const root=fs.readFileSync(f,'utf8');
               const packaged=fs.readFileSync(path.join('www',f),'utf8');
               if(root!==packaged) throw new Error('www/'+f+' quedó desfasado respecto al runtime principal');
             }
           }
           const loader=fs.readFileSync('www/app.js','utf8');
-          for(const f of ['one-shop-media-safety-v601.js','one-shop-local-media-v602.js','one-shop-photo-recovery-v600.js']){
+          for(const f of ['one-shop-media-safety-v601.js','one-shop-local-media-v602.js','one-shop-photo-recovery-v600.js','one-shop-auto-photo-rescue-v603.js']){
             if(!loader.includes(f)) throw new Error('app.js no carga '+f);
           }
           const sw=fs.readFileSync('www/service-worker.js','utf8');
@@ -64,11 +66,13 @@ jobs:
           const vault=fs.readFileSync('www/one-shop-local-media-v602.js','utf8');
           const safety=fs.readFileSync('www/one-shop-media-safety-v601.js','utf8');
           const recovery=fs.readFileSync('www/one-shop-photo-recovery-v600.js','utf8');
+          const auto=fs.readFileSync('www/one-shop-auto-photo-rescue-v603.js','utf8');
           if(!vault.includes("navigator.storage?.persist?.()")) throw new Error('Falta solicitud de almacenamiento persistente');
           if(!vault.includes("oneshotMediaVault_v1")) throw new Error('Falta baúl local independiente');
           if(!safety.includes('protectRecord')) throw new Error('Falta blindaje contra sobrescritura lite');
           if(!recovery.includes('recoverAll')) throw new Error('Falta recuperación integral de fotos');
-          console.log('ONE SHOT: APK incluye persistencia local, baúl independiente y rescate de fotos.');
+          if(!auto.includes('recoverOne')) throw new Error('Falta rescate automático de evidencias existentes');
+          console.log('ONE SHOT: APK incluye persistencia local, baúl independiente y rescate automático de fotos.');
           NODE
 
       - name: Existing field/report rules
