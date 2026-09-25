@@ -1,9 +1,9 @@
 "use strict";
-/* ONE SHOT v5.9.23 · coordenadas Excel estilo TimeMark */
+/* ONE SHOT v5.9.24 · coordenadas Excel estilo TimeMark · hook de runtime */
 (()=>{
 if(window.ONE_SHOT_REPORT_COORDINATES_606)return;
 window.ONE_SHOT_REPORT_COORDINATES_606=true;
-const BUILD='one-shop-v5.9.23-signed-cardinal-coordinates-01';
+const BUILD='one-shop-v5.9.24-signed-cardinal-runtime-hook-01';
 const signedCardinal=(value,axis,digits=5)=>{
   const n=Number(value);
   if(!Number.isFinite(n))return '';
@@ -33,7 +33,7 @@ async function rewrite(file){
       const pair=parsePair(text);
       if(!pair)continue;
       const label=formatPair(pair.lat,pair.lon);
-      if(value&&typeof value==='object'&&value.hyperlink){cell.value={...value,text:label};}
+      if(value&&typeof value==='object'&&value.hyperlink)cell.value={...value,text:label};
       else cell.value=label;
       cell.alignment={...(cell.alignment||{}),vertical:'middle',horizontal:'center',wrapText:true};
     }
@@ -54,10 +54,41 @@ function wrap(){
     return true;
   }catch(_){return false;}
 }
+function patchStandard(api){
+  try{
+    if(!api||typeof api.patch!=='function')return false;
+    if(api.patch.__oneshotCoordsHook606){wrap();return true;}
+    const base=api.patch.bind(api);
+    const patched=function(...args){const result=base(...args);wrap();return result};
+    patched.__oneshotCoordsHook606=true;
+    patched.__oneshotBasePatch=base;
+    api.patch=patched;
+    wrap();
+    return true;
+  }catch(_){return false;}
+}
+function hookStandard(){
+  try{
+    const existing=window.ONE_FIELD_REPORT_STANDARD;
+    if(existing)return patchStandard(existing);
+    const desc=Object.getOwnPropertyDescriptor(window,'ONE_FIELD_REPORT_STANDARD');
+    if(desc&&!desc.configurable)return false;
+    let current=desc?.value;
+    Object.defineProperty(window,'ONE_FIELD_REPORT_STANDARD',{
+      configurable:true,
+      enumerable:true,
+      get(){return current},
+      set(v){current=v;patchStandard(v)}
+    });
+    if(current)patchStandard(current);
+    return true;
+  }catch(err){console.warn('[ONE SHOT] no se pudo enganchar reporte estándar',err);return false;}
+}
+hookStandard();
 let tries=0;
-const timer=setInterval(()=>{wrap();if(++tries>240)clearInterval(timer)},250);
+const timer=setInterval(()=>{hookStandard();wrap();if(++tries>480)clearInterval(timer)},250);
 wrap();
-window.addEventListener('load',()=>setTimeout(wrap,700),{once:true});
-document.addEventListener('click',e=>{if(e.target.closest?.('[data-view="Reports"],#bulkDownloadExcel,#previewDownloadBtn,#bulkShareExcel,#previewShareBtn'))setTimeout(wrap,80)},{capture:true,passive:true});
-window.ONE_SHOT_REPORT_COORDINATES={BUILD,signedCardinal,formatPair,rewrite,wrap};
+window.addEventListener('load',()=>setTimeout(()=>{hookStandard();wrap()},700),{once:true});
+document.addEventListener('click',e=>{if(e.target.closest?.('[data-view="Reports"],#bulkDownloadExcel,#previewDownloadBtn,#bulkShareExcel,#previewShareBtn')){hookStandard();setTimeout(wrap,0)}},{capture:true,passive:true});
+window.ONE_SHOT_REPORT_COORDINATES={BUILD,signedCardinal,formatPair,rewrite,wrap,patchStandard,hookStandard};
 })();
