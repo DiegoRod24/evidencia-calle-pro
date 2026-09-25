@@ -98,7 +98,9 @@ jobs:
           if(!coords.includes("n.toFixed(digits)")) throw new Error('Coordenadas no conservan el signo decimal');
           if(coords.includes('Math.abs(n).toFixed')) throw new Error('No se debe eliminar el signo de latitud/longitud');
           if(!coords.includes("n<0?'S':'N'")||!coords.includes("n<0?'W':'E'")) throw new Error('Falta hemisferio N/S/E/W');
-          console.log('ONE SHOT: persistencia, rescate y coordenadas firmadas incluidas en APK.');
+          if(!coords.includes("Object.defineProperty(window,'ONE_FIELD_REPORT_STANDARD'")) throw new Error('Falta hook al reporte estándar cargado en diferido');
+          if(!coords.includes('api.patch=patched')) throw new Error('Falta reaplicar coordenadas después de patch() del reporte');
+          console.log('ONE SHOT: persistencia, rescate y coordenadas firmadas con hook runtime incluidas en APK.');
           NODE
 
       - name: Existing field/report rules
