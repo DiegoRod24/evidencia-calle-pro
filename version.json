@@ -1,8 +1,8 @@
 {
-  "version": "v5.9.22 · FOTO PERSISTENTE + REPARACIÓN VISUAL",
-  "build": "one-shop-v5.9.22-photo-persistence-repair-01",
+  "version": "v5.9.23 · COORDENADAS EXCEL ESTILO TIMEMARK",
+  "build": "one-shop-v5.9.23-signed-cardinal-coordinates-01",
   "released": "2026-09-25",
-  "notes": "Corrige tarjetas con imagen rota aunque la evidencia conserve metadatos o una copia alternativa de la foto. Añade un puente de runtime para que los módulos de blindaje, baúl local y rescate automático se conecten realmente con State/Store/Camera del núcleo. Si una imagen falla, busca otra copia válida del mismo registro y luego intenta rescate local por ID antes de marcarla como no encontrada.",
+  "notes": "El reporte Excel principal conserva el signo original de latitud/longitud y agrega el hemisferio, igual al formato observado en TimeMark: -13.65652°S, -73.37820°W. Se usan 5 decimales en EVIDENCIAS y DATOS_TECNICOS mantiene los valores decimales originales completos para auditoría.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOT_v5_9_22_PHOTO_PERSISTENCE_REPAIR.apk"
+  "apkFilename": "ONE_SHOT_v5_9_23_SIGNED_CARDINAL_COORDINATES.apk"
 }
