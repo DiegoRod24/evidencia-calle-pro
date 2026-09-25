@@ -55,6 +55,7 @@ const critical = [
   "one-shop-media-safety-v601.js",
   "one-shop-local-media-v602.js",
   "one-shop-photo-recovery-v600.js",
+  "one-shop-auto-photo-rescue-v603.js",
   "service-worker.js",
   "version.json"
 ];
