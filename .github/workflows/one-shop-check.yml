@@ -15,16 +15,22 @@ jobs:
         with:
           node-version: '22'
 
-      - name: JavaScript syntax
-        run: |
-          node --check app.js
-          node --check app-core-v5.6.3.js
-          node --check one-shop-media-safety-v601.js
-          node --check one-shop-local-media-v602.js
-          node --check one-shop-photo-recovery-v600.js
-          node --check one-shop-auto-photo-rescue-v603.js
-          node --check service-worker.js
-          node --check APK/scripts/prepare-webdir.js
+      - name: Syntax · loader
+        run: node --check app.js
+      - name: Syntax · core
+        run: node --check app-core-v5.6.3.js
+      - name: Syntax · media safety
+        run: node --check one-shop-media-safety-v601.js
+      - name: Syntax · local media vault
+        run: node --check one-shop-local-media-v602.js
+      - name: Syntax · photo recovery
+        run: node --check one-shop-photo-recovery-v600.js
+      - name: Syntax · auto photo rescue
+        run: node --check one-shop-auto-photo-rescue-v603.js
+      - name: Syntax · service worker
+        run: node --check service-worker.js
+      - name: Syntax · Android packager
+        run: node --check APK/scripts/prepare-webdir.js
 
       - name: Prepare Android webDir
         run: npm run web:prepare
