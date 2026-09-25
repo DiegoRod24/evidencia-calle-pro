@@ -1,8 +1,8 @@
 {
-  "version": "v5.9.23 · COORDENADAS EXCEL ESTILO TIMEMARK",
-  "build": "one-shop-v5.9.23-signed-cardinal-coordinates-01",
+  "version": "v5.9.24 · COORDENADAS EXCEL TIMEMARK · FIX RUNTIME",
+  "build": "one-shop-v5.9.24-signed-cardinal-runtime-hook-01",
   "released": "2026-09-25",
-  "notes": "El reporte Excel principal conserva el signo original de latitud/longitud y agrega el hemisferio, igual al formato observado en TimeMark: -13.65652°S, -73.37820°W. Se usan 5 decimales en EVIDENCIAS y DATOS_TECNICOS mantiene los valores decimales originales completos para auditoría.",
+  "notes": "Corrige el orden de carga del generador Excel. Lat/Long en EVIDENCIAS ahora conserva el signo original y agrega hemisferio con 5 decimales, por ejemplo -13.65652°S, -73.37820°W. La celda sigue enlazada a Google Maps y DATOS_TECNICOS conserva los valores decimales originales.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOT_v5_9_23_SIGNED_CARDINAL_COORDINATES.apk"
+  "apkFilename": "ONE_SHOT_v5_9_24_COORDENADAS_TIMEMARK_RUNTIME_FIX.apk"
 }
