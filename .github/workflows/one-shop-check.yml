@@ -31,6 +31,8 @@ jobs:
         run: node --check one-shop-broken-image-repair-v604.js
       - name: Syntax · auto photo rescue
         run: node --check one-shop-auto-photo-rescue-v603.js
+      - name: Syntax · report coordinates
+        run: node --check one-shop-report-coordinates-v606.js
       - name: Syntax · service worker
         run: node --check service-worker.js
       - name: Syntax · Android packager
@@ -53,6 +55,7 @@ jobs:
             'one-shop-photo-recovery-v600.js',
             'one-shop-broken-image-repair-v604.js',
             'one-shop-auto-photo-rescue-v603.js',
+            'one-shop-report-coordinates-v606.js',
             'service-worker.js',
             'version.json'
           ];
@@ -68,11 +71,11 @@ jobs:
             }
           }
           const loader=fs.readFileSync('www/app.js','utf8');
-          for(const f of ['one-shop-runtime-bridge-v605.js','one-shop-media-safety-v601.js','one-shop-local-media-v602.js','one-shop-photo-recovery-v600.js','one-shop-broken-image-repair-v604.js','one-shop-auto-photo-rescue-v603.js']){
+          for(const f of ['one-shop-runtime-bridge-v605.js','one-shop-media-safety-v601.js','one-shop-local-media-v602.js','one-shop-photo-recovery-v600.js','one-shop-broken-image-repair-v604.js','one-shop-auto-photo-rescue-v603.js','one-shop-report-coordinates-v606.js']){
             if(!loader.includes(f)) throw new Error('app.js no carga '+f);
           }
           const sw=fs.readFileSync('www/service-worker.js','utf8');
-          for(const f of ['one-shop-runtime-bridge-v605.js','one-shop-media-safety-v601.js','one-shop-local-media-v602.js','one-shop-photo-recovery-v600.js','one-shop-broken-image-repair-v604.js']){
+          for(const f of ['one-shop-runtime-bridge-v605.js','one-shop-media-safety-v601.js','one-shop-local-media-v602.js','one-shop-photo-recovery-v600.js','one-shop-broken-image-repair-v604.js','one-shop-report-coordinates-v606.js']){
             if(!sw.includes(f)) throw new Error('Service Worker no cachea '+f);
           }
           const bridge=fs.readFileSync('www/one-shop-runtime-bridge-v605.js','utf8');
@@ -81,6 +84,7 @@ jobs:
           const recovery=fs.readFileSync('www/one-shop-photo-recovery-v600.js','utf8');
           const repair=fs.readFileSync('www/one-shop-broken-image-repair-v604.js','utf8');
           const auto=fs.readFileSync('www/one-shop-auto-photo-rescue-v603.js','utf8');
+          const coords=fs.readFileSync('www/one-shop-report-coordinates-v606.js','utf8');
           for(const binding of ['window.State=State','window.Store=Store','window.Camera=Camera','window.Gallery=Gallery']){
             if(!bridge.includes(binding)) throw new Error('Bridge incompleto: falta '+binding);
           }
@@ -91,7 +95,10 @@ jobs:
           if(!repair.includes('recoverOne')) throw new Error('Falta recuperación al romperse una imagen de tarjeta');
           if(!repair.includes('reportImage4x3')) throw new Error('La galería no contempla copias alternativas de foto');
           if(!auto.includes('recoverOne')) throw new Error('Falta rescate automático de evidencias existentes');
-          console.log('ONE SHOT: persistencia, bridge runtime, rescate y reparación visual incluidos en APK.');
+          if(!coords.includes("n.toFixed(digits)")) throw new Error('Coordenadas no conservan el signo decimal');
+          if(coords.includes('Math.abs(n).toFixed')) throw new Error('No se debe eliminar el signo de latitud/longitud');
+          if(!coords.includes("n<0?'S':'N'")||!coords.includes("n<0?'W':'E'")) throw new Error('Falta hemisferio N/S/E/W');
+          console.log('ONE SHOT: persistencia, rescate y coordenadas firmadas incluidas en APK.');
           NODE
 
       - name: Existing field/report rules
