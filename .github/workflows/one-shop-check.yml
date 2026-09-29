@@ -25,6 +25,8 @@ jobs:
         run: node --check one-shop-media-safety-v601.js
       - name: Syntax · local media vault
         run: node --check one-shop-local-media-v602.js
+      - name: Syntax · durable capture
+        run: node --check one-shot-durable-capture-v607.js
       - name: Syntax · photo recovery
         run: node --check one-shop-photo-recovery-v600.js
       - name: Syntax · broken image repair
@@ -52,6 +54,7 @@ jobs:
             'one-shop-runtime-bridge-v605.js',
             'one-shop-media-safety-v601.js',
             'one-shop-local-media-v602.js',
+            'one-shot-durable-capture-v607.js',
             'one-shop-photo-recovery-v600.js',
             'one-shop-broken-image-repair-v604.js',
             'one-shop-auto-photo-rescue-v603.js',
@@ -71,16 +74,17 @@ jobs:
             }
           }
           const loader=fs.readFileSync('www/app.js','utf8');
-          for(const f of ['one-shop-runtime-bridge-v605.js','one-shop-media-safety-v601.js','one-shop-local-media-v602.js','one-shop-photo-recovery-v600.js','one-shop-broken-image-repair-v604.js','one-shop-auto-photo-rescue-v603.js','one-shop-report-coordinates-v606.js']){
+          for(const f of ['one-shop-runtime-bridge-v605.js','one-shop-media-safety-v601.js','one-shop-local-media-v602.js','one-shot-durable-capture-v607.js','one-shop-photo-recovery-v600.js','one-shop-broken-image-repair-v604.js','one-shop-auto-photo-rescue-v603.js','one-shop-report-coordinates-v606.js']){
             if(!loader.includes(f)) throw new Error('app.js no carga '+f);
           }
           const sw=fs.readFileSync('www/service-worker.js','utf8');
-          for(const f of ['one-shop-runtime-bridge-v605.js','one-shop-media-safety-v601.js','one-shop-local-media-v602.js','one-shop-photo-recovery-v600.js','one-shop-broken-image-repair-v604.js','one-shop-report-coordinates-v606.js']){
+          for(const f of ['one-shop-runtime-bridge-v605.js','one-shop-media-safety-v601.js','one-shop-local-media-v602.js','one-shot-durable-capture-v607.js','one-shop-photo-recovery-v600.js','one-shop-broken-image-repair-v604.js','one-shop-report-coordinates-v606.js']){
             if(!sw.includes(f)) throw new Error('Service Worker no cachea '+f);
           }
           const bridge=fs.readFileSync('www/one-shop-runtime-bridge-v605.js','utf8');
           const vault=fs.readFileSync('www/one-shop-local-media-v602.js','utf8');
           const safety=fs.readFileSync('www/one-shop-media-safety-v601.js','utf8');
+          const durable=fs.readFileSync('www/one-shot-durable-capture-v607.js','utf8');
           const recovery=fs.readFileSync('www/one-shop-photo-recovery-v600.js','utf8');
           const repair=fs.readFileSync('www/one-shop-broken-image-repair-v604.js','utf8');
           const auto=fs.readFileSync('www/one-shop-auto-photo-rescue-v603.js','utf8');
@@ -91,16 +95,23 @@ jobs:
           if(!vault.includes("navigator.storage?.persist?.()")) throw new Error('Falta solicitud de almacenamiento persistente');
           if(!vault.includes("oneshotMediaVault_v1")) throw new Error('Falta baúl local independiente');
           if(!safety.includes('protectRecord')) throw new Error('Falta blindaje contra sobrescritura lite');
+          if(!durable.includes('persistVerified')) throw new Error('Falta verificación real después de guardar');
+          if(!durable.includes('primaryGet(record.id)')) throw new Error('Falta lectura de comprobación desde IndexedDB');
+          if(!durable.includes('vaultVerified(record)')) throw new Error('Falta comprobación del baúl local');
+          if(!durable.includes('rescueVaultOrphans')) throw new Error('Falta rescate de fotos huérfanas');
+          if(!durable.includes("Store.saveLite=safeLite")) throw new Error('El respaldo lite aún puede guardar multimedia pesada');
+          if(!durable.includes('oneshotCaptureJournalV1')) throw new Error('Falta diario liviano de capturas');
           if(!recovery.includes('recoverAll')) throw new Error('Falta recuperación integral de fotos');
           if(!repair.includes('recoverOne')) throw new Error('Falta recuperación al romperse una imagen de tarjeta');
           if(!repair.includes('reportImage4x3')) throw new Error('La galería no contempla copias alternativas de foto');
-          if(!auto.includes('recoverOne')) throw new Error('Falta rescate automático de evidencias existentes');
+          if(!auto.includes('hasMissingLocal')) throw new Error('El rescate automático no revisa nuevas evidencias sin foto');
+          if(!auto.includes('countChanged')) throw new Error('El rescate automático no detecta cambios en el total');
           if(!coords.includes("n.toFixed(digits)")) throw new Error('Coordenadas no conservan el signo decimal');
           if(coords.includes('Math.abs(n).toFixed')) throw new Error('No se debe eliminar el signo de latitud/longitud');
           if(!coords.includes("n<0?'S':'N'")||!coords.includes("n<0?'W':'E'")) throw new Error('Falta hemisferio N/S/E/W');
           if(!coords.includes("Object.defineProperty(window,'ONE_FIELD_REPORT_STANDARD'")) throw new Error('Falta hook al reporte estándar cargado en diferido');
           if(!coords.includes('api.patch=patched')) throw new Error('Falta reaplicar coordenadas después de patch() del reporte');
-          console.log('ONE SHOT: persistencia, rescate y coordenadas firmadas con hook runtime incluidas en APK.');
+          console.log('ONE SHOT: captura durable verificada, rescate local y coordenadas firmadas incluidos en APK.');
           NODE
 
       - name: Existing field/report rules

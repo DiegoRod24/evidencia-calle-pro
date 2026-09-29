@@ -1,15 +1,14 @@
 "use strict";
-/* ONE SHOT v5.9.21 · Auto Photo Rescue
-   - Revisa todas las evidencias existentes al abrir la versión corregida.
-   - Recupera SOLO multimedia de registros que ya existen; no revive evidencias borradas.
-   - Prioriza almacenamiento local: memoria/IndexedDB -> baúl local -> bases antiguas -> Drive configurado.
-   - Si encuentra una foto, la vuelve a sembrar en el baúl independiente para próximas aperturas.
+/* ONE SHOT v5.9.25 · Auto Photo Rescue
+   - Revisa evidencias existentes al abrir y también cuando cambió el total o falta multimedia.
+   - Recupera SOLO multimedia de registros que ya existen; no revive borrados intencionales.
+   - Prioriza: memoria/IndexedDB -> baúl local -> bases antiguas -> Drive configurado.
 */
 (()=>{
 if(window.ONE_SHOT_AUTO_PHOTO_RESCUE_603)return;
 window.ONE_SHOT_AUTO_PHOTO_RESCUE_603=true;
 
-const BUILD='one-shop-v5.9.21-auto-photo-rescue-01';
+const BUILD='one-shop-v5.9.25-auto-photo-rescue-02';
 const MEDIA=['image','stampedImage','correctedImage','correctedStampedImage','reportImage4x3','originalImage','rescuedImage','watermarkedImage','markedImage','evidenceImage'];
 const hasPhoto=r=>!!(r&&MEDIA.some(k=>typeof r[k]==='string'&&r[k].startsWith('data:image/')));
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
@@ -99,16 +98,15 @@ async function run({silent=false}={}){
 }
 
 async function boot(){
-  // Da tiempo al núcleo para abrir IndexedDB y cargar State.records.
-  await sleep(1800);
+  await sleep(1400);
   const last=(()=>{try{return JSON.parse(localStorage.getItem('oneshotPhotoRescue603Last')||'null')}catch(_){return null}})();
-  // Ejecutar siempre al menos una vez por nueva carga/build. Si la revisión anterior dejó
-  // faltantes, repetir silenciosamente porque Drive/almacenamiento puede estar disponible ahora.
-  const shouldRun=!last||last.build!==BUILD||Number(last.missing||0)>0;
+  const rows=State.records||[];
+  const hasMissingLocal=rows.some(r=>!hasPhoto(r));
+  const countChanged=Number(last?.total??-1)!==rows.length;
+  const shouldRun=!last||last.build!==BUILD||Number(last.missing||0)>0||countChanged||hasMissingLocal;
   if(shouldRun)await run({silent:false});
   else{
-    // Aunque ya se recuperó todo, resembra el baúl si la app fue actualizada/reanudada.
-    try{for(const r of State.records||[])if(hasPhoto(r))await ONE_SHOT_LOCAL_MEDIA_VAULT.put(r)}catch(_){}
+    try{for(const r of rows)if(hasPhoto(r))await ONE_SHOT_LOCAL_MEDIA_VAULT.put(r)}catch(_){}
   }
   try{localStorage.setItem('oneshotAutoPhotoRescueBuild',BUILD)}catch(_){}
 }
