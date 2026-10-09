@@ -297,7 +297,7 @@ const UI = {
 const Store = {
   open() {
     return new Promise(resolve => {
-      const q = indexedDB.open("oneshotEvidenceDB_v2", 1);
+      const q = indexedDB.open("oneshotEvidenceDB_v2");
       q.onupgradeneeded = () => q.result.createObjectStore("records", {keyPath:"id"});
       q.onsuccess = () => { State.db = q.result; resolve(); };
       q.onerror = () => resolve();
