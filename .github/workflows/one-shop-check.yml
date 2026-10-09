@@ -104,7 +104,7 @@ jobs:
           if(!recovery.includes('recoverAll')) throw new Error('Falta recuperación integral de fotos');
           if(!repair.includes('recoverOne')) throw new Error('Falta recuperación al romperse una imagen de tarjeta');
           if(!repair.includes('reportImage4x3')) throw new Error('La galería no contempla copias alternativas de foto');
-          if(!auto.includes('hasMissingLocal')) throw new Error('El rescate automático no revisa nuevas evidencias sin foto');
+          if(!auto.includes('Number(last.missing||0)>0')) throw new Error('El rescate automático debe reintentar fotos realmente ausentes');
           if(!auto.includes('countChanged')) throw new Error('El rescate automático no detecta cambios en el total');
           if(!coords.includes("n.toFixed(digits)")) throw new Error('Coordenadas no conservan el signo decimal');
           if(coords.includes('Math.abs(n).toFixed')) throw new Error('No se debe eliminar el signo de latitud/longitud');
@@ -128,4 +128,23 @@ jobs:
             if(!report.includes(field)) throw new Error('Falta campo territorial '+field);
           }
           console.log('Reglas de campo/reporte conservadas.');
+          NODE
+
+      - name: Performance and safe recovery invariants
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),assert=require('assert');
+          const vault=fs.readFileSync('one-shop-local-media-v602.js','utf8');
+          const durable=fs.readFileSync('one-shot-durable-capture-v607.js','utf8');
+          const rescue=fs.readFileSync('one-shop-auto-photo-rescue-v603.js','utf8');
+          assert(vault.includes("getAll(IDBKeyRange.bound(start,end))"),'Fotos del baúl deben consultarse por clave, no con lectura completa');
+          assert(vault.includes('function legacyCodeIndex(db)'), 'Mantener respaldo por código de foto antigua');
+          assert(vault.includes('if(!q.result||q.result.value!==row.value)'), 'Evitar escrituras idénticas');
+          assert(durable.includes('async function primaryKeys()'),'Falta rescate del índice desde IndexedDB');
+          assert(durable.includes('State.records.push(compact(full))'),'Recuperar metadatos sin llenar memoria de fotos');
+          assert(durable.includes('async function vaultKeys()'),'Falta escaneo ligero de claves del baúl');
+          assert(durable.includes('scheduleVaultRecovery(merged)'),'El arranque no debe esperar el rescate completo');
+          assert(rescue.includes('const shouldRun=!last||last.build!==BUILD||Number(last.missing||0)>0||countChanged'),'No recuperar las mismas fotos en cada carga');
+          assert(!rescue.includes('||hasMissingLocal'),'La memoria lite NO indica que faltan fotos');
+          console.log('ONE SHOT: recuperacion conservada, sin barridos multimedia repetidos al navegar.');
           NODE
