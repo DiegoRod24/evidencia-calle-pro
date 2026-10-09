@@ -43,7 +43,7 @@ async function lookupByPhotoCode(db,code){
  return batches.flat().filter(x=>x.photoCode===String(code));
 }
 
-function open(){return new Promise((resolve,reject)=>{try{const q=indexedDB.open(DB,1);q.onupgradeneeded=()=>{if(!q.result.objectStoreNames.contains(STORE))q.result.createObjectStore(STORE,{keyPath:'key'})};q.onsuccess=()=>resolve(q.result);q.onerror=()=>reject(q.error)}catch(e){reject(e)}})}
+function open(){return new Promise((resolve,reject)=>{try{const q=indexedDB.open(DB);q.onupgradeneeded=()=>{if(!q.result.objectStoreNames.contains(STORE))q.result.createObjectStore(STORE,{keyPath:'key'})};q.onsuccess=()=>resolve(q.result);q.onerror=()=>reject(q.error)}catch(e){reject(e)}})}
 // v5.9.26: consultas por clave de evidencia, sin traer todas las fotos del telefono.
 async function put(record){
  if(!record?.id)return 0;
