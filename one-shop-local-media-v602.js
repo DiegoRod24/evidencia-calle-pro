@@ -11,6 +11,38 @@ const DB='oneshotMediaVault_v1',STORE='media';
 const FIELDS=['image','stampedImage','originalImage','correctedImage','correctedStampedImage','reportImage4x3','rescuedImage','watermarkedImage','markedImage','evidenceImage'];
 const isImage=v=>typeof v==='string'&&v.startsWith('data:image/');
 const key=(id,field)=>String(id)+'::'+field;
+let photoCodeIds=null,photoCodeIndexLoading=null;
+function legacyCodeIndex(db){
+ if(photoCodeIds)return Promise.resolve(photoCodeIds);
+ if(photoCodeIndexLoading)return photoCodeIndexLoading;
+ photoCodeIndexLoading=new Promise(resolve=>{
+  const map=new Map();let finished=false;const done=()=>{if(!finished){finished=true;resolve(map)}};
+  try{
+   const tx=db.transaction(STORE,'readonly'),q=tx.objectStore(STORE).openCursor();
+   q.onsuccess=e=>{
+    const cur=e.target.result;if(!cur)return;
+    const x=cur.value,code=String(x?.photoCode||''),id=String(x?.id||'');
+    if(code&&id){if(!map.has(code))map.set(code,new Set());map.get(code).add(id)}
+    cur.continue();
+   };
+   tx.oncomplete=done;tx.onerror=tx.onabort=done;
+  }catch(_){done()}
+ }).then(map=>{photoCodeIds=map;photoCodeIndexLoading=null;return map});
+ return photoCodeIndexLoading;
+}
+async function lookupByPhotoCode(db,code){
+ const index=await legacyCodeIndex(db),ids=[...(index.get(String(code))||[])];
+ if(!ids.length)return[];
+ const batches=await Promise.all(ids.map(id=>new Promise(resolve=>{
+  try{
+   const start=id+'::',end=start+String.fromCharCode(0xffff);
+   const q=db.transaction(STORE,'readonly').objectStore(STORE).getAll(IDBKeyRange.bound(start,end));
+   q.onsuccess=()=>resolve(q.result||[]);q.onerror=()=>resolve([]);
+  }catch(_){resolve([])}
+ })));
+ return batches.flat().filter(x=>x.photoCode===String(code));
+}
+
 function open(){return new Promise((resolve,reject)=>{try{const q=indexedDB.open(DB,1);q.onupgradeneeded=()=>{if(!q.result.objectStoreNames.contains(STORE))q.result.createObjectStore(STORE,{keyPath:'key'})};q.onsuccess=()=>resolve(q.result);q.onerror=()=>reject(q.error)}catch(e){reject(e)}})}
 // v5.9.26: consultas por clave de evidencia, sin traer todas las fotos del telefono.
 async function put(record){
@@ -23,7 +55,7 @@ async function put(record){
    let written=0,done=false;const finish=n=>{if(done)return;done=true;resolve(n)};
    try{
     const tx=db.transaction(STORE,'readwrite'),os=tx.objectStore(STORE);
-    tx.oncomplete=()=>finish(written);tx.onerror=tx.onabort=()=>finish(0);
+    tx.oncomplete=()=>{if(written){photoCodeIds=null;photoCodeIndexLoading=null}finish(written)};tx.onerror=tx.onabort=()=>finish(0);
     for(const row of rows){
      const q=os.get(row.key);
      q.onsuccess=()=>{try{if(!q.result||q.result.value!==row.value){os.put(row);written++}}catch(_){}};
@@ -45,17 +77,9 @@ async function getFor(record){
    }catch(_){resolve([])}
   });
   let rows=mine;
-  // Compatibilidad con evidencias antiguas cuyo ID haya cambiado.
-  // Solo se usa el barrido completo si no existe ninguna foto con su ID original.
-  if(!rows.length&&record.photoCode){
-   rows=await new Promise(resolve=>{
-    try{
-     const q=db.transaction(STORE,'readonly').objectStore(STORE).getAll();
-     q.onsuccess=()=>resolve((q.result||[]).filter(x=>x.photoCode===String(record.photoCode)));
-     q.onerror=()=>resolve([]);
-    }catch(_){resolve([])}
-   });
-  }
+  // Compatibilidad con codigos antiguos sin volver a traer TODAS las fotos.
+  // Un unico cursor construye un indice liviano codigo -> ID por sesion.
+  if(!rows.length&&record.photoCode)rows=await lookupByPhotoCode(db,record.photoCode);
   if(!rows.length)return null;
   const out={...record};
   for(const x of rows)if(!out[x.field]&&isImage(x.value))out[x.field]=x.value;
