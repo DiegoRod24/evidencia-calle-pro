@@ -29,6 +29,12 @@ jobs:
         run: node --check one-shop-performance-v595.js
       - name: Regression · photos survive empty evidence index
         run: node tests/oneshot-index-recovery.test.cjs
+      - name: Syntax · field editor
+        run: node --check one-shop-field-tools-v571.js
+      - name: Syntax · evidence image selection
+        run: node --check one-shop-performance-v595.js && node --check one-shop-broken-image-repair-v604.js
+      - name: Regression · durable editing and corrected photos
+        run: node tests/oneshot-edit-persistence.test.cjs
       - name: Syntax · durable capture
         run: node --check one-shot-durable-capture-v607.js
       - name: Syntax · photo recovery

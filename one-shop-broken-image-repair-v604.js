@@ -9,7 +9,7 @@
 if(window.ONE_SHOT_BROKEN_IMAGE_REPAIR_604)return;
 window.ONE_SHOT_BROKEN_IMAGE_REPAIR_604=true;
 const BUILD='one-shop-v5.9.22-broken-image-repair-01';
-const MEDIA=['reportImage4x3','correctedStampedImage','stampedImage','correctedImage','image','originalImage','rescuedImage','watermarkedImage','markedImage','evidenceImage'];
+const MEDIA=['correctedStampedImage','correctedImage','stampedImage','image','reportImage4x3','originalImage','rescuedImage','watermarkedImage','markedImage','evidenceImage'];
 const attempts=new Map();
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
