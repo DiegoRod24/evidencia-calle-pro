@@ -104,7 +104,7 @@ jobs:
           if(!recovery.includes('recoverAll')) throw new Error('Falta recuperación integral de fotos');
           if(!repair.includes('recoverOne')) throw new Error('Falta recuperación al romperse una imagen de tarjeta');
           if(!repair.includes('reportImage4x3')) throw new Error('La galería no contempla copias alternativas de foto');
-          if(!auto.includes('Number(last.missing||0)>0')) throw new Error('El rescate automático debe reintentar fotos realmente ausentes');
+          if(!auto.includes('retryMissing')||!auto.includes('Number(last?.missing||0)>0')) throw new Error('El rescate automático debe reintentar las fotos ausentes sin escanear cada navegación');
           if(!auto.includes('countChanged')) throw new Error('El rescate automático no detecta cambios en el total');
           if(!coords.includes("n.toFixed(digits)")) throw new Error('Coordenadas no conservan el signo decimal');
           if(coords.includes('Math.abs(n).toFixed')) throw new Error('No se debe eliminar el signo de latitud/longitud');
@@ -144,7 +144,10 @@ jobs:
           assert(durable.includes('State.records.push(compact(full))'),'Recuperar metadatos sin llenar memoria de fotos');
           assert(durable.includes('async function vaultKeys()'),'Falta escaneo ligero de claves del baúl');
           assert(durable.includes('scheduleVaultRecovery(merged)'),'El arranque no debe esperar el rescate completo');
-          assert(rescue.includes('const shouldRun=!last||last.build!==BUILD||Number(last.missing||0)>0||countChanged'),'No recuperar las mismas fotos en cada carga');
+          assert(rescue.includes('const shouldRun=!last||last.build!==BUILD||countChanged||retryMissing'),'No recuperar las mismas fotos en cada carga');
           assert(!rescue.includes('||hasMissingLocal'),'La memoria lite NO indica que faltan fotos');
+          const gallery=fs.readFileSync('one-shop-photo-recovery-v600.js','utf8');
+          assert(gallery.includes("now-lastAutoAt<60000"),'La galeria debe limitar rescates automaticos');
+          assert(gallery.includes('scanVisible(true)'), 'El boton manual de recuperar debe seguir disponible');
           console.log('ONE SHOT: recuperacion conservada, sin barridos multimedia repetidos al navegar.');
           NODE
