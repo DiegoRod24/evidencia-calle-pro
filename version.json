@@ -1,8 +1,8 @@
 {
-  "version": "v5.9.26 · INTERFAZ FLUIDA Y RESCATE PROGRESIVO",
-  "build": "one-shot-v5.9.26-performance-safe-recovery-01",
-  "released": "2026-10-08",
-  "notes": "Mejora de rendimiento: consulta fotos por clave en el baúl local, evita escrituras duplicadas y limita escaneos automáticos repetidos. Recupera metadatos faltantes desde la base principal y rescata fotos huérfanas por lotes después del primer render, sin borrar información.",
+  "version": "v5.9.27 · EDICIÓN VERIFICADA Y FOTO CORREGIDA",
+  "build": "one-shot-v5.9.27-verified-evidence-editor-01",
+  "released": "2026-10-09",
+  "notes": "Guardar cambios y corregir marco comprueban los metadatos y multimedia realmente escritos en IndexedDB. Evita falsos mensajes de éxito, conserva imágenes originales y da prioridad a la foto corregida sobre reportes antiguos. Mantiene el rescate v5.9.26 sin borrar evidencias.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOT_v5_9_26_INTERFAZ_FLUIDA.apk"
+  "apkFilename": "ONE_SHOT_v5_9_27_EDICION_VERIFICADA.apk"
 }
