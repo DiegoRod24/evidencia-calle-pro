@@ -17,6 +17,7 @@ function makeEnvironment(diskRecords,initialRecords=[]) {
     UI:{setView(){}},
     document:{hidden:false,addEventListener(){},getElementById(){return {classList:{contains:()=>false}}},querySelectorAll(){return []}},
     console:{info(){},warn(){}},CSS:{escape:x=>x},
+    requestIdleCallback:fn=>queueMicrotask(fn),
     setTimeout:fn=>{queueMicrotask(fn);return 1},
     requestAnimationFrame:fn=>{queueMicrotask(fn);return 1},
     performance:{now:()=>0}
