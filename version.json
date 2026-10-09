@@ -1,8 +1,8 @@
 {
-  "version": "v5.9.25 · CAPTURA DURABLE VERIFICADA",
-  "build": "one-shot-v5.9.25-durable-capture-01",
-  "released": "2026-09-29",
-  "notes": "Las fotos nuevas ya no se consideran guardadas solo por estar en memoria: ONE SHOT verifica lectura real desde IndexedDB y/o el baúl local. Agrega diario liviano de metadatos, reintentos automáticos, rescate de fotos huérfanas del baúl local y vuelve a ejecutar recuperación cuando aparecen evidencias nuevas sin multimedia. Conserva la corrección de coordenadas TimeMark y enlaces de Google Maps.",
+  "version": "v5.9.26 · INTERFAZ FLUIDA Y RESCATE PROGRESIVO",
+  "build": "one-shot-v5.9.26-performance-safe-recovery-01",
+  "released": "2026-10-08",
+  "notes": "Mejora de rendimiento: consulta fotos por clave en el baúl local, evita escrituras duplicadas y limita escaneos automáticos repetidos. Recupera metadatos faltantes desde la base principal y rescata fotos huérfanas por lotes después del primer render, sin borrar información.",
   "apkUrl": "",
-  "apkFilename": "ONE_SHOT_v5_9_25_CAPTURA_DURABLE_VERIFICADA.apk"
+  "apkFilename": "ONE_SHOT_v5_9_26_INTERFAZ_FLUIDA.apk"
 }

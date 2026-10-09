@@ -37,6 +37,7 @@ async function run({silent=false}={}){
   running=true;
 
   const rows=[...(State.records||[])];
+  const byId=new Map((State.records||[]).filter(r=>r?.id).map(r=>[String(r.id),r]));
   let available=0,recovered=0,missing=0,seeded=0;
   const sources={memory:0,indexeddb:0,vault:0,legacy:0,drive:0,other:0};
 
@@ -45,11 +46,12 @@ async function run({silent=false}={}){
       const part=rows.slice(i,i+2);
       await Promise.all(part.map(async row=>{
         if(!row?.id)return;
-        let live=(State.records||[]).find(x=>String(x.id)===String(row.id))||row;
+        let live=byId.get(String(row.id))||row;
         if(hasPhoto(live)){
           available++;
           sources.memory++;
-          try{seeded+=await ONE_SHOT_LOCAL_MEDIA_VAULT.put(live)}catch(_){}
+          // Las tomas ya verificadas se respaldan al guardar y en la migración local.
+          // No escribirlas nuevamente cada vez que se abre ONE SHOT.
           return;
         }
 
@@ -66,11 +68,13 @@ async function run({silent=false}={}){
           missing++;
         }
       }));
-      if(i%12===0)await sleep(0);
+      if(i%12===0)await sleep(8);
     }
 
-    try{Store?.saveLite?.();Reports?.invalidate?.()}catch(_){}
-    try{Gallery?.render?.()}catch(_){}
+    if(recovered){
+      try{Store?.saveLite?.();Reports?.invalidate?.()}catch(_){}
+      try{if(document.getElementById('viewEvidence')?.classList.contains('active'))Gallery?.render?.()}catch(_){}
+    }
 
     const audit={
       build:BUILD,
@@ -101,13 +105,15 @@ async function boot(){
   await sleep(1400);
   const last=(()=>{try{return JSON.parse(localStorage.getItem('oneshotPhotoRescue603Last')||'null')}catch(_){return null}})();
   const rows=State.records||[];
-  const hasMissingLocal=rows.some(r=>!hasPhoto(r));
+  // El arranque rapido conserva deliberadamente solo metadatos en memoria.
+  // No tomar esa ausencia temporal de fotos como evidencia de perdida.
   const countChanged=Number(last?.total??-1)!==rows.length;
-  const shouldRun=!last||last.build!==BUILD||Number(last.missing||0)>0||countChanged||hasMissingLocal;
+  const lastMs=Date.parse(String(last?.at||''))||0;
+  const retryMissing=Number(last?.missing||0)>0&&(Date.now()-lastMs>=6*3600000);
+  const shouldRun=!last||last.build!==BUILD||countChanged||retryMissing;
   if(shouldRun)await run({silent:false});
-  else{
-    try{for(const r of rows)if(hasPhoto(r))await ONE_SHOT_LOCAL_MEDIA_VAULT.put(r)}catch(_){}
-  }
+  // No hacer un resguardo masivo en cada inicio: local-media-v602 ya
+  // protege las nuevas fotos y la migracion de fotos antiguas.
   try{localStorage.setItem('oneshotAutoPhotoRescueBuild',BUILD)}catch(_){}
 }
 

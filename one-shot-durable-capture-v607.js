@@ -61,7 +61,7 @@ function openMain(){
   if(State.db)return Promise.resolve(State.db);
   return new Promise((resolve,reject)=>{
     try{
-      const q=indexedDB.open(MAIN_DB,1);
+      const q=indexedDB.open(MAIN_DB);
       q.onupgradeneeded=()=>{if(!q.result.objectStoreNames.contains(MAIN_STORE))q.result.createObjectStore(MAIN_STORE,{keyPath:'id'})};
       q.onsuccess=()=>{State.db=q.result;resolve(q.result)};q.onerror=()=>reject(q.error||new Error('No se pudo abrir IndexedDB'));
     }catch(e){reject(e)}
@@ -82,7 +82,7 @@ async function primaryPut(record){
 function openVault(){
   return new Promise((resolve,reject)=>{
     try{
-      const q=indexedDB.open(VAULT_DB,1);
+      const q=indexedDB.open(VAULT_DB);
       q.onupgradeneeded=()=>{if(!q.result.objectStoreNames.contains(VAULT_STORE))q.result.createObjectStore(VAULT_STORE,{keyPath:'key'})};
       q.onsuccess=()=>resolve(q.result);q.onerror=()=>reject(q.error||new Error('No se pudo abrir baúl local'));
     }catch(e){reject(e)}
@@ -139,22 +139,102 @@ function localDateParts(iso){
     return{fecha,hora};
   }catch(_){return{fecha:d.toISOString().slice(0,10),hora:d.toTimeString().slice(0,8)}}
 }
+// Rescate progresivo: leer claves livianas, solo abrir fotos de IDs huerfanos.
+// No elimina ni sobrescribe fotos existentes. Los registros con metadatos
+// siguen usando el recuperador de fotos tradicional si les falta la imagen.
+async function vaultKeys(){
+ let db;try{
+  db=await openVault();
+  return await new Promise(resolve=>{
+   try{const q=db.transaction(VAULT_STORE,'readonly').objectStore(VAULT_STORE).getAllKeys();
+    q.onsuccess=()=>resolve(q.result||[]);q.onerror=()=>resolve([])}
+   catch(_){resolve([])}
+  });
+ }catch(_){return []}finally{try{db?.close()}catch(_){}}
+}
+async function vaultForId(id){
+ let db;try{
+  db=await openVault();
+  return await new Promise(resolve=>{
+   try{
+    const start=String(id)+'::',end=start+String.fromCharCode(0xffff);
+    const q=db.transaction(VAULT_STORE,'readonly').objectStore(VAULT_STORE).getAll(IDBKeyRange.bound(start,end));
+    q.onsuccess=()=>resolve(q.result||[]);q.onerror=()=>resolve([]);
+   }catch(_){resolve([])}
+  });
+ }catch(_){return []}finally{try{db?.close()}catch(_){}}
+}
+async function primaryKeys(){
+ try{
+  const db=await openMain();
+  return await new Promise(resolve=>{
+   try{const q=db.transaction(MAIN_STORE,'readonly').objectStore(MAIN_STORE).getAllKeys();
+    q.onsuccess=()=>resolve(q.result||[]);q.onerror=()=>resolve([])}
+   catch(_){resolve([])}
+  });
+ }catch(_){return []}
+}
 async function rescueVaultOrphans(){
-  const rows=await vaultRows();if(!rows.length)return{added:0,hydrated:0};
-  const groups=new Map();for(const x of rows){if(!x?.id||!isImage(x.value))continue;const id=String(x.id);if(!groups.has(id))groups.set(id,[]);groups.get(id).push(x)}
-  const existing=new Map((State.records||[]).filter(r=>r?.id).map(r=>[String(r.id),r]));let added=0,hydrated=0;
-  for(const [id,media] of groups){
-    let rec=existing.get(id);
-    if(!rec){
-      const savedAt=media.map(x=>x.savedAt).filter(Boolean).sort()[0]||new Date().toISOString(),p=localDateParts(savedAt);
-      rec={id,photoCode:media.find(x=>x.photoCode)?.photoCode||`OS-RECUPERADA-${id.slice(0,8)}`,createdAt:savedAt,updatedAt:savedAt,fecha:p.fecha,hora:p.hora,type:'PENDIENTE',status:'Activo',address:'Evidencia recuperada del almacenamiento local',observation:'Recuperada automáticamente del baúl local; revisar metadatos.',integrityStatus:'RECUPERADA · METADATOS PARCIALES',recoveryMetadataPartial:true,recoveredAt:new Date().toISOString(),selected:false};
-      State.records.push(rec);existing.set(id,rec);added++;
-    }
-    let changed=false;for(const x of media)if(!rec[x.field]&&isImage(x.value)){rec[x.field]=x.value;changed=true}
-    if(changed){hydrated++;try{await primaryPut(rec)}catch(_){}writeJournal(rec)}
+ const known=new Set((State.records||[]).filter(r=>r?.id).map(r=>String(r.id)));
+ let added=0,hydrated=0;
+ // Recuperar metadatos desde la base principal cuando se perdio el indice lite.
+ const mainIds=await primaryKeys();
+ for(let i=0;i<mainIds.length;i++){
+  const id=String(mainIds[i]);if(known.has(id))continue;
+  const full=await primaryGet(id);if(!full?.id)continue;
+  State.records.push(compact(full));known.add(id);added++;writeJournal(full);
+  if(i%3===2)await sleep(0);
+ }
+ // Luego buscar fotos que solo sobrevivieron en el baul independiente.
+ const keys=await vaultKeys();
+ const ids=[...new Set(keys.map(k=>{const txt=String(k),i=txt.lastIndexOf('::');return i>0?txt.slice(0,i):''}).filter(Boolean))];
+ const missing=ids.filter(id=>!known.has(id));
+ const count=document.getElementById('evidenceCount');
+ if(missing.length&&count)count.textContent='Revisando '+missing.length+' fotos del baul local…';
+ for(let i=0;i<missing.length;i++){
+  const id=missing[i];if(known.has(id))continue;
+  // Si IndexedDB principal conserva el registro, recuperar sus metadatos completos.
+  const fromMain=await primaryGet(id);
+  let rec=fromMain?.id?{...fromMain}:null;
+  if(!hasMedia(rec)){
+   const media=await vaultForId(id);
+   const valid=media.filter(x=>x?.id&&isImage(x.value));
+   if(!valid.length)continue;
+   if(!rec){
+    const savedAt=valid.map(x=>x.savedAt).filter(Boolean).sort()[0]||new Date().toISOString(),p=localDateParts(savedAt);
+    rec={id,photoCode:valid.find(x=>x.photoCode)?.photoCode||`OS-RECUPERADA-${id.slice(0,8)}`,createdAt:savedAt,updatedAt:savedAt,fecha:p.fecha,hora:p.hora,type:'PENDIENTE',status:'Activo',address:'Evidencia recuperada del almacenamiento local',observation:'Recuperada automaticamente del baul local; revisar metadatos.',integrityStatus:'RECUPERADA · METADATOS PARCIALES',recoveryMetadataPartial:true,recoveredAt:new Date().toISOString(),selected:false};
+   }
+   let changed=false;for(const x of valid)if(!rec[x.field]&&isImage(x.value)){rec[x.field]=x.value;changed=true}
+   if(changed){hydrated++;try{await primaryPut(rec)}catch(err){console.warn('[ONE SHOT] respaldo de foto recuperada pendiente',err)}}
   }
-  if(added||hydrated){State.records.sort((a,b)=>String(b.createdAt||b.updatedAt||'').localeCompare(String(a.createdAt||a.updatedAt||'')));safeLite()}
-  return{added,hydrated};
+  if(!hasMedia(rec))continue;
+  State.records.push(rec);known.add(id);added++;writeJournal(rec);
+  if(i%3===2)await sleep(0);
+ }
+ if(added){
+  State.records.sort((a,b)=>String(b.createdAt||b.updatedAt||'').localeCompare(String(a.createdAt||a.updatedAt||'')));
+  safeLite();
+  try{Reports?.invalidate?.();Reports?.renderSummary?.()}catch(_){}
+  try{if(document.getElementById('viewEvidence')?.classList.contains('active'))Gallery?.render?.()}catch(_){}
+ }
+ return{added,hydrated,checked:mainIds.length+missing.length};
+}
+let recoveryScheduled=false;
+function scheduleVaultRecovery(merged){
+ if(recoveryScheduled)return;
+ recoveryScheduled=true;
+ const run=async()=>{
+  try{
+   const rescued=await rescueVaultOrphans();
+   safeLite();
+   try{localStorage.setItem('oneshotDurableRecoveryLast',JSON.stringify({at:new Date().toISOString(),merged,...rescued,total:(State.records||[]).length}))}catch(_){}
+   if(rescued.added)console.info('[ONE SHOT] Fotos huerfanas recuperadas',rescued);
+  }catch(e){console.warn('[ONE SHOT] recuperacion en segundo plano',e)}
+ };
+ setTimeout(()=>{
+  if(window.requestIdleCallback)requestIdleCallback(()=>{run()},{timeout:3000});
+  else setTimeout(run,0);
+ },1600);
 }
 function patchStore(){
   if(!window.Store||Store.__durableCapture607)return false;
@@ -165,7 +245,7 @@ function patchStore(){
     const p=persistVerified(record,baseSave);if(record?.id){pending.set(String(record.id),p);p.finally(()=>{if(pending.get(String(record.id))===p)pending.delete(String(record.id))}).catch(()=>{})}return p;
   };
   if(baseBatch)Store.saveBatch=async function(records=State.records){for(const r of records||[])writeJournal(r);const out=await baseBatch(records);safeLite();return out};
-  if(baseLoad)Store.load=async function(){await baseLoad();const merged=mergeFallback();const rescued=await rescueVaultOrphans();safeLite();try{localStorage.setItem('oneshotDurableRecoveryLast',JSON.stringify({at:new Date().toISOString(),merged,...rescued,total:(State.records||[]).length}))}catch(_){}return State.records};
+  if(baseLoad)Store.load=async function(){await baseLoad();const merged=mergeFallback();safeLite();scheduleVaultRecovery(merged);return State.records};
   return true;
 }
 function patchCamera(){
