@@ -108,7 +108,9 @@ async function boot(){
   // El arranque rapido conserva deliberadamente solo metadatos en memoria.
   // No tomar esa ausencia temporal de fotos como evidencia de perdida.
   const countChanged=Number(last?.total??-1)!==rows.length;
-  const shouldRun=!last||last.build!==BUILD||Number(last.missing||0)>0||countChanged;
+  const lastMs=Date.parse(String(last?.at||''))||0;
+  const retryMissing=Number(last?.missing||0)>0&&(Date.now()-lastMs>=6*3600000);
+  const shouldRun=!last||last.build!==BUILD||countChanged||retryMissing;
   if(shouldRun)await run({silent:false});
   // No hacer un resguardo masivo en cada inicio: local-media-v602 ya
   // protege las nuevas fotos y la migracion de fotos antiguas.
