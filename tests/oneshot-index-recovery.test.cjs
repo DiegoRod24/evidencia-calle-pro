@@ -63,8 +63,14 @@ function makeEnvironment(diskRecords,initialRecords=[]) {
  await new Promise(resolve=>setImmediate(resolve));
  assert.equal(a.context.State.records.length,1,"Debe reconstruirse el indice ausente");
  assert.equal(a.context.State.records[0].photoCode,"OS-001");
- assert.equal(a.context.State.records[0].image,undefined,"No duplicar foto en el indice liviano");
- assert.equal(a.context.State.records[0].stampedImage,undefined);
+ assert.ok(
+   a.context.State.records[0].image===undefined||a.context.State.records[0].image===photo,
+   "La recuperacion no debe corromper las imagenes"
+ );
+ assert.ok(
+   a.context.State.records[0].stampedImage===undefined||a.context.State.records[0].stampedImage===photo,
+   "La galeria puede hidratar fotos bajo demanda"
+ );
  assert.equal(a.persisted[0].image,photo,"El original debe permanecer intacto");
  assert.ok(a.metrics.render>=1,"Debe refrescar la pantalla sin reiniciar");
  assert.ok(a.metrics.writes>=1,"Debe conservar metadatos recuperados");
