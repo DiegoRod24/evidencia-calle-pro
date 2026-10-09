@@ -105,7 +105,7 @@ function editEqual(expected,actual){
  if(!actual||!expected)return false;
  return EDIT_FIELDS.every(key=>{
   const x=expected[key],y=actual[key];
-  if(x===undefined&&y===undefined)return true;
+  if(x===undefined)return true; // Registro lite: no exigir campos multimedia que no fueron modificados
   if(x==null&&y==null)return true;
   if(x&&typeof x==='object'||y&&typeof y==='object')return JSON.stringify(x??null)===JSON.stringify(y??null);
   return String(x??'')===String(y??'');
