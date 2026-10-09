@@ -114,6 +114,14 @@ function editEqual(expected,actual){
 async function persistVerified(record,baseSave){
  if(!record?.id)return baseSave(record);
  writeJournal(record);
+ // Antes de escribir un registro parcialmente hidratado, preservar bytes originales.
+ // Las variantes de reporte/marco pueden invalidarse expresamente; no restaurarlas.
+ const previous=await primaryGet(record.id);
+ if(previous){
+  for(const key of ['image','stampedImage','originalImage','rescuedImage','watermarkedImage','markedImage','evidenceImage','orientationOriginalImage']){
+   if(!record[key]&&previous[key])record[key]=previous[key];
+  }
+ }
  let lastError=null,full=null,primaryOk=false,vaultOk=false;
  for(let attempt=1;attempt<=3;attempt++){
   try{await baseSave(record)}catch(e){lastError=e}
