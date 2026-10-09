@@ -26,6 +26,9 @@ function makeEnvironment(diskRecords,initialRecords=[]) {
     const tx={oncomplete:null,onerror:null,onabort:null,objectStore(name){
       assert.equal(name,"records");
       return{
+        getAllKeys(){
+          const q={};queueMicrotask(()=>q.onsuccess?.({target:{result:persisted.map(r=>r.id)}}));return q;
+        },
         openCursor(){
           let i=0;const req={};
           function next(){queueMicrotask(()=>{
@@ -70,6 +73,21 @@ function makeEnvironment(diskRecords,initialRecords=[]) {
  assert.equal(result.restored,1,"Rescate manual de foto en base principal");
  assert.equal(b.context.State.records.length,1);
  assert.equal(b.persisted[0].image,photo);
+ const partial=makeEnvironment([
+    {id:"foto-1",photoCode:"OS-001",image:photo},
+    {id:"foto-3",photoCode:"OS-003",image:photo}
+ ],[{id:"foto-1",photoCode:"OS-001"}]);
+ partial.context.Store.hydrateFullRecords582();
+ await new Promise(resolve=>setImmediate(resolve));
+ await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(partial.context.State.records.length,2,"Debe incluir fotos que faltan incluso con indice parcial");
+ assert.deepEqual([...partial.context.State.records.map(x=>x.id)].sort(),["foto-1","foto-3"]);
+ assert.equal(partial.persisted[1].image,photo,"No modificar fotografías originales");
+ assert.equal(partial.metrics.writes,1,"El indice se actualiza una sola vez");
+ const present=makeEnvironment([{id:"foto-4",image:photo}],[{id:"foto-4",photoCode:"OS-004"}]);
+ const stable=await present.context.window.ONE_SHOT_MEDIA_LAZY_595.restoreMissingIndex();
+ assert.equal(stable.restored,0,"No duplicar registros ya presentes");
+ assert.equal(present.metrics.writes,0,"No reescribir un indice completo");
  const c=makeEnvironment([],[]);
  const empty=await c.context.window.ONE_SHOT_MEDIA_LAZY_595.restoreMissingIndex();
  assert.equal(empty.restored,0,"No inventar evidencias si DB esta vacia");
