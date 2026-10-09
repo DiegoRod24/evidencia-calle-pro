@@ -61,7 +61,7 @@ function openMain(){
   if(State.db)return Promise.resolve(State.db);
   return new Promise((resolve,reject)=>{
     try{
-      const q=indexedDB.open(MAIN_DB,1);
+      const q=indexedDB.open(MAIN_DB);
       q.onupgradeneeded=()=>{if(!q.result.objectStoreNames.contains(MAIN_STORE))q.result.createObjectStore(MAIN_STORE,{keyPath:'id'})};
       q.onsuccess=()=>{State.db=q.result;resolve(q.result)};q.onerror=()=>reject(q.error||new Error('No se pudo abrir IndexedDB'));
     }catch(e){reject(e)}
@@ -82,7 +82,7 @@ async function primaryPut(record){
 function openVault(){
   return new Promise((resolve,reject)=>{
     try{
-      const q=indexedDB.open(VAULT_DB,1);
+      const q=indexedDB.open(VAULT_DB);
       q.onupgradeneeded=()=>{if(!q.result.objectStoreNames.contains(VAULT_STORE))q.result.createObjectStore(VAULT_STORE,{keyPath:'key'})};
       q.onsuccess=()=>resolve(q.result);q.onerror=()=>reject(q.error||new Error('No se pudo abrir baúl local'));
     }catch(e){reject(e)}
