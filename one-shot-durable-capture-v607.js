@@ -98,26 +98,54 @@ async function vaultVerified(record){
     await vault.put(record);const recovered=await vault.getFor(record);return hasMedia(recovered);
   }catch(_){return false}
 }
-async function persistVerified(record,baseSave){
-  if(!record?.id)return baseSave(record);
-  writeJournal(record);
-  let lastError=null,primaryOk=false,vaultOk=false;
-  for(let attempt=1;attempt<=3;attempt++){
-    try{await baseSave(record)}catch(e){lastError=e}
-    let full=await primaryGet(record.id);primaryOk=hasMedia(full);
-    if(!primaryOk){try{await primaryPut(record)}catch(e){lastError=e};full=await primaryGet(record.id);primaryOk=hasMedia(full)}
-    vaultOk=await vaultVerified(record);
-    if(primaryOk||vaultOk)break;
-    await sleep(160*attempt);
-  }
-  if(!(primaryOk||vaultOk)){
-    record.persistenceStatus='ERROR_NO_PERSISTIDO';record.persistenceVerifiedAt=new Date().toISOString();writeJournal(record);safeLite();
-    throw lastError||new Error('La foto quedó en memoria pero el almacenamiento local no confirmó el guardado');
-  }
-  record.persistenceStatus=primaryOk&&vaultOk?'VERIFICADA_DOBLE':primaryOk?'VERIFICADA_INDEXEDDB':'VERIFICADA_BAUL';
-  record.persistenceVerifiedAt=new Date().toISOString();writeJournal(record);safeLite();
-  return {ok:true,primaryOk,vaultOk,status:record.persistenceStatus};
+// Los metadatos y las correcciones tambien deben quedar realmente guardados.
+// Verificar solo que existe una imagen permitia falsos "Evidencia actualizada".
+const EDIT_FIELDS=['id','electionProcess','electionType','type','status','party','candidate','candidateType','district','ubigeo','observation','placeId','tramoId','panelProvider','provider','company','empresa','panelProviderStatus','updatedAt','frameEdited','frameEditedAt','frameTransform','correctedImage','correctedStampedImage'];
+function editEqual(expected,actual){
+ if(!actual||!expected)return false;
+ return EDIT_FIELDS.every(key=>{
+  const x=expected[key],y=actual[key];
+  if(x===undefined&&y===undefined)return true;
+  if(x==null&&y==null)return true;
+  if(x&&typeof x==='object'||y&&typeof y==='object')return JSON.stringify(x??null)===JSON.stringify(y??null);
+  return String(x??'')===String(y??'');
+ });
 }
+async function persistVerified(record,baseSave){
+ if(!record?.id)return baseSave(record);
+ writeJournal(record);
+ let lastError=null,full=null,primaryOk=false,vaultOk=false;
+ for(let attempt=1;attempt<=3;attempt++){
+  try{await baseSave(record)}catch(e){lastError=e}
+  full=await primaryGet(record.id);
+  primaryOk=editEqual(record,full)&&hasMedia(full);
+  if(!primaryOk){
+   try{
+    // No reemplazar una fotografia original completa por el registro ligero.
+    const safe={...(full||{}),...record};
+    if(full)for(const field of MEDIA){
+      if(!safe[field]&&full[field]&&!['reportImage4x3','reportThumbnailImage','correctedStampedImage'].includes(field))safe[field]=full[field];
+    }
+    await primaryPut(safe);
+    full=await primaryGet(record.id);
+    primaryOk=editEqual(record,full)&&hasMedia(full);
+   }catch(e){lastError=e}
+  }
+  vaultOk=await vaultVerified(record);
+  // El baul protege la foto, pero no sustituye la confirmacion de los cambios
+  // de clasificacion y marco en la base de registros.
+  if(primaryOk)break;
+  await sleep(160*attempt);
+ }
+ if(!primaryOk){
+  record.persistenceStatus='ERROR_NO_PERSISTIDO';record.persistenceVerifiedAt=new Date().toISOString();writeJournal(record);
+  throw lastError||new Error('No se confirmó el guardado de datos y clasificación en IndexedDB; los cambios siguen visibles para reintentar');
+ }
+ record.persistenceStatus=vaultOk?'VERIFICADA_DOBLE':'VERIFICADA_INDEXEDDB';
+ record.persistenceVerifiedAt=new Date().toISOString();writeJournal(record);safeLite();
+ return {ok:true,primaryOk,vaultOk,status:record.persistenceStatus};
+}
+
 function mergeFallback(){
   const fallback=[];
   const lite=readJson('oneshotRecordsLite',[]),journal=readJson(JOURNAL,[]);
