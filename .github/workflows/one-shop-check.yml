@@ -25,6 +25,10 @@ jobs:
         run: node --check one-shop-media-safety-v601.js
       - name: Syntax · local media vault
         run: node --check one-shop-local-media-v602.js
+      - name: Syntax · lazy photo hydration and index reconstruction
+        run: node --check one-shop-performance-v595.js
+      - name: Regression · photos survive empty evidence index
+        run: node tests/oneshot-index-recovery.test.cjs
       - name: Syntax · durable capture
         run: node --check one-shot-durable-capture-v607.js
       - name: Syntax · photo recovery
