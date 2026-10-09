@@ -26,43 +26,40 @@ let indexRecovery595=null;
 function restoreMissingIndex595(){
  if(indexRecovery595)return indexRecovery595;
  if(!State.db)return Promise.resolve({restored:0,reason:'db_unavailable'});
- const old=(State.records||[]).length;
- if(old>0)return Promise.resolve({restored:0,reason:'index_present'});
- indexRecovery595=new Promise(resolve=>{
-  const rows=[];let scanned=0,tx;
-  let settled=false;
-  const finish=(result)=>{if(settled)return;settled=true;resolve(result)};
-  try{
-   tx=State.db.transaction('records','readonly');
-   const q=tx.objectStore('records').openCursor();
-   q.onsuccess=e=>{
-    const cur=e.target.result;if(!cur)return;
-    scanned++;
-    if(cur.value?.id)rows.push(onlyMetadata595(cur.value));
-    cur.continue();
-   };
-   q.onerror=()=>finish({restored:0,reason:'cursor_error'});
-   tx.onerror=tx.onabort=()=>finish({restored:0,reason:'transaction_error'});
-   tx.oncomplete=()=>{
-    const byId=new Map((State.records||[]).filter(r=>r?.id).map(r=>[String(r.id),r]));
-    let restored=0;
-    for(const r of rows)if(!byId.has(String(r.id))){byId.set(String(r.id),r);restored++}
-    if(restored){
-      State.records=[...byId.values()].sort((a,b)=>String(b.createdAt||b.updatedAt||'').localeCompare(String(a.createdAt||a.updatedAt||'')));
-      try{Store.saveLite?.()}catch(e){console.warn('[ONE SHOT] fallo indice lite',e)}
-      try{Reports?.invalidate?.();Reports?.renderSummary?.()}catch(_){}
-      try{Gallery.render?.()}catch(e){console.warn('[ONE SHOT] fallo repintado evidencias',e)}
-      console.info('[ONE SHOT] indice recuperado desde DB principal',restored);
-    }
-    finish({scanned,restored});
-   };
-  }catch(e){finish({restored:0,reason:String(e?.message||e)})}
- }).finally(()=>{indexRecovery595=null});
+ indexRecovery595=(async()=>{
+  // Leer primero SOLO las claves. Incluso si existe un índice parcial, detectar
+  // todas las fotos presentes en la base principal (no depender de localStorage).
+  const ids=await new Promise((resolve,reject)=>{
+   try{
+    const tx=State.db.transaction('records','readonly'),q=tx.objectStore('records').getAllKeys();
+    q.onsuccess=()=>resolve(q.result||[]);
+    q.onerror=()=>reject(q.error||new Error('No se pudo listar IndexedDB'));
+   }catch(e){reject(e)}
+  });
+  const known=new Set((State.records||[]).filter(r=>r?.id).map(r=>String(r.id)));
+  const missing=ids.filter(id=>!known.has(String(id)));
+  let restored=0;
+  for(let i=0;i<missing.length;i++){
+   const full=await fullById(missing[i]);
+   if(full?.id && !(State.records||[]).some(r=>String(r.id)===String(full.id))){
+    State.records.push(onlyMetadata595(full));restored++;known.add(String(full.id));
+   }
+   if(i%4===3)await new Promise(resolve=>setTimeout(resolve,0));
+  }
+  if(restored){
+   State.records.sort((a,b)=>String(b.createdAt||b.updatedAt||'').localeCompare(String(a.createdAt||a.updatedAt||'')));
+   try{Store.saveLite?.()}catch(e){console.warn('[ONE SHOT] indice lite: ',e)}
+   try{Reports?.invalidate?.();Reports?.renderSummary?.()}catch(_){}
+   try{Gallery.render?.()}catch(e){console.warn('[ONE SHOT] repintar: ',e)}
+   console.info('[ONE SHOT] registros recuperados desde base principal:',restored);
+  }
+  return{scanned:ids.length,restored};
+ })().catch(e=>({restored:0,error:String(e?.message||e)})).finally(()=>{indexRecovery595=null});
  return indexRecovery595;
 }
 
 try{
- if(Store?.hydrateFullRecords582){Store.__fullHydrateLegacy595=Store.hydrateFullRecords582;Store.hydrateFullRecords582=function(){if(!State.db)return;if(!(State.records||[]).length){idle(()=>restoreMissingIndex595().catch(e=>console.warn('[ONE SHOT] recuperacion del indice',e)),750);return}if(document.hidden)return;idle(()=>{warmLatest();if(document.getElementById('viewEvidence')?.classList.contains('active'))hydrateIds(visibleIds(10),10).then(observeCards)},1200)}}
+ if(Store?.hydrateFullRecords582){Store.__fullHydrateLegacy595=Store.hydrateFullRecords582;Store.hydrateFullRecords582=function(){if(!State.db)return;idle(()=>{restoreMissingIndex595().then(()=>{if(document.hidden)return;warmLatest();if(document.getElementById('viewEvidence')?.classList.contains('active'))hydrateIds(visibleIds(10),10).then(observeCards)}).catch(e=>console.warn('[ONE SHOT] recuperacion del indice',e))},750)}}
 }catch(e){console.warn('[ONE SHOT perf] hydrate patch',e)}
 try{
  const baseRender=Gallery.render.bind(Gallery);Gallery.render=function(){const out=baseRender();requestAnimationFrame(observeCards);return out};
