@@ -164,13 +164,31 @@ async function vaultForId(id){
   });
  }catch(_){return []}finally{try{db?.close()}catch(_){}}
 }
+async function primaryKeys(){
+ try{
+  const db=await openMain();
+  return await new Promise(resolve=>{
+   try{const q=db.transaction(MAIN_STORE,'readonly').objectStore(MAIN_STORE).getAllKeys();
+    q.onsuccess=()=>resolve(q.result||[]);q.onerror=()=>resolve([])}
+   catch(_){resolve([])}
+  });
+ }catch(_){return []}
+}
 async function rescueVaultOrphans(){
- const keys=await vaultKeys();
- if(!keys.length)return{added:0,hydrated:0,checked:0};
- const ids=[...new Set(keys.map(k=>{const txt=String(k),i=txt.lastIndexOf('::');return i>0?txt.slice(0,i):''}).filter(Boolean))];
  const known=new Set((State.records||[]).filter(r=>r?.id).map(r=>String(r.id)));
- const missing=ids.filter(id=>!known.has(id));
  let added=0,hydrated=0;
+ // Recuperar metadatos desde la base principal cuando se perdio el indice lite.
+ const mainIds=await primaryKeys();
+ for(let i=0;i<mainIds.length;i++){
+  const id=String(mainIds[i]);if(known.has(id))continue;
+  const full=await primaryGet(id);if(!full?.id)continue;
+  State.records.push(compact(full));known.add(id);added++;writeJournal(full);
+  if(i%3===2)await sleep(0);
+ }
+ // Luego buscar fotos que solo sobrevivieron en el baul independiente.
+ const keys=await vaultKeys();
+ const ids=[...new Set(keys.map(k=>{const txt=String(k),i=txt.lastIndexOf('::');return i>0?txt.slice(0,i):''}).filter(Boolean))];
+ const missing=ids.filter(id=>!known.has(id));
  const count=document.getElementById('evidenceCount');
  if(missing.length&&count)count.textContent='Revisando '+missing.length+' fotos del baul local…';
  for(let i=0;i<missing.length;i++){
@@ -199,7 +217,7 @@ async function rescueVaultOrphans(){
   try{Reports?.invalidate?.();Reports?.renderSummary?.()}catch(_){}
   try{if(document.getElementById('viewEvidence')?.classList.contains('active'))Gallery?.render?.()}catch(_){}
  }
- return{added,hydrated,checked:missing.length};
+ return{added,hydrated,checked:mainIds.length+missing.length};
 }
 let recoveryScheduled=false;
 function scheduleVaultRecovery(merged){
