@@ -27,7 +27,7 @@ function makeEnvironment(diskRecords,initialRecords=[]) {
       assert.equal(name,"records");
       return{
         getAllKeys(){
-          const q={};queueMicrotask(()=>q.onsuccess?.({target:{result:persisted.map(r=>r.id)}}));return q;
+          const q={};queueMicrotask(()=>{q.result=persisted.map(r=>r.id);q.onsuccess?.({target:{result:q.result}})});return q;
         },
         openCursor(){
           let i=0;const req={};
@@ -44,7 +44,7 @@ function makeEnvironment(diskRecords,initialRecords=[]) {
           next();return req;
         },
         get(id){
-          const q={};queueMicrotask(()=>q.onsuccess?.({target:{result:persisted.find(r=>r.id===id)||null}}));return q;
+          const q={};queueMicrotask(()=>{q.result=persisted.find(r=>r.id===id)||null;q.onsuccess?.({target:{result:q.result}})});return q;
         }
       };
     }};
