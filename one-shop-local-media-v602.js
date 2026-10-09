@@ -39,7 +39,7 @@ async function getFor(record){
   const id=String(record.id);
   const mine=await new Promise(resolve=>{
    try{
-    const tx=db.transaction(STORE,'readonly'),start=id+'::',end=id+'::\\uffff';
+    const tx=db.transaction(STORE,'readonly'),start=id+'::',end=id+'::'+String.fromCharCode(0xffff);
     const q=tx.objectStore(STORE).getAll(IDBKeyRange.bound(start,end));
     q.onsuccess=()=>resolve(q.result||[]);q.onerror=()=>resolve([]);
    }catch(_){resolve([])}
