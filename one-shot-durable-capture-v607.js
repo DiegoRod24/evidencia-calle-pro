@@ -118,9 +118,14 @@ async function persistVerified(record,baseSave){
  // Las variantes de reporte/marco pueden invalidarse expresamente; no restaurarlas.
  const previous=await primaryGet(record.id);
  if(previous){
-  for(const key of ['image','stampedImage','originalImage','rescuedImage','watermarkedImage','markedImage','evidenceImage','orientationOriginalImage']){
-   if(!record[key]&&previous[key])record[key]=previous[key];
+  // El registro ligero omite derivadas. Omitido NO equivale a eliminado.
+  // Si una correccion invalido expresamente una derivada con '', respetar eso.
+  for(const key of MEDIA){
+   if((record[key]===undefined||record[key]===null||(['image','stampedImage','originalImage','rescuedImage'].includes(key)&&!record[key]))&&previous[key]){
+    record[key]=previous[key];
+   }
   }
+  if(!record.orientationOriginalImage&&previous.orientationOriginalImage)record.orientationOriginalImage=previous.orientationOriginalImage;
  }
  let lastError=null,full=null,primaryOk=false,vaultOk=false;
  for(let attempt=1;attempt<=3;attempt++){
