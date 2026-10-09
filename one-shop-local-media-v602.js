@@ -12,12 +12,55 @@ const FIELDS=['image','stampedImage','originalImage','correctedImage','corrected
 const isImage=v=>typeof v==='string'&&v.startsWith('data:image/');
 const key=(id,field)=>String(id)+'::'+field;
 function open(){return new Promise((resolve,reject)=>{try{const q=indexedDB.open(DB,1);q.onupgradeneeded=()=>{if(!q.result.objectStoreNames.contains(STORE))q.result.createObjectStore(STORE,{keyPath:'key'})};q.onsuccess=()=>resolve(q.result);q.onerror=()=>reject(q.error)}catch(e){reject(e)}})}
+// v5.9.26: consultas por clave de evidencia, sin traer todas las fotos del telefono.
 async function put(record){
- if(!record?.id)return 0;const rows=[];for(const field of FIELDS){const value=record[field];if(isImage(value))rows.push({key:key(record.id,field),id:String(record.id),photoCode:String(record.photoCode||''),field,value,savedAt:new Date().toISOString()})}
- if(!rows.length)return 0;let db;try{db=await open();await new Promise(resolve=>{const tx=db.transaction(STORE,'readwrite'),os=tx.objectStore(STORE);rows.forEach(x=>os.put(x));tx.oncomplete=tx.onerror=tx.onabort=()=>resolve()});return rows.length}catch(_){return 0}finally{try{db?.close()}catch(_){}}
+ if(!record?.id)return 0;
+ const rows=[];for(const field of FIELDS){const value=record[field];if(isImage(value))rows.push({key:key(record.id,field),id:String(record.id),photoCode:String(record.photoCode||''),field,value,savedAt:new Date().toISOString()})}
+ if(!rows.length)return 0;
+ let db;try{
+  db=await open();
+  return await new Promise(resolve=>{
+   let written=0,done=false;const finish=n=>{if(done)return;done=true;resolve(n)};
+   try{
+    const tx=db.transaction(STORE,'readwrite'),os=tx.objectStore(STORE);
+    tx.oncomplete=()=>finish(written);tx.onerror=tx.onabort=()=>finish(0);
+    for(const row of rows){
+     const q=os.get(row.key);
+     q.onsuccess=()=>{try{if(!q.result||q.result.value!==row.value){os.put(row);written++}}catch(_){}};
+    }
+   }catch(_){finish(0)}
+  });
+ }catch(_){return 0}finally{try{db?.close()}catch(_){}}
 }
 async function getFor(record){
- if(!record?.id)return null;let db;try{db=await open();const all=await new Promise(resolve=>{const tx=db.transaction(STORE,'readonly'),q=tx.objectStore(STORE).getAll();q.onsuccess=()=>resolve(q.result||[]);q.onerror=()=>resolve([])});const mine=all.filter(x=>x.id===String(record.id)||(record.photoCode&&x.photoCode===String(record.photoCode)));if(!mine.length)return null;const out={...record};for(const x of mine)if(!out[x.field]&&isImage(x.value))out[x.field]=x.value;return out}catch(_){return null}finally{try{db?.close()}catch(_){}}
+ if(!record?.id)return null;
+ let db;try{
+  db=await open();
+  const id=String(record.id);
+  const mine=await new Promise(resolve=>{
+   try{
+    const tx=db.transaction(STORE,'readonly'),start=id+'::',end=id+'::\\uffff';
+    const q=tx.objectStore(STORE).getAll(IDBKeyRange.bound(start,end));
+    q.onsuccess=()=>resolve(q.result||[]);q.onerror=()=>resolve([]);
+   }catch(_){resolve([])}
+  });
+  let rows=mine;
+  // Compatibilidad con evidencias antiguas cuyo ID haya cambiado.
+  // Solo se usa el barrido completo si no existe ninguna foto con su ID original.
+  if(!rows.length&&record.photoCode){
+   rows=await new Promise(resolve=>{
+    try{
+     const q=db.transaction(STORE,'readonly').objectStore(STORE).getAll();
+     q.onsuccess=()=>resolve((q.result||[]).filter(x=>x.photoCode===String(record.photoCode)));
+     q.onerror=()=>resolve([]);
+    }catch(_){resolve([])}
+   });
+  }
+  if(!rows.length)return null;
+  const out={...record};
+  for(const x of rows)if(!out[x.field]&&isImage(x.value))out[x.field]=x.value;
+  return out;
+ }catch(_){return null}finally{try{db?.close()}catch(_){}}
 }
 async function migrateCurrent(){let n=0;for(let i=0;i<(State.records||[]).length;i+=3){const part=State.records.slice(i,i+3);const rr=await Promise.all(part.map(put));n+=rr.reduce((a,b)=>a+b,0);await new Promise(r=>setTimeout(r,0))}try{localStorage.setItem('oneshotMediaVaultSeededAt',new Date().toISOString())}catch(_){}return n}
 async function storageInfo(){
